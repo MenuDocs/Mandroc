@@ -7,7 +7,7 @@
     <a href="https://github.com/MenuDocs/Mandroc">
         <img src="https://img.shields.io/github/languages/top/MenuDocs/Mandroc-Rewrite.svg?style=for-the-badge">
     </a>
-    <a href="https://github.com/ionadev/image-gen-api/issues">
+    <a href="https://github.com/MenuDocs/MenuDocs-Rewrite/issues">
         <img src="https://img.shields.io/github/issues/MenuDocs/Mandroc-Rewrite.svg?style=for-the-badge">
     </a>
     <a href="https://github.com/ionadev/image-gen-api/pulls">
