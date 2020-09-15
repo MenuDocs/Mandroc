@@ -33,8 +33,6 @@ _Anybody that contributes to the bot will be shown in the contributors section b
 **Main Libraries Used**:
 
 - [Discord.js](https://www.npmjs.com/package/discord.js) - A powerful JavaScript library to interact with Discord API
-- [Endb](https://endb.js.org) - Simple key-value storage with support for multiple backends.
-- [ms](https://www.npmjs.com/package/ms) - Use this package to easily convert various time formats to milliseconds.
 
 ## Links
 
