@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "discord.js": "^12.3.1",
+    "typescript": "^4.0.2"
+  },
+  "name": "MenuDocs-Rewrite",
+  "version": "1.0.0",
+  "description": "Mandroc Rewrite",
+  "main": "index.js",
+  "repository": "https://github.com/MenuDocs/MenuDocs-Rewrite.git",
+  "author": "Vixel <43552157+MelodicAlbuild@users.noreply.github.com>",
+  "license": "MIT"
+}
