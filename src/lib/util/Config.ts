@@ -24,13 +24,13 @@ class Config {
     const file = path.join(process.cwd(), "config.json");
 
     if (!fs.existsSync(file)) {
-      signale.fatal("File 'config.json' does not exist... please create it.");
+      signale.fatal(`File "${path.basename(file)}" does not exist... please create it.`);
       return process.exit(1);
     }
 
     fs.access(file,  fs.constants.F_OK, (err) => {
       if (err) {
-        signale.fatal("Cannot read from 'config.json'", err.message);
+        signale.fatal(`Cannot read from "${path.basename(file)}"`, err.message);
         return process.exit(1);
       }
     });
@@ -41,7 +41,7 @@ class Config {
     try {
       this._data = JSON.parse(data);
     } catch (e) {
-      signale.fatal("Cannot load 'config.json'", e);
+      signale.fatal(`Cannot load "${path.basename(file)}"`, e);
       process.exit(1);
     }
   }
