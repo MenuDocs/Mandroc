@@ -1,13 +1,28 @@
 {
+  "name": "@menudocs/mandroc",
+  "version": "3.0.0",
+  "description": "Version 3 of Mandroc: The guild bound bot for the MenuDocs Discord server..",
+  "main": "dist/index.js",
+  "repository": "https://github.com/MenuDocs/MenuDocs-Rewrite.git",
+  "author": "MelodicAlbuild and 2D",
+  "_moduleAliases": {
+    "@lib": "dist/lib"
+  },
   "dependencies": {
     "discord.js": "^12.3.1",
+    "lexure": "^0.17.0",
+    "module-alias": "^2.2.2",
+    "mongodb": "^3.6.2",
+    "reflect-metadata": "^0.1.13",
+    "signale": "^1.4.0",
+    "typeorm": "^0.2.26"
+  },
+  "devDependencies": {
+    "@types/node": "^14.10.2",
+    "@types/signale": "^1.4.1",
+    "prettier": "^2.1.1",
+    "type-fest": "^0.16.0",
     "typescript": "^4.0.2"
   },
-  "name": "MenuDocs-Rewrite",
-  "version": "1.0.0",
-  "description": "Mandroc Rewrite",
-  "main": "index.js",
-  "repository": "https://github.com/MenuDocs/MenuDocs-Rewrite.git",
-  "author": "MelodicAlbuild, 2D | MenuDocs",
   "license": "MIT"
 }
