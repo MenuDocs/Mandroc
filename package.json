@@ -27,5 +27,8 @@
     "type-fest": "^0.16.0",
     "typescript": "^4.0.2"
   },
+  "engines": {
+    "node": "14.x.x"
+  },
   "license": "MIT"
 }
