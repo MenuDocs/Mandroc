@@ -8,6 +8,9 @@
   "_moduleAliases": {
     "@lib": "dist/lib"
   },
+  "scripts": {
+    "start": "tsc && node ."
+  },
   "dependencies": {
     "discord.js": "^12.3.1",
     "lexure": "^0.17.0",
