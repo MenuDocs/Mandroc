@@ -9,11 +9,12 @@
     "@lib": "dist/lib"
   },
   "scripts": {
-    "start": "tsc && node ."
+    "build": "rm -rf dist && tsc --removeComments",
+    "format": "prettier --write src/"
   },
   "dependencies": {
+    "discord-akairo": "^8.1.0",
     "discord.js": "^12.3.1",
-    "lexure": "^0.17.0",
     "module-alias": "^2.2.2",
     "mongodb": "^3.6.2",
     "reflect-metadata": "^0.1.13",
