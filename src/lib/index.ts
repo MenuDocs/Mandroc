@@ -1,6 +1,7 @@
-export * from "./classes/Module";
+import type { Signale } from "signale";
+
 export * from "./classes/Command";
-export * from "./classes/Listener";
+export * from "./classes/decorators";
 
 export * from "./database/entities/profile.entity";
 
@@ -10,6 +11,26 @@ export * from "./util/DotNotation";
 export * from "./util/Functions";
 
 export * from "./Client";
+
+declare module "discord.js" {
+  interface Client {
+    log: Signale;
+  }
+
+  type ReactionCollectorFilter = (
+    reaction: MessageReaction,
+    user: User
+  ) => boolean;
+
+  interface Message {
+    createReactionCollector(
+      filter: ReactionCollectorFilter,
+      options?: ReactionCollectorOptions
+    ): ReactionCollector;
+
+    prompt(question: string, embeddable?: boolean): Promise<boolean>;
+  }
+}
 
 declare global {
   type Dictionary<V = any> = Record<string, V>;
@@ -21,5 +42,4 @@ declare global {
      */
     capitalize(lowerRest?: boolean): string;
   }
-
 }
