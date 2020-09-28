@@ -1,19 +1,15 @@
-import { join } from "path";
-import { existsSync, lstatSync, readdirSync } from "fs";
-
 import type { EventEmitter } from "events";
 import type { Class } from "type-fest";
 
 /**
  * A helper function for determining whether something is a class.
  * @param input
- * @since 2.0.0
  */
 export function isClass(input: unknown): input is Class<unknown> {
   return (
-    typeof input === "function"
-    && typeof input.prototype === "object"
-    && input.toString().substring(0, 5) === "class"
+    typeof input === "function" &&
+    typeof input.prototype === "object" &&
+    input.toString().substring(0, 5) === "class"
   );
 }
 
@@ -21,14 +17,15 @@ export function isClass(input: unknown): input is Class<unknown> {
  * A helper function for capitalizing the first letter in the sentence.
  * @param str
  * @param lowerRest
- * @since 2.0.0
  */
-export function capitalize(str: string, lowerRest = false): string {
-  const [ f, ...r ] = str.split("");
-  return `${f.toUpperCase()}${lowerRest ? r.join("").toLowerCase() : r.join("")}`;
+export function capitalize(str: string, lowerRest = true): string {
+  const [f, ...r] = str.split("");
+  return `${f.toUpperCase()}${
+    lowerRest ? r.join("").toLowerCase() : r.join("")
+  }`;
 }
 
-String.prototype.capitalize = function(lowerRest = false) {
+String.prototype.capitalize = function (lowerRest = true) {
   return capitalize(this.toString(), lowerRest);
 };
 
@@ -38,29 +35,28 @@ String.prototype.capitalize = function(lowerRest = false) {
  * @since 2.0.0
  */
 export function isEmitter(input: unknown): input is EventEmitter {
-  return (input !== "undefined" && input !== void 0)
-    && typeof (input as EventEmitter).on === "function"
-    && typeof (input as EventEmitter).emit === "function";
+  return (
+    input !== "undefined" &&
+    input !== void 0 &&
+    typeof (input as EventEmitter).on === "function" &&
+    typeof (input as EventEmitter).emit === "function"
+  );
 }
 
 /**
  * Returns an array.
  * @param v
- * @since 2.0.0
  */
 export function array<T>(v: T | T[]): T[] {
-  return Array.isArray(v) ? v : [ v ];
+  return Array.isArray(v) ? v : [v];
 }
 
 /**
  * A helper function for determining if a value is a string.
  * @param value
- * @since 2.0.0
  */
 export function isString(value: unknown): value is string {
-  return value !== null
-    && value !== "undefined"
-    && typeof value === "string";
+  return value !== null && value !== "undefined" && typeof value === "string";
 }
 
 /**
@@ -68,9 +64,11 @@ export function isString(value: unknown): value is string {
  * @param value
  */
 export function isPromise(value: unknown): value is Promise<unknown> {
-  return value
-    && typeof (value as Promise<unknown>).then === "function"
-    && typeof (value as Promise<unknown>).catch === "function";
+  return (
+    value &&
+    typeof (value as Promise<unknown>).then === "function" &&
+    typeof (value as Promise<unknown>).catch === "function"
+  );
 }
 
 /**
@@ -78,9 +76,7 @@ export function isPromise(value: unknown): value is Promise<unknown> {
  */
 export function intoCallable<T>(value: T | (() => T)): () => T {
   // @ts-ignore
-  return typeof value !== "function"
-    ? () => value
-    : value;
+  return typeof value !== "function" ? () => value : value;
 }
 
 /**
@@ -88,16 +84,23 @@ export function intoCallable<T>(value: T | (() => T)): () => T {
  * @param strings
  * @param values
  */
-export function code(strings: TemplateStringsArray, ...values: unknown[]): string;
+export function code(
+  strings: TemplateStringsArray,
+  ...values: unknown[]
+): string;
 /**
  * Creates a typed code block template tag.
  * @param type The type of code block.
  */
 export function code(type: string): TemplateTag<string>;
 export function code(...args: unknown[]): string | TemplateTag<string> {
-  const block = (type?: string): TemplateTag<string> =>
-    (strings: TemplateStringsArray, ...values: unknown[]) =>
-      `\`\`\`${type ?? ""}\n${strings.map((s, i) => s + (values[i] ?? "")).join("")}\n\`\`\``;
+  const block = (type?: string): TemplateTag<string> => (
+    strings: TemplateStringsArray,
+    ...values: unknown[]
+  ) =>
+    `\`\`\`${type ?? ""}\n${strings
+      .map((s, i) => s + (values[i] ?? ""))
+      .join("")}\n\`\`\``;
 
   return typeof args[0] === "string"
     ? block(args.shift() as string)
@@ -121,47 +124,29 @@ export function isObj(value: unknown): value is Dictionary {
 }
 
 /**
- * A helper function to test if a path leads to a directory.
- * @param path
- */
-export function isDir(path: string): boolean {
-  if (!existsSync(path)) return false;
-  else return lstatSync(path).isDirectory();
-}
-
-/**
- * A helper function for recursively reading a directory.
- * @param path
- */
-export function readDir(path: string): string[] {
-  if (!isDir(path)) throw new Error(`Path: ${path}, doesn't exist or it is not a directory`);
-
-  const files: string[] = [];
-  const read = (dir = path) => {
-    for (const file of readdirSync(dir)) {
-      const joined = join(dir, file);
-      if (isDir(joined)) read(joined);
-      else files.push(joined);
-    }
-  };
-
-  read();
-  return files;
-}
-
-/**
  * Merges objects into one.
  * @param objects The objects to merge.
  */
-export function mergeObjects<O extends Dictionary = Dictionary>(...objects: Partial<O>[]): O {
+export function mergeObjects<O extends Dictionary = Dictionary>(
+  ...objects: Partial<O>[]
+): O {
   const o: Dictionary = {};
   for (const object of objects) {
     for (const key of Object.keys(object))
-      if (o[key] === null || o[key] === void 0)
-        o[key] = object[key];
+      if (o[key] === null || o[key] === void 0) o[key] = object[key];
   }
 
   return o as O;
 }
 
-export type TemplateTag<T> = (strings: TemplateStringsArray, ...values: unknown[]) => T;
+export function censorToken(token: string): string {
+  return token
+    .split(".")
+    .map((v, i) => (i > 1 ? v.replace(/./g, "*") : v))
+    .join(".");
+}
+
+export type TemplateTag<T> = (
+  strings: TemplateStringsArray,
+  ...values: unknown[]
+) => T;

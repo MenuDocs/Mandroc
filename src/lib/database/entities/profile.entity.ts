@@ -20,7 +20,7 @@ export class Profile extends BaseEntity {
   @Column({ default: 1 })
   level!: number;
 
-  @Column({ default: 0,  })
+  @Column({ default: 0 })
   boosters!: number;
 
   @Column({ type: "string", nullable: true })

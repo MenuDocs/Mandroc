@@ -5,7 +5,7 @@ import { Profile } from "./entities/profile.entity";
 
 export class Database {
   public readonly log: Signale = new Signale({
-    scope: "database"
+    scope: "database",
   });
 
   /**
@@ -21,7 +21,7 @@ export class Database {
       type: "mongodb",
       url: config.get<string>("database"),
       useUnifiedTopology: true,
-      entities: [Profile]
+      entities: [Profile],
     });
 
     this.log.info("Connected to MongoDB");

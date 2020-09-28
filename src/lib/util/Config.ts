@@ -24,17 +24,18 @@ class Config {
     const file = path.join(process.cwd(), "config.json");
 
     if (!fs.existsSync(file)) {
-      signale.fatal(`File "${path.basename(file)}" does not exist... please create it.`);
+      signale.fatal(
+        `File "${path.basename(file)}" does not exist... please create it.`
+      );
       return process.exit(1);
     }
 
-    fs.access(file,  fs.constants.F_OK, (err) => {
+    fs.access(file, fs.constants.F_OK, (err) => {
       if (err) {
         signale.fatal(`Cannot read from "${path.basename(file)}"`, err.message);
         return process.exit(1);
       }
     });
-
 
     const data = fs.readFileSync(file, "utf-8");
 
