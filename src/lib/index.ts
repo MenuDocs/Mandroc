@@ -1,3 +1,4 @@
+import type { Converter } from "showdown";
 import type { Signale } from "signale";
 
 export * from "./classes/Command";
@@ -9,12 +10,15 @@ export * from "./util/Config";
 export * from "./util/constants";
 export * from "./util/DotNotation";
 export * from "./util/Functions";
+export * from "./util/MDN";
 
 export * from "./Client";
 
 declare module "discord.js" {
   interface Client {
     log: Signale;
+    canMDN: boolean;
+    showdown: Converter;
   }
 
   type ReactionCollectorFilter = (

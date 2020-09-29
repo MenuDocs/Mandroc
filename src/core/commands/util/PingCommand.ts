@@ -9,6 +9,7 @@ export default class PingCommand extends MandrocCommand {
     return message.util?.send("Pinging the mainframe...").then((m) => {
       const hb = Math.round(this.client.ws.ping);
       const api = m.createdTimestamp - message.createdTimestamp;
+
       return message.util?.edit(
         `**Pong!** Heartbeat: *${hb}ms*, Roundtrip: *${api}ms*`
       );
