@@ -24,6 +24,7 @@ export class MandrocCommand extends Command {
   public constructor(id: string, options: MandrocCommandOptions = {}) {
     super(id, options);
 
+    this.description = this.description || null;
     this.permissionLevel = options.permissionLevel ?? PermissionLevel.Member;
   }
 }
