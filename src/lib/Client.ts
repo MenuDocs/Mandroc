@@ -1,4 +1,5 @@
 import { Signale } from "signale";
+import { Converter }  from "showdown";
 import { Intents, MessageEmbed } from "discord.js";
 import { AkairoClient, CommandHandler, ListenerHandler } from "discord-akairo";
 
@@ -34,6 +35,18 @@ export class Mandroc extends AkairoClient {
   public readonly listenerHandler: ListenerHandler;
 
   /**
+   * The turndown service.
+   * @type {Converter}
+   */
+  public readonly showdown: Converter;
+
+  /**
+   * Whether the MDN command can be used.
+   * @type {boolean}
+   */
+  public canMDN = true;
+
+  /**
    * Creates a new instanceof Mandroc.
    */
   public constructor() {
@@ -64,6 +77,8 @@ export class Mandroc extends AkairoClient {
     this.log = new Signale({ scope: "mandroc" });
 
     this.database = new Database();
+
+    this.showdown = new Converter();
 
     this.commandHandler = new CommandHandler(this, {
       aliasReplacement: /-/g,
@@ -96,9 +111,11 @@ export class Mandroc extends AkairoClient {
           modifyTimeout: (_, p) =>
             new MessageEmbed().setColor(Color.Primary).setDescription(p),
           cancel: "Okay, I cancelled the prompt.",
+          ended: "The prompt has ended.",
+          timeout: "Sorry, you've ran out of time.",
           retry: "Please retry...",
           retries: 3,
-          time: 10000,
+          time: 15000,
         },
       },
     });
