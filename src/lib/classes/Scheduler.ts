@@ -12,7 +12,7 @@ export class Scheduler extends EventEmitter {
    * The check interval.
    * @private
    */
-  #interval?: NodeJS.Timeout;
+  //#interval?: NodeJS.Timeout;
 
   /**
    * All scheduled/synced tasks.
@@ -99,12 +99,12 @@ export class Scheduler extends EventEmitter {
   /**
    * Checks for tasks that have ended.
    */
-  public check() {
+  public async check() {
     const now = Date.now();
     for (const [name, data] of this.#tasks) {
       if (data.endAt > now) continue;
 
-      await this.delete()
+      await this.delete(name)
     }
   }
 

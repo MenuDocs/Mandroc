@@ -67,7 +67,8 @@ export class Mandroc extends AkairoClient {
         "396096412116320258",
         "191231307290771456",
         "203104843479515136",
-        "424566306042544128"
+        "424566306042544128",
+        "277211104390807552"
       ],
       partials: [ "MESSAGE", "REACTION", "CHANNEL", "GUILD_MEMBER", "USER" ],
       presence: {
