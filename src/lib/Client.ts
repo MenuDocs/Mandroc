@@ -1,48 +1,60 @@
 import { Signale } from "signale";
-import { Converter }  from "showdown";
 import { Intents, MessageEmbed } from "discord.js";
 import { AkairoClient, CommandHandler, ListenerHandler } from "discord-akairo";
+import TurndownService from "turndown";
 
 import { Database } from "./database/Database";
 import { config } from "./util/Config";
 import { MandrocCommand } from "./classes/Command";
 import { join } from "path";
 import { Color } from "./util/constants";
+import { Redis } from "./database/Redis";
+import { Moderation } from "./adminstrative/Moderation";
+import { Scheduler } from "./classes/Scheduler";
 
 export class Mandroc extends AkairoClient {
   /**
    * The database instance.
-   * @type {Database}
    */
   public readonly database: Database;
 
   /**
    * The client logger.
-   * @type {Signale}
    */
   public readonly log: Signale;
 
   /**
+   * The scheduler.
+   */
+  public readonly scheduler: Scheduler;
+
+  /**
    * The commands handler.
-   * @type {CommandHandler}
    */
   public readonly commandHandler: CommandHandler;
 
   /**
    * The listeners handler.
-   * @type {ListenerHandler}
    */
   public readonly listenerHandler: ListenerHandler;
 
   /**
    * The turndown service.
-   * @type {Converter}
    */
-  public readonly showdown: Converter;
+  public readonly turndown: TurndownService;
+
+  /**
+   * The redis util.
+   */
+  public readonly redis: Redis;
+
+  /**
+   * The moderation instance.
+   */
+  public readonly moderation: Moderation;
 
   /**
    * Whether the MDN command can be used.
-   * @type {boolean}
    */
   public canMDN = true;
 
@@ -55,30 +67,41 @@ export class Mandroc extends AkairoClient {
         "396096412116320258",
         "191231307290771456",
         "203104843479515136",
-        "424566306042544128",
+        "424566306042544128"
       ],
-      partials: ["MESSAGE", "REACTION", "CHANNEL", "GUILD_MEMBER", "USER"],
+      partials: [ "MESSAGE", "REACTION", "CHANNEL", "GUILD_MEMBER", "USER" ],
       presence: {
         activity: {
           url: "https://twitch.tv/menudocs",
           name: "!help • menudocs.org",
-          type: "STREAMING",
-        },
+          type: "STREAMING"
+        }
       },
+      fetchAllMembers: true,
       ws: {
         intents: new Intents()
           .add("GUILDS")
           .add("GUILD_MESSAGES")
           .add("GUILD_MEMBERS")
-          .add("GUILD_BANS"),
-      },
+          .add("GUILD_BANS")
+      }
     });
 
     this.log = new Signale({ scope: "mandroc" });
 
     this.database = new Database();
 
-    this.showdown = new Converter();
+    this.scheduler = new Scheduler(this);
+
+    this.redis = new Redis(this);
+
+    this.moderation = new Moderation(this);
+
+    this.turndown = new TurndownService()
+      .addRule("hyperlink", {
+        filter: "a",
+        replacement: (text, node) => `[${text}](https://developer.mozilla.org${node.href})`
+      });
 
     this.commandHandler = new CommandHandler(this, {
       aliasReplacement: /-/g,
@@ -115,14 +138,14 @@ export class Mandroc extends AkairoClient {
           timeout: "Sorry, you've ran out of time.",
           retry: "Please retry...",
           retries: 3,
-          time: 15000,
-        },
-      },
+          time: 15000
+        }
+      }
     });
 
     this.listenerHandler = new ListenerHandler(this, {
       directory: join(process.cwd(), "dist", "core", "listeners"),
-      automateCategories: true,
+      automateCategories: true
     });
   }
 
@@ -132,10 +155,12 @@ export class Mandroc extends AkairoClient {
       commands: this.commandHandler,
       listeners: this.listenerHandler,
       process,
-      ws: this.ws,
+      ws: this.ws
     });
 
     await this.database.launch();
+    await this.redis.launch();
+
     this.listenerHandler.loadAll();
     this.commandHandler.loadAll();
 

@@ -12,6 +12,9 @@ export class Profile extends BaseEntity {
   pocket!: number;
 
   @Column({ default: 0 })
+  rep!: number;
+
+  @Column({ default: 0 })
   bank!: number;
 
   @Column({ default: 0 })
@@ -25,6 +28,9 @@ export class Profile extends BaseEntity {
 
   @Column({ type: "string", nullable: true })
   bodyguard?: BodyguardTier;
+
+  @Column({ default: 0 })
+  infractions!: number;
 }
 
 export type BodyguardTier = "rookie" | "gold" | "deluxe" | "chad";

@@ -1,8 +1,5 @@
 import { Color, command, MandrocCommand, Resource, search } from "@lib";
 import { Message, MessageEmbed } from "discord.js";
-import { JSDOM } from "jsdom";
-
-const dom = new JSDOM().window.document
 
 @command("mdn", {
   aliases: [ "js", "mdn" ],
@@ -36,15 +33,14 @@ export default class MDNCommand extends MandrocCommand {
       return message.util?.send(embed);
     }
 
-    const markdown = this.client.showdown
-      .makeMarkdown(resource.summary, dom)
-      .replace(/<[^>]*>?/gm, "")
+    resource.summary = resource.summary
+      .replace(/<code><strong>(.+)<\/strong><\/code>/g, "<strong><code>$1</code></strong>");
 
     const embed = new MessageEmbed()
       .setColor(Color.Primary)
       .setTitle(resource.title)
       .setURL(`https://developer.mozilla.org${resource.url}`)
-      .setDescription(markdown);
+      .setDescription(this.client.turndown.turndown(resource.summary));
 
     if (resource.tags) {
       embed.setFooter(resource.tags.join(", "));

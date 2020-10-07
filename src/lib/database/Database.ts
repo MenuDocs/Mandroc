@@ -2,6 +2,7 @@ import { Connection, createConnection } from "typeorm";
 import { Signale } from "signale";
 import { config } from "../util/Config";
 import { Profile } from "./entities/profile.entity";
+import { Infraction } from "@lib";
 
 export class Database {
   public readonly log: Signale = new Signale({
@@ -21,7 +22,8 @@ export class Database {
       type: "mongodb",
       url: config.get<string>("database"),
       useUnifiedTopology: true,
-      entities: [Profile],
+      entities: [Profile, Infraction],
+      synchronize: true
     });
 
     this.log.info("Connected to MongoDB");
