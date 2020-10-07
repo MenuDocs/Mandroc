@@ -25,7 +25,9 @@ export class Redis {
    * @type {number}
    */
   public async infractionCount(defaultCount = 0): Promise<number> {
-    let infractions: number | string | null = await this.client.get("admin:infractions");
+    let infractions: number | string | null = await this.client.get(
+      "admin:infractions"
+    );
     if (!infractions) {
       infractions = defaultCount;
       await this.client.set("admin:infractions", String(defaultCount));

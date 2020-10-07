@@ -41,6 +41,5 @@ export function adminCommand(id: string, options: MandrocCommandOptions = {}) {
     permissionLevel: PermissionLevel.TrialMod,
     channel: "guild",
     ...options,
-  })
+  });
 }
-

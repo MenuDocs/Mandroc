@@ -22,13 +22,6 @@ export class Slurs extends Module {
    * @private
    */
   private get slurs(): string[] {
-    return [
-      "nigger",
-      "nigga",
-      "faggot",
-      "fag",
-      "dike",
-      "coon"
-    ]
+    return ["nigger", "nigga", "faggot", "fag", "dike", "coon"];
   }
 }

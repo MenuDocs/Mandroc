@@ -55,7 +55,7 @@ export class Scheduler extends EventEmitter {
    * Syncs all current tasks.
    */
   public async sync(): Promise<this> {
-    const tasks = await this.redis.smembers(KEY) ?? [];
+    const tasks = (await this.redis.smembers(KEY)) ?? [];
     for (const name of tasks) {
       const task = await this.redis.get(TASK(name));
       if (!task || typeof task !== "string") continue;
@@ -70,7 +70,10 @@ export class Scheduler extends EventEmitter {
    * @param name The name of the task.
    * @param data The data to set.
    */
-  public async new(name: string, data: Dictionary & { endAt: number }): Promise<this> {
+  public async new(
+    name: string,
+    data: Dictionary & { endAt: number }
+  ): Promise<this> {
     this.#tasks.set(name, data);
 
     await this.redis.sadd(KEY, name);
@@ -104,13 +107,11 @@ export class Scheduler extends EventEmitter {
     for (const [name, data] of this.#tasks) {
       if (data.endAt > now) continue;
 
-      await this.delete(name)
+      await this.delete(name);
     }
   }
 
-  _clearInterval() {
-
-  }
+  _clearInterval() {}
 }
 
 interface ScheduledTask extends Dictionary {

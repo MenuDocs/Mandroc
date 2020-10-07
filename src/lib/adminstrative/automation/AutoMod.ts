@@ -7,7 +7,6 @@ import type { Moderation } from "../Moderation";
 import { ModLog } from "../../util/ModLog";
 
 export class AutoMod {
-
   public readonly moderation: Moderation;
 
   /**
@@ -44,9 +43,7 @@ export class AutoMod {
         }
       } else if (infractions <= 4) {
         modLog.type = InfractionType.Mute;
-        modLog.setDuration(infractions === 4
-          ? "1w"
-          : "30m");
+        modLog.setDuration(infractions === 4 ? "1w" : "30m");
       }
 
       return modLog;

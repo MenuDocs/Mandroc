@@ -23,7 +23,7 @@ export class Database {
       url: config.get<string>("database"),
       useUnifiedTopology: true,
       entities: [Profile, Infraction],
-      synchronize: true
+      synchronize: true,
     });
 
     this.log.info("Connected to MongoDB");

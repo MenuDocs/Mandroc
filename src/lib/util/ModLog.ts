@@ -1,9 +1,14 @@
 import { GuildMember, MessageEmbed, User } from "discord.js";
-import { Color, imageUrlOptions, Infraction, InfractionType, Mandroc } from "@lib";
+import {
+  Color,
+  imageUrlOptions,
+  Infraction,
+  InfractionType,
+  Mandroc,
+} from "@lib";
 import ms from "ms";
 
 export class ModLog {
-
   /**
    * The person punishing. 😈
    */
@@ -49,20 +54,24 @@ export class ModLog {
    * The mod log embed.
    */
   public get embed() {
-    const color = [ InfractionType.Warn, InfractionType.Mute ].includes(this.type)
+    const color = [InfractionType.Warn, InfractionType.Mute].includes(this.type)
       ? Color.Warning
       : Color.Danger;
 
     const offender = this.#client.users.cache.get(this.offender.id),
       embed = new MessageEmbed()
         .setColor(color)
-        .setAuthor(`Moderation: ${this.type.capitalize()} (Case: ${this.#caseId})`)
-        .setDescription([
-          `**Moderator**: ${this.moderator.section}`,
-          `**Offender**: ${this.offender.section}`,
-          `**Reason**: ${this.reason}`,
-          this.duration?.section
-        ].filter(Boolean));
+        .setAuthor(
+          `Moderation: ${this.type.capitalize()} (Case: ${this.#caseId})`
+        )
+        .setDescription(
+          [
+            `**Moderator**: ${this.moderator.section}`,
+            `**Offender**: ${this.offender.section}`,
+            `**Reason**: ${this.reason}`,
+            this.duration?.section,
+          ].filter(Boolean)
+        );
 
     if (offender) {
       embed.setAuthor(
@@ -79,11 +88,11 @@ export class ModLog {
    */
   public get postable() {
     return (
-      this.reason
-      && this.moderator.section
-      && this.offender.section
-      && this.#caseId
-      && this.type
+      this.reason &&
+      this.moderator.section &&
+      this.offender.section &&
+      this.#caseId &&
+      this.type
     );
   }
 
@@ -101,7 +110,7 @@ export class ModLog {
       offender: this.offender.id,
       moderator: this.moderator.id ?? "AutoMod",
       reason: this.reason,
-      meta
+      meta,
     });
   }
 
@@ -123,13 +132,11 @@ export class ModLog {
    * @param {}duration
    */
   public setDuration(duration: string | number): ModLog {
-    const ms_ = typeof duration === "string"
-      ? ms(duration)
-      : duration;
+    const ms_ = typeof duration === "string" ? ms(duration) : duration;
 
     this.duration = {
       ms: ms_,
-      section: `**Duration**: ${ms(ms_, { long: true })}`
+      section: `**Duration**: ${ms(ms_, { long: true })}`,
     };
 
     return this;
@@ -141,14 +148,12 @@ export class ModLog {
    */
   public setModerator(moderator: User | GuildMember | "automod"): ModLog {
     if (moderator !== "automod") {
-      const user = "user" in moderator
-        ? moderator.user
-        : moderator;
+      const user = "user" in moderator ? moderator.user : moderator;
 
       this.moderator = {
         section: `${user.tag} \`(${user.id})\``,
         id: user.id ?? null,
-        tag: user.tag ?? null
+        tag: user.tag ?? null,
       };
 
       return this;
@@ -157,7 +162,7 @@ export class ModLog {
     this.moderator = {
       section: "AutoMod",
       id: null,
-      tag: null
+      tag: null,
     };
 
     return this;
@@ -177,14 +182,12 @@ export class ModLog {
    * @param offender The moderator obj.
    */
   public setOffender(offender: User | GuildMember): ModLog {
-    const user = "user" in offender
-      ? offender.user
-      : offender;
+    const user = "user" in offender ? offender.user : offender;
 
     this.offender = {
       section: `${user.tag} \`(${user.id})\``,
       id: user.id,
-      tag: user.tag
+      tag: user.tag,
     };
 
     return this;

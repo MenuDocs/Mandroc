@@ -1,5 +1,8 @@
 import { AutoMod } from "./automation/AutoMod";
-import { Infraction, InfractionType } from "../database/entities/infraction.entity";
+import {
+  Infraction,
+  InfractionType,
+} from "../database/entities/infraction.entity";
 import { IDS } from "../util/constants";
 import { ModLog } from "../util/ModLog";
 
@@ -60,7 +63,7 @@ export class Moderation {
       modLog.setDuration(data.duration);
       await this.client.scheduler.new(data.offender.id, {
         endAt: Date.now() + (modLog.duration?.ms as number),
-        caseId: await modLog.assignCaseId()
+        caseId: await modLog.assignCaseId(),
       });
     }
 

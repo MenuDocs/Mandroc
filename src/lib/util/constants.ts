@@ -3,13 +3,13 @@ import type { ImageURLOptions } from "discord.js";
 
 export const IDS = {
   GUILD: "416512197590777857",
-  MOD_LOGS: "615083453196664865"
-}
+  MOD_LOGS: "615083453196664865",
+};
 
 export const imageUrlOptions = {
   dynamic: true,
   size: 4096,
-  format: "png"
+  format: "png",
 } as ImageURLOptions;
 
 export const bodyguardTiers: Record<BodyguardTier, BodyguardStats> = {

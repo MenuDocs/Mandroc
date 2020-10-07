@@ -4,7 +4,7 @@ export enum InfractionType {
   Warn = "warn",
   Ban = "ban",
   Kick = "kick",
-  Mute = "mute"
+  Mute = "mute",
 }
 
 @Entity("infractions")

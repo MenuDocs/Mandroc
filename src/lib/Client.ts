@@ -68,15 +68,15 @@ export class Mandroc extends AkairoClient {
         "191231307290771456",
         "203104843479515136",
         "424566306042544128",
-        "277211104390807552"
+        "277211104390807552",
       ],
-      partials: [ "MESSAGE", "REACTION", "CHANNEL", "GUILD_MEMBER", "USER" ],
+      partials: ["MESSAGE", "REACTION", "CHANNEL", "GUILD_MEMBER", "USER"],
       presence: {
         activity: {
           url: "https://twitch.tv/menudocs",
           name: "!help • menudocs.org",
-          type: "STREAMING"
-        }
+          type: "STREAMING",
+        },
       },
       fetchAllMembers: true,
       ws: {
@@ -84,8 +84,8 @@ export class Mandroc extends AkairoClient {
           .add("GUILDS")
           .add("GUILD_MESSAGES")
           .add("GUILD_MEMBERS")
-          .add("GUILD_BANS")
-      }
+          .add("GUILD_BANS"),
+      },
     });
 
     this.log = new Signale({ scope: "mandroc" });
@@ -98,11 +98,11 @@ export class Mandroc extends AkairoClient {
 
     this.moderation = new Moderation(this);
 
-    this.turndown = new TurndownService()
-      .addRule("hyperlink", {
-        filter: "a",
-        replacement: (text, node) => `[${text}](https://developer.mozilla.org${node.href})`
-      });
+    this.turndown = new TurndownService().addRule("hyperlink", {
+      filter: "a",
+      replacement: (text, node) =>
+        `[${text}](https://developer.mozilla.org${node.href})`,
+    });
 
     this.commandHandler = new CommandHandler(this, {
       aliasReplacement: /-/g,
@@ -139,14 +139,14 @@ export class Mandroc extends AkairoClient {
           timeout: "Sorry, you've ran out of time.",
           retry: "Please retry...",
           retries: 3,
-          time: 15000
-        }
-      }
+          time: 15000,
+        },
+      },
     });
 
     this.listenerHandler = new ListenerHandler(this, {
       directory: join(process.cwd(), "dist", "core", "listeners"),
-      automateCategories: true
+      automateCategories: true,
     });
   }
 
@@ -156,7 +156,7 @@ export class Mandroc extends AkairoClient {
       commands: this.commandHandler,
       listeners: this.listenerHandler,
       process,
-      ws: this.ws
+      ws: this.ws,
     });
 
     await this.database.launch();

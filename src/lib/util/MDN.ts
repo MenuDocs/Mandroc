@@ -17,7 +17,10 @@ export interface Resource {
 
 const keyed = {} as Record<string, Resource>;
 
-export const loadResource = (base: Record<string, Resource>, resource: Resource) => {
+export const loadResource = (
+  base: Record<string, Resource>,
+  resource: Resource
+) => {
   base[resource.title] = resource;
 
   if (resource.subpages)
