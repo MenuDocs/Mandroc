@@ -34,7 +34,7 @@ export class Moderation {
 
   /**
    * Warns a user.
-   * @param data
+   * @param data The punishment data.
    */
   public async warn(data: PunishData): Promise<Infraction> {
     return new ModLog(this.client)
@@ -45,6 +45,10 @@ export class Moderation {
       .post();
   }
 
+  /**
+   * Bans a user.
+   * @param data The punishment data.
+   */
   public async ban(data: PunishData) {
     const modLog = new ModLog(this.client)
       .setReason(data.reason)
