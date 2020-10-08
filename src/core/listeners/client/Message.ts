@@ -4,7 +4,6 @@ import type { Message } from "discord.js";
 
 @listener("message", { event: "message", emitter: "client" })
 export default class ReadyListener extends Listener {
-  //private messageCache = new MessageSenderCache();
 
   public exec(message: Message) {
     console.log(message.content);
