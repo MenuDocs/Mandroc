@@ -27,8 +27,10 @@ export default class ReadyListener extends Listener {
         );
       } else if (messages.size > 10) {
         if (mutedRole) {
-          if (!message.member?.roles.cache.has(mutedRole.id))
+          if (!message.member?.roles.cache.has(mutedRole.id)) {
             message.member?.roles.add(mutedRole);
+            setTimeout(() => message.member?.roles.cache.has(mutedRole.id) ? message.member?.roles.remove(mutedRole) : "", 3600000)
+          }
         }
       }
     }
