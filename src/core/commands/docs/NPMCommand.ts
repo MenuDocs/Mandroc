@@ -51,16 +51,15 @@ export default class GitHubCommand extends MandrocCommand {
         `https://www.npmjs.com/package/${res._id}`
       )
       .addField("Package Info", [
-        `**❯ Name:** ${res._id}`,
-        `**❯ Repository:** ${res.repository.url || "None"}`,
-        `**❯ Keywords:** ${res.keywords ? res.keywords.join(", ") : "None"}`,
         `**❯ Author:** ${version.maintainers[0].name || "None"}`,
+        `**❯ Repository:** ${res.repository.url || "None"}`,
         `**❯ ${
           version.maintainers.length > 1 ? "Maintainers" : "Maintainer"
         }:** ${version.maintainers
           .map((usr: { name: any }) => usr.name)
           .join(", ")}`,
         `**❯ Latest Version:** ${version.version || "None"}`,
+        `**❯ Keywords:** ${res.keywords ? res.keywords.join(", ") : "None"}`,
       ]);
 
     if (res.description)
