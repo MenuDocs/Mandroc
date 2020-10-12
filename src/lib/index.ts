@@ -1,6 +1,12 @@
+import "./extensions/GuildMember";
+import "./extensions/Message";
+import "./extensions/User";
+
 import type { Signale } from "signale";
 import type TurndownService from "turndown";
 import type { Moderation } from "./adminstrative/Moderation";
+import type { Database } from "./database/Database";
+import type { PermissionLevel } from "./classes/Command";
 
 export * from "./classes/Command";
 export * from "./classes/decorators";
@@ -23,12 +29,17 @@ declare module "discord.js" {
     canMDN: boolean;
     turndown: TurndownService;
     moderation: Moderation;
+    database: Database;
   }
 
   type ReactionCollectorFilter = (
     reaction: MessageReaction,
     user: User
   ) => boolean;
+
+  interface GuildMember {
+    permissionLevel: PermissionLevel | null;
+  }
 
   interface Message {
     createReactionCollector(
