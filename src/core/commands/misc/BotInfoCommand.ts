@@ -7,7 +7,6 @@ import os from "os";
   aliases: ["botinfo", "bi"],
   description: {
     content: "Displays bot info",
-    usage: "",
     examples: (prefix: string) => [`${prefix}botinfo`],
   },
 })
