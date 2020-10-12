@@ -1,9 +1,20 @@
 import type { BodyguardTier } from "../database/entities/profile.entity";
 import type { ImageURLOptions } from "discord.js";
+import { PermissionLevel } from "../classes/Command";
 
 export const IDS = {
   GUILD: "416512197590777857",
   MOD_LOGS: "615083453196664865",
+  ROLES: {
+    [PermissionLevel.Member]: "Verified Member",
+    [PermissionLevel.Donator]: "762898486923886611",
+    [PermissionLevel.Helper]: "762898486932013056",
+    [PermissionLevel.TrialMod]: "762898486945251328",
+    [PermissionLevel.Mod]: "762898486945251332",
+    [PermissionLevel.Admin]: "762898486945251335",
+    [PermissionLevel.Management]: "762898486956916747",
+  } as Record<PermissionLevel, string>,
+  Unverified: "762898486571827235",
 };
 
 export const imageUrlOptions = {
