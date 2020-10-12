@@ -37,6 +37,13 @@ const API_URL = "https://djsdocs.sorta.moe/v2/embed";
 })
 export default class DJSCommand extends MandrocCommand {
   public async exec(message: Message, { query, type }: args) {
+    if (query === "djs")
+      return message.util?.send(
+        new MessageEmbed()
+          .setColor(Color.Primary)
+          .setImage("https://i.redd.it/1gxyc19z70s51.jpg")
+      );
+
     const qs = new URLSearchParams({
       src: type.toLowerCase(),
       q: query.replace(/#/g, "."),
