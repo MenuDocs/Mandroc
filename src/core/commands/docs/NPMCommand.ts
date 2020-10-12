@@ -56,7 +56,7 @@ export default class GitHubCommand extends MandrocCommand {
         `**❯ ${
           version.maintainers.length > 1 ? "Maintainers" : "Maintainer"
         }:** ${version.maintainers
-          .map((usr: { name: any }) => usr.name)
+          .map((usr: { name: string }) => usr.name)
           .join(", ")}`,
         `**❯ Latest Version:** ${version.version || "None"}`,
         `**❯ Keywords:** ${res.keywords ? res.keywords.join(", ") : "None"}`,
