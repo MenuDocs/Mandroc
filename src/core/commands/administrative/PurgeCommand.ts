@@ -27,20 +27,28 @@ import { MessageEmbed } from "discord.js";
     },
   ],
 })
-export default class WarnCommand extends MandrocCommand {
+export default class PurgeCommand extends MandrocCommand {
   public async exec(message: Message, args: args) {
-    await message.delete();
+    if (message.deletable) {
+      await message.delete();
+    }
 
-    let i = 0;
-    (await message.channel.messages.fetch({ limit: args.amount })).map((msg) =>
-      (msg.deletable && msg.pinned && args.includePins) ||
-      (!msg.pinned && !args.includePins)
-        ? msg.delete()
-        : i++
-    );
-    let returnMessage = `Successfully deleted **${args.amount - i}** messages.`;
-    if (i > 0)
-      returnMessage += `\nDidn't delete ${i} messages, due to them being pinned`;
+    if (args.amount > 100)
+      return message.util?.send(
+        "You may not delete more than 100 messages at a time."
+      );
+
+    const messages = (
+      await message.channel.messages.fetch({ limit: args.amount })
+    ).filter((m) => !m.deleted && m.deletable);
+
+    messages.map((msg) => (args.includePins == msg.pinned ? msg.delete() : ""));
+
+    let filtered =
+      args.amount -
+      messages.filter((msg) => msg.pinned == args.includePins).size;
+    let returnMessage = `Successfully deleted **${messages.size}** messages.`;
+    if (filtered > 0) returnMessage += `\nIgnore ${filtered} pinned messages.`;
 
     if (!args.silent)
       message.util
