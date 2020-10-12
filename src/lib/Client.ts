@@ -1,6 +1,11 @@
 import { Signale } from "signale";
 import { Intents, MessageEmbed } from "discord.js";
-import { AkairoClient, CommandHandler, ListenerHandler } from "discord-akairo";
+import {
+  AkairoClient,
+  CommandHandler,
+  ListenerHandler,
+  InhibitorHandler,
+} from "discord-akairo";
 import TurndownService from "turndown";
 
 import { Database } from "./database/Database";
@@ -32,6 +37,11 @@ export class Mandroc extends AkairoClient {
    * The commands handler.
    */
   public readonly commandHandler: CommandHandler;
+
+  /**
+   * The inhibitor handler.
+   */
+  public readonly inhibitorHandler: InhibitorHandler;
 
   /**
    * The listeners handler.
@@ -148,6 +158,11 @@ export class Mandroc extends AkairoClient {
       directory: join(process.cwd(), "dist", "core", "listeners"),
       automateCategories: true,
     });
+
+    this.inhibitorHandler = new InhibitorHandler(this, {
+      directory: join(process.cwd(), "dist", "core", "inhibitors"),
+      automateCategories: true,
+    });
   }
 
   public async launch(): Promise<void> {
@@ -159,11 +174,16 @@ export class Mandroc extends AkairoClient {
       ws: this.ws,
     });
 
+    this.commandHandler
+      .useInhibitorHandler(this.inhibitorHandler)
+      .useListenerHandler(this.listenerHandler);
+
     await this.database.launch();
     await this.redis.launch();
 
     this.listenerHandler.loadAll();
     this.commandHandler.loadAll();
+    this.inhibitorHandler.loadAll();
 
     await this.login(config.get("token"));
   }
