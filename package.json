@@ -4,12 +4,13 @@
   "description": "Version 3 of Mandroc: The guild bound bot for the MenuDocs Discord server..",
   "main": "dist/index.js",
   "repository": "https://github.com/MenuDocs/MenuDocs-Rewrite.git",
-  "author": "MelodicAlbuild and 2D",
+  "author": "2D & R1zeN",
   "_moduleAliases": {
     "@lib": "dist/lib"
   },
   "scripts": {
     "build": "rm -rf dist && tsc --removeComments",
+    "start": "node dist/index.js",
     "format": "prettier --write src/"
   },
   "dependencies": {
