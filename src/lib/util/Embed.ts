@@ -11,7 +11,7 @@ export class Embed {
   }
 
   public static Error(content?: string): MessageEmbed {
-    const embed = new MessageEmbed().setColor(Color.Primary);
+    const embed = new MessageEmbed().setColor(Color.Danger);
 
     if (content) embed.setDescription(content);
 
