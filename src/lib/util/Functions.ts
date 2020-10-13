@@ -1,5 +1,8 @@
 import type { EventEmitter } from "events";
 import type { Class } from "type-fest";
+import { Profile } from "@lib";
+import type { Profile as ProfileType } from "lib/database/entities/profile.entity";
+import type { ObjectID } from "typeorm";
 
 /**
  * A helper function for determining whether something is a class.
@@ -11,6 +14,26 @@ export function isClass(input: unknown): input is Class<unknown> {
     typeof input.prototype === "object" &&
     input.toString().substring(0, 5) === "class"
   );
+}
+
+/**
+ * A helper function which registers users in the database.
+ * @param uid
+ */
+export async function registerUser(uid: ObjectID): Promise<ProfileType> {
+  const user = new Profile();
+  user._id = uid;
+  user.bank = 0;
+  user.bodyguard = undefined;
+  user.boosters = 0;
+  user.hasId = () => true;
+  user.infractions = 0;
+  user.level = 1;
+  user.pocket = 0;
+  user.userId = (uid as unknown) as string;
+  user.xp = 0;
+
+  return await user.save();
 }
 
 /**
