@@ -11,6 +11,7 @@ export default class ReadyListener extends Listener {
   public async exec(message: Message) {
     const member = message.member;
 
+    // Anti-Mod
     if (!member?.user.bot && !member?.permissions.has("CHANGE_NICKNAME")) {
       // Anti-Invite
       if (message.content.includes("discord.gg")) {
@@ -61,12 +62,12 @@ export default class ReadyListener extends Listener {
           Date.now() - message.createdTimestamp < maxAge
       );
 
-      if (messages.size >= 6) {
-        if (messages.size === 6) {
+      if (messages.size >= 10) {
+        if (messages.size === 10) {
           message.channel.send(`${member}, stop spammming.`);
-        } else if (messages.size === 8) {
+        } else if (messages.size === 15) {
           message.channel.send(`${member}, stop spamming! **Final warning!**`);
-        } else if (messages.size > 10) {
+        } else if (messages.size > 20) {
           if (mutedRole) {
             if (!member?.roles.cache.has(mutedRole.id)) {
               member?.roles.add(mutedRole);
