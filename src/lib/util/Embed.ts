@@ -10,8 +10,24 @@ export class Embed {
     return embed;
   }
 
-  public static Error(content?: string): MessageEmbed {
+  public static Danger(content?: string): MessageEmbed {
     const embed = new MessageEmbed().setColor(Color.Danger);
+
+    if (content) embed.setDescription(content);
+
+    return embed;
+  }
+
+  public static Warning(content?: string): MessageEmbed {
+    const embed = new MessageEmbed().setColor(Color.Warning);
+
+    if (content) embed.setDescription(content);
+
+    return embed;
+  }
+
+  public static Success(content?: string): MessageEmbed {
+    const embed = new MessageEmbed().setColor(Color.Success);
 
     if (content) embed.setDescription(content);
 
