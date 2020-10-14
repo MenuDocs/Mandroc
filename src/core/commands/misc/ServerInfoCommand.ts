@@ -13,8 +13,8 @@ export default class ServerInfo extends MandrocCommand {
   public async exec(message: Message) {
     const { guild } = message;
     const { cache: members } = guild?.members!!;
-    const { cache: roles } = guild?.roles!!;
     const { cache: emojis } = guild?.emojis!!;
+    const roles = guild?.roles?.cache.sort((a, b) => b.position - a.position)!!;
 
     const embed = new MessageEmbed()
       .setColor(Color.Primary)
