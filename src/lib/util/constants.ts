@@ -3,8 +3,8 @@ import type { ImageURLOptions } from "discord.js";
 import { PermissionLevel } from "../classes/Command";
 
 export const IDS = {
-  GUILD: "416512197590777857",
-  MOD_LOGS: "615083453196664865",
+  GUILD: "762898486571827232",
+  MOD_LOGS: "762898487700094992",
   ROLES: {
     [PermissionLevel.Member]: "Verified Member",
     [PermissionLevel.Donator]: "762898486923886611",
