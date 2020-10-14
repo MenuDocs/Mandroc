@@ -31,7 +31,7 @@ export class Moderation {
   /**
    * The mod logs channel.
    */
-  public get logChannel(): Promise<TextChannel> {
+  public logChannel(): Promise<TextChannel> {
     return this.client.channels.fetch(IDS.MOD_LOGS, true, true) as Promise<
       TextChannel
     >;
