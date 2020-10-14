@@ -31,8 +31,10 @@ export class Moderation {
   /**
    * The mod logs channel.
    */
-  public logChannel(): Promise<TextChannel> {
-    return this.client.channels.fetch(IDS.MOD_LOGS) as Promise<TextChannel>;
+  public get logChannel(): Promise<TextChannel> {
+    return this.client.channels.fetch(IDS.MOD_LOGS, true, true) as Promise<
+      TextChannel
+    >;
   }
 
   /**
@@ -45,6 +47,19 @@ export class Moderation {
       .setOffender(data.offender)
       .setModerator(data.moderator)
       .setType(InfractionType.Warn)
+      .post();
+  }
+
+  /**
+   * Kicks a user.
+   * @param data The punishment data.
+   */
+  public async kick(data: PunishData): Promise<Infraction> {
+    return new ModLog(this.client)
+      .setReason(data.reason)
+      .setOffender(data.offender)
+      .setModerator(data.moderator)
+      .setType(InfractionType.Kick)
       .post();
   }
 
