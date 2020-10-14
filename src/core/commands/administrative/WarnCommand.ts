@@ -29,7 +29,7 @@ export default class WarnCommand extends MandrocCommand {
     if (message.deletable) await message.delete();
 
     if (!target.manageable) {
-      const embed = Embed.Error("Sorry, you can't warn this user.");
+      const embed = Embed.Danger("Sorry, you can't warn this user.");
       return message.util?.send(embed);
     }
 
