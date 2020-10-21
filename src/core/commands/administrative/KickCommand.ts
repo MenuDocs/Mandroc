@@ -34,8 +34,8 @@ export default class WarnCommand extends MandrocCommand {
     }
 
     this.client.moderation.kick({
-      moderator: message.author,
-      offender: target.user,
+      moderator: message.member!,
+      offender: target,
       reason: reason,
     });
     const memberEmbed = Embed.Danger(

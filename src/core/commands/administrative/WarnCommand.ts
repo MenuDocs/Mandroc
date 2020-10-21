@@ -34,8 +34,8 @@ export default class WarnCommand extends MandrocCommand {
     }
 
     await this.client.moderation.warn({
-      moderator: message.author,
-      offender: target.user,
+      moderator: message.member!,
+      offender: target,
       reason: reason,
     });
 
