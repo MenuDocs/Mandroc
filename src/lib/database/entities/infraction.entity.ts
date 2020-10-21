@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, PrimaryColumn } from "typeorm";
+import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn } from "typeorm";
 
 export enum InfractionType {
   Warn = "warn",
@@ -9,8 +9,11 @@ export enum InfractionType {
 
 @Entity("infractions")
 export class Infraction extends BaseEntity {
-  @PrimaryColumn({ default: 0 })
-  _id!: number;
+  @ObjectIdColumn()
+  _id!: ObjectID;
+
+  @Column({ type: "number", default: 0 })
+  id!: number;
 
   @Column()
   offender!: string;
@@ -30,6 +33,6 @@ export class Infraction extends BaseEntity {
   @Column({ default: {} })
   meta!: Dictionary;
 
-  @Column()
-  messageId!: string;
+  @Column({ nullable: true })
+  messageId!: string | null;
 }

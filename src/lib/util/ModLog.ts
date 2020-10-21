@@ -105,7 +105,7 @@ export class ModLog {
     if (!this.moderator.id) meta.automod = true;
 
     return Infraction.create({
-      _id: this.#caseId,
+      id: this.#caseId,
       type: this.type,
       offender: this.offender.id,
       moderator: this.moderator.id ?? "AutoMod",
@@ -147,7 +147,7 @@ export class ModLog {
    * @param moderator The moderator obj.
    */
   public setModerator(moderator: User | GuildMember | "automod"): ModLog {
-    if (moderator !== "automod") {
+    if (moderator !== "automod" && moderator.id !== this.#client.user?.id) {
       const user = "user" in moderator ? moderator.user : moderator;
 
       this.moderator = {
@@ -160,7 +160,7 @@ export class ModLog {
     }
 
     this.moderator = {
-      section: "AutoMod",
+      section: "AutoMod™️",
       id: null,
       tag: null,
     };
@@ -220,7 +220,7 @@ export class ModLog {
     infraction.messageId = message.id;
 
     // (3) Save the infraction
-    await infraction.save();
+    await infraction.save().catch(console.error);
 
     return infraction;
   }

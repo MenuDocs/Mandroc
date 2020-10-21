@@ -1,5 +1,7 @@
+import type { Message } from "discord.js";
 import type { Moderation } from "../Moderation";
 import type { AutoMod } from "./AutoMod";
+import type { Mandroc } from "../../Client";
 
 export abstract class Module {
   public readonly automod: AutoMod;
@@ -21,6 +23,16 @@ export abstract class Module {
     this.automod = automod;
   }
 
+  /**
+   * The client instance.
+   */
+  public get client(): Mandroc {
+    return this.moderation.client;
+  }
+
+  /**
+   * The moderation instance.
+   */
   public get moderation(): Moderation {
     return this.automod.moderation;
   }
@@ -28,5 +40,5 @@ export abstract class Module {
   /**
    * Runs this module.
    */
-  public abstract run(...args: unknown[]): Promise<boolean>;
+  public abstract run(message: Message, ...args: unknown[]): Promise<boolean>;
 }
