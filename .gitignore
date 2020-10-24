@@ -1,5 +1,7 @@
 node_modules/
 dist/
+.idea
+.vscode
 
 config.json
 yarn.lock
