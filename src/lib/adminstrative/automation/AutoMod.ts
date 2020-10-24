@@ -9,6 +9,7 @@ import { Slurs } from "./modules/Slurs";
 import type { Module } from "./Module";
 import type { Moderation } from "../Moderation";
 import type { Profile } from "@lib";
+import { AntiCodeBlock } from "./modules/AntiCodeBlock";
 
 export class AutoMod {
   public readonly moderation: Moderation;
@@ -26,7 +27,8 @@ export class AutoMod {
 
     this.modules = new Collection<string, Module>()
       .set("invites", new Invites(this))
-      .set("slurs", new Slurs(this));
+      .set("slurs", new Slurs(this))
+      .set("antiCodeBlock", new AntiCodeBlock(this));
 
     moderation.client.on("message", this._runModules.bind(this));
     moderation.client.on("messageUpdate", async (old, message) => {
