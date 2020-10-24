@@ -1,14 +1,11 @@
 import { AutoMod } from "./automation/AutoMod";
-import {
-  Infraction,
-  InfractionType,
-} from "../database/entities/infraction.entity";
-import { IDS } from "../util/constants";
+import { Infraction, InfractionType } from "@lib";
+import { IDS } from "@lib";
 import { ModLog } from "../util/ModLog";
-import { Embed } from "../util/Embed";
+import { Embed } from "@lib";
 import ms from "ms";
 
-import type { Mandroc } from "../Client";
+import type { Mandroc } from "@lib";
 import type { GuildMember, Message, TextChannel, User } from "discord.js";
 
 export class Moderation {

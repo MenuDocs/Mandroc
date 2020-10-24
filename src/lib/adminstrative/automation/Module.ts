@@ -1,7 +1,7 @@
 import type { Message } from "discord.js";
 import type { Moderation } from "../Moderation";
 import type { AutoMod } from "./AutoMod";
-import type { Mandroc } from "../../Client";
+import type { Mandroc } from "@lib";
 
 export abstract class Module {
   public readonly automod: AutoMod;
