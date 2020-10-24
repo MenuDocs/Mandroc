@@ -7,6 +7,7 @@ export enum PermissionLevel {
   TrialMod,
   Mod,
   Admin,
+  LowerManagement,
   Management,
 }
 

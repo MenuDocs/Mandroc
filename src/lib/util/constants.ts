@@ -12,6 +12,7 @@ export const IDS = {
     [PermissionLevel.TrialMod]: "762898486945251328",
     [PermissionLevel.Mod]: "762898486945251332",
     [PermissionLevel.Admin]: "762898486945251335",
+    [PermissionLevel.LowerManagement]: "762898486945251337",
     [PermissionLevel.Management]: "762898486956916747",
   } as Record<PermissionLevel, string>,
   Unverified: "762898486571827235",
