@@ -35,7 +35,7 @@ export class Slurs extends Module {
         offender: message.member!,
       });
 
-      return true;
+      return message.member?.permissionLevel! < 5;
     }
 
     return false;
