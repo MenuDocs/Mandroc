@@ -31,6 +31,9 @@ export class Profile extends BaseEntity {
 
   @Column({ default: 0 })
   infractions!: number;
+
+  @Column("array")
+  repBy: string[] = [];
 }
 
 export type BodyguardTier = "rookie" | "gold" | "deluxe" | "chad";
