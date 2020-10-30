@@ -1,8 +1,6 @@
 import { Connection, createConnection } from "typeorm";
 import { Signale } from "signale";
-import { config } from "../util/Config";
-import { Profile } from "./entities/profile.entity";
-import { Infraction } from "@lib";
+import { Profile, Infraction, Tag, config } from "@lib";
 
 export class Database {
   public readonly log: Signale = new Signale({
@@ -21,9 +19,13 @@ export class Database {
     this.connection = await createConnection({
       type: "mongodb",
       url: config.get<string>("database"),
-      useUnifiedTopology: true,
-      entities: [Profile, Infraction],
+      entities: [Profile, Infraction, Tag],
       synchronize: true,
+      useUnifiedTopology: true,
+      cache: {
+        type: "ioredis",
+        alwaysEnabled: true,
+      },
     });
 
     this.log.info("Connected to MongoDB");

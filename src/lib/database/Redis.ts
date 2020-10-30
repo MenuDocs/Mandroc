@@ -1,4 +1,4 @@
-import { Tedis } from "tedis";
+import IORedis from "ioredis";
 
 import type { Mandroc } from "../Client";
 
@@ -11,7 +11,7 @@ export class Redis {
   /**
    * The IORedis instance.
    */
-  public client!: Tedis;
+  public client!: IORedis.Redis;
 
   /**
    * @param client The mandroc instance.
@@ -45,7 +45,7 @@ export class Redis {
    */
   public async launch() {
     try {
-      this.client = new Tedis();
+      this.client = new IORedis();
     } catch (e) {
       this.mandroc.log.fatal("Couldn't connect to redis.", e);
       return process.exit(1);

@@ -1,7 +1,7 @@
 import { Collection } from "discord.js";
 import { EventEmitter } from "events";
 
-import type { Tedis } from "tedis";
+import type { Redis } from "ioredis";
 import type { Mandroc } from "../Client";
 
 const KEY = "scheduler:tasks";
@@ -47,7 +47,7 @@ export class Scheduler extends EventEmitter {
    * The redis client.
    * @private
    */
-  private get redis(): Tedis {
+  private get redis(): Redis {
     return this.#client.redis.client;
   }
 
@@ -58,7 +58,7 @@ export class Scheduler extends EventEmitter {
     const tasks = (await this.redis.smembers(KEY)) ?? [];
     for (const name of tasks) {
       const task = await this.redis.get(TASK(name));
-      if (!task || typeof task !== "string") continue;
+      if (!task) continue;
       this.#tasks.set(name, JSON.parse(task));
     }
 
