@@ -2,16 +2,16 @@ import { adminCommand, Embed, MandrocCommand } from "@lib";
 
 import type { GuildMember, Message } from "discord.js";
 
-@adminCommand("kick", {
-  aliases: ["kick", "k"],
+@adminCommand("ban", {
+  aliases: ["ban", "b", "banish"],
   editable: false,
   args: [
     {
       id: "target",
       type: "member",
       prompt: {
-        start: "Please provide a user to warn.",
-        retry: "I need a user to warn.",
+        start: "Please provide a user to ban.",
+        retry: "I need a user to ban.",
       },
     },
     {
@@ -24,7 +24,7 @@ import type { GuildMember, Message } from "discord.js";
     },
   ],
 })
-export default class KickCommand extends MandrocCommand {
+export default class BanCommand extends MandrocCommand {
   public async exec(message: Message, { target, reason }: args) {
     if (message.member?.permissionLevel! <= target.permissionLevel!) {
       const embed = Embed.Warning(
@@ -33,24 +33,24 @@ export default class KickCommand extends MandrocCommand {
       return message.util?.send(embed);
     }
 
-    await this.client.moderation.kick({
+    await this.client.moderation.ban({
       moderator: message.member!,
       offender: target,
       reason: reason,
     });
     const memberEmbed = Embed.Danger(
-      `You have been kicked off the MenuDocs server for \`${reason}\``
+      `You have been banned off the MenuDocs server for \`${reason}\``
     );
-    if (target.kickable) {
+    if (target.bannable) {
       try {
         target.send(memberEmbed);
-        target.kick(reason);
-      } catch (ignored) {
-        target.kick(reason);
-      }
+        target.ban({ reason });
+      } catch (ignored) {}
+
+      target.ban({ reason });
     }
 
-    const response = Embed.Success(`Successfully kicked ${target}`);
+    const response = Embed.Success(`Successfully banned ${target}`);
     message.util?.send(response);
   }
 }
