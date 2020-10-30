@@ -8,29 +8,28 @@ import { MessageEmbed, TextChannel } from "discord.js";
   editable: false,
   args: [
     {
-      id: "cooldown",
-      type: "string",
+      id: "ratelimit",
+      type: "lowercase",
       prompt: {
-        start: "Please provide a cooldown.",
-        retry: "I need a valid cooldown!.",
+        start: "Please provide a rate-limit.",
+        retry: "I need a valid rate-limit!",
       },
     },
   ],
 })
 export default class SlowmodeCommand extends MandrocCommand {
-  public async exec(message: Message, { cooldown }: args) {
+  public async exec(message: Message, { ratelimit }: args) {
     const channel = message.channel as TextChannel;
-    cooldown = cooldown.toLocaleLowerCase();
     const regex = /\d+[smh]$/;
 
     const embed = new MessageEmbed();
 
-    if (cooldown === "off") {
+    if (ratelimit === "off") {
       await channel.setRateLimitPerUser(0);
       return channel.send("Disabled slowmode!");
     }
 
-    if (!regex.exec(cooldown)) {
+    if (!regex.exec(ratelimit)) {
       embed
         .setColor(Color.Danger)
         .setDescription("You must provide a valid cooldown");
@@ -40,28 +39,28 @@ export default class SlowmodeCommand extends MandrocCommand {
 
     embed
       .setColor(Color.Success)
-      .setDescription(`Successfully set the slowmode to: \`${cooldown}\``);
+      .setDescription(`Successfully set the slowmode to: \`${ratelimit}\``);
 
     message.channel.send(embed);
 
-    if (cooldown.includes("s")) {
-      cooldown = ((+cooldown.split(/\D+/)[0] * 60) / 60).toString();
-    } else if (cooldown.includes("m")) {
-      cooldown = (+cooldown.split(/\D+/)[0] * 60).toString();
+    if (ratelimit.includes("s")) {
+      ratelimit = ((+ratelimit.split(/\D+/)[0] * 60) / 60).toString();
+    } else if (ratelimit.includes("m")) {
+      ratelimit = (+ratelimit.split(/\D+/)[0] * 60).toString();
     } else {
-      cooldown = (+cooldown.split(/\D+/)[0] * 3600).toString();
+      ratelimit = (+ratelimit.split(/\D+/)[0] * 3600).toString();
     }
 
-    if (+cooldown > 21600) {
+    if (+ratelimit > 21600) {
       embed.setColor(Color.Danger).setDescription("The max is 6 hours.");
 
       return message.channel.send(embed);
     }
 
-    await channel.setRateLimitPerUser(+cooldown);
+    await channel.setRateLimitPerUser(+ratelimit);
   }
 }
 
 type args = {
-  cooldown: string;
+  ratelimit: string;
 };
