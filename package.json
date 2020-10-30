@@ -18,6 +18,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "child_process": "^1.0.2",
     "discord-akairo": "^8.1.0",
     "discord.js": "^12.3.1",
     "module-alias": "^2.2.2",
