@@ -24,16 +24,16 @@ import type { GuildMember, Message } from "discord.js";
     },
   ],
 })
-export default class WarnCommand extends MandrocCommand {
+export default class KickCommand extends MandrocCommand {
   public async exec(message: Message, { target, reason }: args) {
-    if (message.member?.permissionLevel!! <= target.permissionLevel!!) {
+    if (message.member?.permissionLevel! <= target.permissionLevel!) {
       const embed = Embed.Warning(
         "You do not have permission to interact with them."
       );
       return message.util?.send(embed);
     }
 
-    this.client.moderation.kick({
+    await this.client.moderation.kick({
       moderator: message.member!,
       offender: target,
       reason: reason,
@@ -42,10 +42,12 @@ export default class WarnCommand extends MandrocCommand {
       `You have been kicked off the MenuDocs server for \`${reason}\``
     );
     if (target.kickable) {
-      target
-        .send(memberEmbed)
-        .then(() => target.kick(reason))
-        .catch();
+      try {
+        target.send(memberEmbed);
+        target.kick(reason);
+      } catch (ignored) {
+        target.kick(reason);
+      }
     }
 
     const response = Embed.Success(`Successfully kicked ${target}`);
