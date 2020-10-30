@@ -1,5 +1,4 @@
-import { adminCommand, MandrocCommand, Color } from "@lib";
-
+import { adminCommand, Color, MandrocCommand } from "@lib";
 import type { Message } from "discord.js";
 import { MessageEmbed } from "discord.js";
 
