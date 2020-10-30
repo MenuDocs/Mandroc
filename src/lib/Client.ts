@@ -5,6 +5,7 @@ import {
   CommandHandler,
   ListenerHandler,
   InhibitorHandler,
+  Flag,
 } from "discord-akairo";
 import TurndownService from "turndown";
 
@@ -16,6 +17,8 @@ import { Color } from "./util/constants";
 import { Redis } from "./database/Redis";
 import { Moderation } from "./adminstrative/Moderation";
 import { Scheduler } from "./classes/Scheduler";
+import { Tag } from "./database/entities/tag.entity";
+import { Util } from "discord.js";
 
 export class Mandroc extends AkairoClient {
   /**
@@ -147,7 +150,6 @@ export class Mandroc extends AkairoClient {
           cancel: "Okay, I cancelled the prompt.",
           ended: "The prompt has ended.",
           timeout: "Sorry, you've ran out of time.",
-          retry: "Please retry...",
           retries: 3,
           time: 15000,
         },
@@ -163,6 +165,39 @@ export class Mandroc extends AkairoClient {
       directory: join(process.cwd(), "dist", "core", "inhibitors"),
       automateCategories: true,
     });
+
+    this.commandHandler.resolver.addType("tag", async (message, phrase) => {
+      if (!message.guild) return Flag.fail(phrase);
+      if (!phrase) return Flag.fail(phrase);
+      phrase = Util.cleanContent(phrase.toLowerCase(), message);
+
+      let tags = await Tag.find();
+      const [tag] = tags.filter(
+        (t) => t.name === phrase || t.aliases.includes(phrase)
+      );
+
+      return tag || Flag.fail(phrase);
+    });
+
+    this.commandHandler.resolver.addType(
+      "existingTag",
+      async (message, phrase) => {
+        if (!message.guild) return Flag.fail(phrase);
+        if (!phrase) return Flag.fail(phrase);
+
+        const phraseArr = phrase.split(",");
+        phraseArr.forEach((s) =>
+          Util.cleanContent(s.trim().toLowerCase(), message)
+        );
+
+        let tags = await Tag.find();
+        const [tag] = tags.filter(
+          (t) => t.name === phrase || t.aliases.includes(phrase)
+        );
+
+        return tag ? Flag.fail(tag.name) : phrase;
+      }
+    );
   }
 
   public async launch(): Promise<void> {

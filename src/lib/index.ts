@@ -2,6 +2,7 @@ import "./extensions/GuildMember";
 import "./extensions/Message";
 import "./extensions/User";
 
+import type { CommandHandler } from "discord-akairo";
 import type { Signale } from "signale";
 import type TurndownService from "turndown";
 import type { Moderation } from "./adminstrative/Moderation";
@@ -13,6 +14,7 @@ export * from "./classes/decorators";
 
 export * from "./database/entities/profile.entity";
 export * from "./database/entities/infraction.entity";
+export * from "./database/entities/tag.entity";
 
 export * from "./util/Config";
 export * from "./util/constants";
@@ -30,6 +32,7 @@ declare module "discord.js" {
     turndown: TurndownService;
     moderation: Moderation;
     database: Database;
+    commandHandler: CommandHandler;
   }
 
   type ReactionCollectorFilter = (
