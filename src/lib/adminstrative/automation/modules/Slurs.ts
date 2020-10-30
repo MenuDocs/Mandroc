@@ -20,7 +20,7 @@ export class Slurs extends Module {
       `n+${i}+(g{2,})(${a}|${e}*r+)`,
       `f+${a}g+(${o}+t*)?`,
       `d+${iy}+k+e+`,
-      `c+${o}+n+`,
+      `c+${o}{2,}n+`,
     ];
   }
 
