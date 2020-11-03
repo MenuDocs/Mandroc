@@ -1,11 +1,14 @@
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
+import { Logger } from "@ayanaware/logger";
+import { config, Infraction, Profile, Tag } from "@lib";
 import { Connection, createConnection } from "typeorm";
-import { Signale } from "signale";
-import { Profile, Infraction, Tag, config } from "@lib";
 
 export class Database {
-  public readonly log: Signale = new Signale({
-    scope: "database",
-  });
+  public readonly log = Logger.get(Database);
 
   /**
    * The database connection.
