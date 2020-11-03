@@ -1,12 +1,15 @@
-import fetch from "node-fetch";
-import { Signale } from "signale";
-import ms from "ms";
-import { config } from "@lib";
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
 
-import type { Mandroc } from "@lib";
+import fetch from "node-fetch";
+import ms from "ms";
+import { Logger } from "@ayanaware/logger";
+import { config, Mandroc } from "@lib";
 
 export class Server {
-  public readonly log = new Signale({ scope: "server" });
+  public readonly log = Logger.get(Server);
 
   #auth?: string;
 
@@ -19,9 +22,7 @@ export class Server {
    */
   public constructor(client: Mandroc) {
     this.#client = client;
-    this.requestAuthentication().then(() => {});
     this.#interval?.refresh();
-    this.encoded.bold();
   }
 
   /**
@@ -32,39 +33,49 @@ export class Server {
   }
 
   /**
-   * The encoded authorization.
-   * @private
+   * Starts the server thingy majingy
    */
-  private get encoded(): string {
-    return Buffer.from(
-      `${this.website.username}:${this.website.password}`
-    ).toString("base64");
-  }
-
   public launch() {
-    this.#interval = this.#client.setInterval(async () => {
-      if (!this.#auth) {
-        const auth = await this.requestAuthentication();
-        if (!auth) {
-          this.log.warn("Couldn't fetch the authorization header.");
-          return;
+    this.requestAuthentication().then(() => {
+      this.#interval = this.#client.setInterval(async () => {
+        if (!this.#auth) {
+          const auth = await this.requestAuthentication();
+          if (!auth) {
+            this.log.warn("Couldn't fetch the authorization header.");
+            return;
+          }
+
+          this.#auth = auth;
         }
 
-        this.#auth = auth;
-      }
-
-      this.sendPing();
-    }, ms("5s"));
+        await this.sendPing();
+      }, ms("5s"));
+    });
   }
 
-  private sendPing() {}
+  /**
+   * Sends the gateway ping to the website.
+   * @private
+   */
+  private sendPing() {
+    return fetch(`${this.website.url}/pings/${this.website.id}`, {
+      method: "put",
+      headers: { authorization: `Bearer ${this.#auth}` },
+      body: JSON.stringify({ ping: this.#client.ws.ping }),
+    });
+  }
 
+  /**
+   * Requests a JWT from the website api.
+   * @private
+   */
   private async requestAuthentication(): Promise<string | null> {
     try {
       const response = await fetch(`${this.website.url}/auth/local`, {
-        headers: {
-          authorization: `${this.website.username} ${this.website.password}`,
-        },
+        body: JSON.stringify({
+          identifier: this.website.username,
+          password: this.website.password,
+        }),
       });
 
       const json = await response.json();
