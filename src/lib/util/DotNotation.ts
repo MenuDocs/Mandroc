@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
 /**
  * @file Dot Notation Utilities. Based Off https://github.com/sindresorhus/dot-prop
  */
@@ -44,7 +49,9 @@ export const DN = {
       if (isObj(object)) {
         if (!(key in object)) return false;
         object = object[key];
-      } else return false;
+      } else {
+        return false;
+      }
     }
 
     return true;
@@ -57,15 +64,17 @@ export const DN = {
    * @param defaultValue The default value.
    */
   get<T>(obj: Dictionary, path: string, defaultValue?: T): T | undefined {
-    if (!isObj(obj))
+    if (!isObj(obj)) {
       return defaultValue === undefined ? (obj as T) : defaultValue;
+    }
 
     const segments = getPathSegments(path);
     if (segments.length === 0) return;
 
     for (let i = 0; i < segments.length; i++) {
-      if (!Object.prototype.propertyIsEnumerable.call(obj, segments[i]))
+      if (!Object.prototype.propertyIsEnumerable.call(obj, segments[i])) {
         return defaultValue;
+      }
 
       obj = obj[segments[i]];
       if (obj === undefined || obj === null) {

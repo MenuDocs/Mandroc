@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
 import { Listener } from "discord-akairo";
 import { listener, load } from "@lib";
 
@@ -9,7 +14,7 @@ export default class ReadyListener extends Listener {
     );
 
     load()
-      .then(() => this.client.log.complete("Loaded all MDN entries."))
+      .then(() => this.client.log.debug("Loaded all MDN entries."))
       .catch((e) => {
         this.client.log.error("Error loading MDN", e);
         this.client.canMDN = false;

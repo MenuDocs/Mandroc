@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
 import { Color, command, MandrocCommand } from "@lib";
 import fetch from "node-fetch";
 import { Message, MessageEmbed } from "discord.js";
@@ -62,8 +67,9 @@ export default class GitHubCommand extends MandrocCommand {
         `**❯ Keywords:** ${res.keywords ? res.keywords.join(", ") : "None"}`,
       ]);
 
-    if (res.description)
+    if (res.description) {
       embed.setDescription(["**Description:**", res.description]);
+    }
 
     message.util?.send(embed);
   }

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
 import { Color, command, MandrocCommand, Profile } from "@lib";
 import { Message, MessageEmbed, User } from "discord.js";
 
@@ -35,10 +40,12 @@ import { Message, MessageEmbed, User } from "discord.js";
 export default class PayCommand extends MandrocCommand {
   public async exec(message: Message, { receiver, amount }: args) {
     const author = message.author;
-    const authorProfile = await Profile.findOne({ _id: author.id }) ??
-      await Profile.create({ _id: author.id });
-    const receiverProfile = await Profile.findOne({ _id: receiver.id }) ??
-      await Profile.create({ _id: receiver.id });
+    const authorProfile =
+      (await Profile.findOne({ _id: author.id })) ??
+      (await Profile.create({ _id: author.id }));
+    const receiverProfile =
+      (await Profile.findOne({ _id: receiver.id })) ??
+      (await Profile.create({ _id: receiver.id }));
 
     const embed = new MessageEmbed();
 

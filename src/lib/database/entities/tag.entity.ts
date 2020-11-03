@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
 import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn } from "typeorm";
 
 export const DEFAULT_TAG_PERMISSIONS: TagPermissions = {
@@ -11,28 +16,28 @@ export class Tag extends BaseEntity {
   @ObjectIdColumn()
   _id!: ObjectID;
 
-  @Column()
+  @Column("string")
   public name!: string;
 
-  @Column()
+  @Column("string")
   public authorId!: string;
 
-  @Column()
+  @Column("string")
   public contents!: string;
 
-  @Column({ default: 0 })
+  @Column("number", { default: 0 })
   public uses: number = 0;
 
-  @Column({ default: "general" })
+  @Column("string", { default: "general" })
   public category!: string;
 
-  @Column({ type: "array", default: [] })
+  @Column("array", { default: [] })
   public aliases: string[] = [];
 
-  @Column({ type: "timestamp", default: () => Date.now() })
+  @Column("timestamp", { default: () => Date.now() })
   public createdAt: number = Date.now();
 
-  @Column({ default: false })
+  @Column("boolean", { default: false })
   public embedded: boolean = false;
 
   @Column("json", { default: DEFAULT_TAG_PERMISSIONS })
