@@ -40,7 +40,7 @@ export default class BanCommand extends MandrocCommand {
     }
 
     if (message.deletable) {
-      message.delete()
+      message.delete();
     }
 
     await this.client.moderation.ban({
