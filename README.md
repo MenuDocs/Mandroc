@@ -48,6 +48,7 @@ Here are some links that are associated with MenuDocs:
 
 - [**MenuDocs**](https://twitter.com/menudocs "MenuDocs' Twitter Account")
 - [**Connor Moriarty**](https://github.com/strandxo "Connor's Github Account")
+- [**Jonas Schiøtt (R1zeN)**](https://github.com/JonasSchiott "Jonas' Github Account")
 
 
 ## Contributors
