@@ -6,7 +6,7 @@ import { Message, MessageEmbed, User } from "discord.js";
   description: {
     content: "Pays money to a user.",
     examples: (prefix: string) => [
-      `${prefix}pay @R1zeN 60`,
+      `${prefix}pay @R1zeN#0001 60`,
       `${prefix}pay @duncte123#1245 80`,
       `${prefix}pay T3NED#0001 2`,
     ],
@@ -35,10 +35,12 @@ import { Message, MessageEmbed, User } from "discord.js";
 export default class PayCommand extends MandrocCommand {
   public async exec(message: Message, { receiver, amount }: args) {
     const author = message.author;
-    const authorProfile = await Profile.findOne({ _id: author.id }) ??
-      await Profile.create({ _id: author.id });
-    const receiverProfile = await Profile.findOne({ _id: receiver.id }) ??
-      await Profile.create({ _id: receiver.id });
+    const authorProfile =
+      (await Profile.findOne({ _id: author.id })) ??
+      (await Profile.create({ _id: author.id }));
+    const receiverProfile =
+      (await Profile.findOne({ _id: receiver.id })) ??
+      (await Profile.create({ _id: receiver.id }));
 
     const embed = new MessageEmbed();
 
