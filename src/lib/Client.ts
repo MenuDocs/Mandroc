@@ -220,6 +220,6 @@ export class Mandroc extends AkairoClient {
     this.commandHandler.loadAll();
     this.inhibitorHandler.loadAll();
 
-    await this.login(config.get("token"));
+    await this.login(config.get<string>("token"));
   }
 }
