@@ -6,44 +6,54 @@ export default class RestrictSubCommand extends MandrocCommand {
   public async exec(message: Message, { tag, method, roles }: args) {
     switch (method) {
       case "roles":
-        const changed: { id: string, removed: boolean }[] = []
+        const changed: { id: string; removed: boolean }[] = [];
         for (let role of roles) {
           const i = tag.perms.roles.indexOf(role.id);
           if (i !== -1) {
-            changed.push({ id: role.id, removed: true })
+            changed.push({ id: role.id, removed: true });
             tag.perms.roles.splice(i, 1);
           } else {
-            changed.push({ id: role.id, removed: false })
+            changed.push({ id: role.id, removed: false });
             tag.perms.roles.push(role.id);
           }
         }
 
-        const adj = (c: Dictionary) => c.removed ? "removed" : "added",
-          embed = Embed.Primary(changed.map(c => `**<@&${c.id}>**: ${adj(c)}`));
+        const adj = (c: Dictionary) => (c.removed ? "removed" : "added"),
+          embed = Embed.Primary(
+            changed.map((c) => `**<@&${c.id}>**: ${adj(c)}`)
+          );
 
         await message.util?.send(embed);
         break;
       case "staff": {
         const sen = (tag.perms.staffOnly = !tag.perms.staffOnly)
           ? "now"
-          : "no longer"
+          : "no longer";
 
-        await message.util?.send(Embed.Primary(`The tag, **${tag.name}**, is ${sen} restricted to staff.`))
+        await message.util?.send(
+          Embed.Primary(
+            `The tag, **${tag.name}**, is ${sen} restricted to staff.`
+          )
+        );
         break;
       }
       case "support":
         const sen = (tag.perms.supportOnly = !tag.perms.supportOnly)
           ? "now"
-          : "no longer"
+          : "no longer";
 
-        await message.util?.send(Embed.Primary(`The tag, **${tag.name}**, is ${sen} restricted to support channels.`))
+        await message.util?.send(
+          Embed.Primary(
+            `The tag, **${tag.name}**, is ${sen} restricted to support channels.`
+          )
+        );
         break;
     }
 
-    return tag.save()
+    return tag.save();
   }
 
-  public * args() {
+  public *args() {
     const tag = yield {
       type: "tag",
       prompt: {
@@ -52,7 +62,7 @@ export default class RestrictSubCommand extends MandrocCommand {
     };
 
     const method = yield {
-      type: [ "staff", "support", "roles" ],
+      type: ["staff", "support", "roles"],
     };
 
     let roles;

@@ -1,10 +1,4 @@
-import {
-  Color,
-  command,
-  MandrocCommand,
-  PermissionLevel,
-  Profile,
-} from "@lib";
+import { Color, command, MandrocCommand, PermissionLevel, Profile } from "@lib";
 import { Message, MessageEmbed, User } from "discord.js";
 import utc from "moment";
 
@@ -25,8 +19,9 @@ import utc from "moment";
 })
 export default class UserInfoCommand extends MandrocCommand {
   public async exec(message: Message, { user }: args) {
-    const profile = await Profile.findOne({ _id: user.id }) ??
-      await Profile.create({ _id: user.id });
+    const profile =
+      (await Profile.findOne({ _id: user.id })) ??
+      (await Profile.create({ _id: user.id }));
 
     const memberPermissionLevel = message.member?.permissionLevel
       ? PermissionLevel[message.member.permissionLevel]
