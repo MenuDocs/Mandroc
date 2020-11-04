@@ -1,5 +1,10 @@
-import type { Tedis } from "tedis";
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
 import type { StringResolvable } from "discord.js";
+import type { Redis } from "ioredis";
 
 export class RedisQueue {
   /**
@@ -12,13 +17,13 @@ export class RedisQueue {
    * The redis instance.
    * @private
    */
-  readonly #redis: Tedis;
+  readonly #redis: Redis;
 
   /**
    * @param redis The redis instance.
    * @param key The key to use.
    */
-  public constructor(redis: Tedis, key: string) {
+  public constructor(redis: Redis, key: string) {
     this.#redis = redis;
     this.#key = key;
   }

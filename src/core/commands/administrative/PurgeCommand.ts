@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
 import { adminCommand, Color, MandrocCommand } from "@lib";
 import type { Message } from "discord.js";
 import { MessageEmbed } from "discord.js";
@@ -32,10 +37,11 @@ export default class PurgeCommand extends MandrocCommand {
       await message.delete();
     }
 
-    if (args.amount > 100)
+    if (args.amount > 100) {
       return message.util?.send(
         "You may not delete more than 100 messages at a time."
       );
+    }
 
     const messages = (
       await message.channel.messages.fetch({ limit: args.amount })
@@ -49,7 +55,7 @@ export default class PurgeCommand extends MandrocCommand {
     let returnMessage = `Successfully deleted **${messages.size}** messages.`;
     if (filtered > 0) returnMessage += `\nIgnore ${filtered} pinned messages.`;
 
-    if (!args.silent)
+    if (!args.silent) {
       message.util
         ?.send(
           new MessageEmbed()
@@ -57,6 +63,7 @@ export default class PurgeCommand extends MandrocCommand {
             .setDescription(returnMessage)
         )
         .then((msg) => msg.delete({ timeout: 6e3 }));
+    }
   }
 }
 

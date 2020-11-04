@@ -1,4 +1,9 @@
-import { adminCommand, MandrocCommand, Color } from "@lib";
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
+import { adminCommand, Color, MandrocCommand } from "@lib";
 
 import type { Message } from "discord.js";
 import { MessageEmbed, TextChannel } from "discord.js";
@@ -45,10 +50,12 @@ export default class SlowmodeCommand extends MandrocCommand {
 
     if (ratelimit.includes("s")) {
       ratelimit = ((+ratelimit.split(/\D+/)[0] * 60) / 60).toString();
-    } else if (ratelimit.includes("m")) {
-      ratelimit = (+ratelimit.split(/\D+/)[0] * 60).toString();
     } else {
-      ratelimit = (+ratelimit.split(/\D+/)[0] * 3600).toString();
+      if (ratelimit.includes("m")) {
+        ratelimit = (+ratelimit.split(/\D+/)[0] * 60).toString();
+      } else {
+        ratelimit = (+ratelimit.split(/\D+/)[0] * 3600).toString();
+      }
     }
 
     if (+ratelimit > 21600) {

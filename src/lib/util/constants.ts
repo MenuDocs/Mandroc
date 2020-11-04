@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
 import type { BodyguardTier } from "../database/entities/profile.entity";
 import type { ImageURLOptions } from "discord.js";
 import { PermissionLevel } from "../classes/Command";

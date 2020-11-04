@@ -1,11 +1,13 @@
-import { AutoMod } from "./automation/AutoMod";
-import { Infraction, InfractionType } from "@lib";
-import { IDS } from "@lib";
-import { ModLog } from "../util/ModLog";
-import { Embed } from "@lib";
-import ms from "ms";
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
 
+import { AutoMod } from "./automation/AutoMod";
 import type { Mandroc } from "@lib";
+import { Embed, IDS, Infraction, InfractionType } from "@lib";
+import { ModLog } from "../util/ModLog";
+import ms from "ms";
 import type { GuildMember, Message, TextChannel, User } from "discord.js";
 
 export class Moderation {
@@ -102,6 +104,7 @@ export class Moderation {
           duration ? ` for **${duration}**` : " permanently"
         }.\n\`\`\`\n${modLog.reason}\n\`\`\``
       );
+
       await this.tryDm(data.offender.user, embed);
     }
 

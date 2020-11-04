@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
 import fetch from "node-fetch";
 
 export interface Resource {
@@ -23,10 +28,11 @@ export const loadResource = (
 ) => {
   base[resource.title] = resource;
 
-  if (resource.subpages)
+  if (resource.subpages) {
     for (let i = 0; i < resource.subpages.length; i++) {
       loadResource(base, resource.subpages[i]);
     }
+  }
 
   return base;
 };

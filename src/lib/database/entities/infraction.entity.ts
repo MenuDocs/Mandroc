@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
 import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn } from "typeorm";
 
 export enum InfractionType {
@@ -12,27 +17,27 @@ export class Infraction extends BaseEntity {
   @ObjectIdColumn()
   _id!: ObjectID;
 
-  @Column({ type: "number", default: 0 })
+  @Column("number", { generated: "increment" })
   id!: number;
 
-  @Column()
+  @Column("string")
   offender!: string;
 
-  @Column()
+  @Column("string")
   moderator!: string;
 
-  @Column()
+  @Column("string")
   reason!: string;
 
-  @Column("date", { default: () => new Date() })
-  createdAt!: Date;
+  @Column("timestamp", { default: () => Date.now() })
+  createdAt: number = Date.now();
 
   @Column("enum", { enum: InfractionType })
   type!: InfractionType;
 
-  @Column({ default: {} })
-  meta!: Dictionary;
+  @Column("json", { default: {} })
+  meta: Dictionary = {};
 
-  @Column({ nullable: true })
+  @Column("string", { nullable: true })
   messageId!: string | null;
 }

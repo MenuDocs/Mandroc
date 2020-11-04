@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
 import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn } from "typeorm";
 
 @Entity("profiles")
@@ -5,32 +10,29 @@ export class Profile extends BaseEntity {
   @ObjectIdColumn()
   _id!: ObjectID;
 
-  @Column()
+  @Column("string")
   userId!: string;
 
-  @Column({ default: 0 })
-  pocket!: number;
+  @Column("number", { default: 0 })
+  pocket: number = 0;
 
-  @Column({ default: 0 })
-  rep!: number;
+  @Column("number", { default: 0 })
+  bank: number = 0;
 
-  @Column({ default: 0 })
-  bank!: number;
+  @Column("number", { default: 0 })
+  xp: number = 0;
 
-  @Column({ default: 0 })
-  xp!: number;
+  @Column("number", { default: 1 })
+  level: number = 1;
 
-  @Column({ default: 1 })
-  level!: number;
+  @Column("number", { default: 0 })
+  boosters: number = 0;
 
-  @Column({ default: 0 })
-  boosters!: number;
-
-  @Column({ type: "string", nullable: true })
+  @Column("string", { nullable: true })
   bodyguard?: BodyguardTier;
 
-  @Column({ default: 0 })
-  infractions!: number;
+  @Column("number", { default: 0 })
+  infractions: number = 0;
 
   @Column("array")
   repBy: string[] = [];

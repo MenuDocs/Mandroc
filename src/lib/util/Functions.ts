@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
 import type { EventEmitter } from "events";
 import type { Class } from "type-fest";
 
@@ -132,8 +137,9 @@ export function mergeObjects<O extends Dictionary = Dictionary>(
 ): O {
   const o: Dictionary = {};
   for (const object of objects) {
-    for (const key of Object.keys(object))
+    for (const key of Object.keys(object)) {
       if (o[key] === null || o[key] === void 0) o[key] = object[key];
+    }
   }
 
   return o as O;

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
 import { adminCommand, Embed, MandrocCommand } from "@lib";
 
 import type { GuildMember, Message } from "discord.js";
@@ -5,6 +10,7 @@ import type { GuildMember, Message } from "discord.js";
 @adminCommand("ban", {
   aliases: ["ban", "b", "banish"],
   editable: false,
+  clientPermissions: ["BAN_MEMBERS"],
   args: [
     {
       id: "target",
@@ -33,25 +39,17 @@ export default class BanCommand extends MandrocCommand {
       return message.util?.send(embed);
     }
 
+    if (message.deletable) {
+      message.delete()
+    }
+
     await this.client.moderation.ban({
       moderator: message.member!,
       offender: target,
       reason: reason,
     });
-    const memberEmbed = Embed.Danger(
-      `You have been banned off the MenuDocs server for \`${reason}\``
-    );
-    if (target.bannable) {
-      try {
-        target.send(memberEmbed);
-        target.ban({ reason });
-      } catch (ignored) {}
 
-      target.ban({ reason });
-    }
-
-    const response = Embed.Success(`Successfully banned ${target}`);
-    message.util?.send(response);
+    return message.util?.send(Embed.Success(`Successfully banned ${target}`));
   }
 }
 

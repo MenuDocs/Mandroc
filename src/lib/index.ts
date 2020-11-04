@@ -1,9 +1,16 @@
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
+import "./util/Formatter";
 import "./extensions/GuildMember";
 import "./extensions/Message";
 import "./extensions/User";
 
+import type { Logger } from "@ayanaware/logger";
+
 import type { CommandHandler } from "discord-akairo";
-import type { Signale } from "signale";
 import type TurndownService from "turndown";
 import type { Moderation } from "./adminstrative/Moderation";
 import type { Database } from "./database/Database";
@@ -27,7 +34,7 @@ export * from "./Client";
 
 declare module "discord.js" {
   interface Client {
-    log: Signale;
+    log: Logger;
     canMDN: boolean;
     turndown: TurndownService;
     moderation: Moderation;

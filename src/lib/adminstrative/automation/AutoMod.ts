@@ -1,14 +1,18 @@
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
 import { ModLog } from "../../util/ModLog";
 import { Collection, GuildMember, Message } from "discord.js";
-import { InfractionType } from "@lib";
-import { PermissionLevel } from "@lib";
+import type { Profile } from "@lib";
+import { InfractionType, PermissionLevel } from "@lib";
 
 import { Invites } from "./modules/Invites";
 import { Slurs } from "./modules/Slurs";
 
 import type { Module } from "./Module";
 import type { Moderation } from "../Moderation";
-import type { Profile } from "@lib";
 import { AntiCodeBlock } from "./modules/AntiCodeBlock";
 
 export class AutoMod {
@@ -61,9 +65,11 @@ export class AutoMod {
         if (infractions === 5) {
           modLog.setDuration("1w");
         }
-      } else if (infractions <= 4) {
-        modLog.type = InfractionType.Mute;
-        modLog.setDuration(infractions === 4 ? "1w" : "30m");
+      } else {
+        if (infractions <= 4) {
+          modLog.type = InfractionType.Mute;
+          modLog.setDuration(infractions === 4 ? "1w" : "30m");
+        }
       }
 
       return modLog;

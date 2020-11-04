@@ -1,8 +1,16 @@
-import { PermissionLevel } from "./Command";
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
+import {
+  MandrocCommand,
+  MandrocCommandOptions,
+  PermissionLevel,
+} from "./Command";
 
 import type { Class } from "type-fest";
 import type { Listener, ListenerOptions } from "discord-akairo";
-import type { MandrocCommand, MandrocCommandOptions } from "./Command";
 
 /**
  * A helper function for commands.

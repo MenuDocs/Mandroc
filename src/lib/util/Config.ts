@@ -1,11 +1,17 @@
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
 import * as path from "path";
 import * as fs from "fs";
-import signale from "signale";
+
 import { DN } from "./DotNotation";
+import { main } from "../../index";
 
 class Config {
   /**
-   * The configuration data from ".mdrc.yml"
+   * The configuration data from "config.json"
    * @private
    */
   private _data!: Dictionary;
@@ -24,7 +30,7 @@ class Config {
     const file = path.join(process.cwd(), "config.json");
 
     if (!fs.existsSync(file)) {
-      signale.fatal(
+      main.error(
         `File "${path.basename(file)}" does not exist... please create it.`
       );
       return process.exit(1);
@@ -32,7 +38,8 @@ class Config {
 
     fs.access(file, fs.constants.F_OK, (err) => {
       if (err) {
-        signale.fatal(`Cannot read from "${path.basename(file)}"`, err.message);
+        main.info(`Cannot read from "${path.basename(file)}"`);
+        main.error(err);
         return process.exit(1);
       }
     });
@@ -42,7 +49,8 @@ class Config {
     try {
       this._data = JSON.parse(data);
     } catch (e) {
-      signale.fatal(`Cannot load "${path.basename(file)}"`, e);
+      main.info(`Cannot load "${path.basename(file)}"`);
+      main.error(e);
       process.exit(1);
     }
   }

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
 import { Collection, Invite, Message } from "discord.js";
 
 import { Module } from "../Module";
@@ -43,13 +48,17 @@ export class Invites extends Module {
     let code;
     if (this.regex.test(message.cleanContent)) {
       code = this.regex.exec(message.cleanContent)![1];
-    } else if (this.urlRegex.test(message.cleanContent)) {
-      const [url] = this.urlRegex.exec(message.cleanContent) as RegExpExecArray,
-        res = await fetch(url, { redirect: "manual" }),
-        loc = res.headers.get("Location");
+    } else {
+      if (this.urlRegex.test(message.cleanContent)) {
+        const [url] = this.urlRegex.exec(
+            message.cleanContent
+          ) as RegExpExecArray,
+          res = await fetch(url, { redirect: "manual" }),
+          loc = res.headers.get("Location");
 
-      if (loc && this.regex.test(loc)) {
-        code = this.regex.exec(loc)![1];
+        if (loc && this.regex.test(loc)) {
+          code = this.regex.exec(loc)![1];
+        }
       }
     }
 

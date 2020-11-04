@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
 import { command, Embed, MandrocCommand, PermissionLevel, Tag } from "@lib";
 import type { Message } from "discord.js";
 
@@ -28,11 +33,13 @@ export default class TypeSubCommand extends MandrocCommand {
         `The tag, **${tag.name}**, is already of type \`embedded\``
       );
       return message.util?.send(embed);
-    } else if (!tag.embedded && type === "regular") {
-      embed.setDescription(
-        `The tag, **${tag.name}**, is already of type \`regular\``
-      );
-      return message.util?.send(embed);
+    } else {
+      if (!tag.embedded && type === "regular") {
+        embed.setDescription(
+          `The tag, **${tag.name}**, is already of type \`regular\``
+        );
+        return message.util?.send(embed);
+      }
     }
 
     embed.setDescription(

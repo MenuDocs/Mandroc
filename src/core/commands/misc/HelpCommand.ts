@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
 import { Color, command, MandrocCommand, PermissionLevel } from "@lib";
 import type { Message } from "discord.js";
 import { MessageEmbed } from "discord.js";
@@ -42,11 +47,12 @@ export default class HelpCommand extends MandrocCommand {
           .filter((c) => c.aliases.length > 0)
           .map((c) => `\`${c.aliases[0]}\``);
 
-        if (mapped.length)
+        if (mapped.length) {
           embed.addField(
             `❯ ${id.capitalize()} (${mapped.length})`,
             mapped.join(", ")
           );
+        }
       }
 
       return message.util?.send(embed);
@@ -72,11 +78,12 @@ export default class HelpCommand extends MandrocCommand {
           ? description.examples(prefix)
           : description.examples;
 
-      if (examples.length)
+      if (examples.length) {
         embed.addField(
           "❯ Examples",
           examples.map((e) => `\`${e}\``)
         );
+      }
     }
 
     return message.util?.send(embed);

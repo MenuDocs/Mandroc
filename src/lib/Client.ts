@@ -1,11 +1,15 @@
-import { Signale } from "signale";
-import { Intents, MessageEmbed } from "discord.js";
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
+import { Intents, MessageEmbed, Util } from "discord.js";
 import {
   AkairoClient,
   CommandHandler,
-  ListenerHandler,
-  InhibitorHandler,
   Flag,
+  InhibitorHandler,
+  ListenerHandler,
 } from "discord-akairo";
 import TurndownService from "turndown";
 
@@ -18,7 +22,7 @@ import { Redis } from "./database/Redis";
 import { Moderation } from "./adminstrative/Moderation";
 import { Scheduler } from "./classes/Scheduler";
 import { Tag } from "./database/entities/tag.entity";
-import { Util } from "discord.js";
+import { Logger } from "@ayanaware/logger";
 
 export class Mandroc extends AkairoClient {
   /**
@@ -29,7 +33,7 @@ export class Mandroc extends AkairoClient {
   /**
    * The client logger.
    */
-  public readonly log: Signale;
+  public readonly log: Logger;
 
   /**
    * The scheduler.
@@ -101,7 +105,7 @@ export class Mandroc extends AkairoClient {
       },
     });
 
-    this.log = new Signale({ scope: "mandroc" });
+    this.log = Logger.get(Mandroc);
 
     this.database = new Database();
 

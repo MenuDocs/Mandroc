@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
 import IORedis from "ioredis";
 
 import type { Mandroc } from "../Client";
@@ -47,7 +52,7 @@ export class Redis {
     try {
       this.client = new IORedis();
     } catch (e) {
-      this.mandroc.log.fatal("Couldn't connect to redis.", e);
+      this.mandroc.log.error(e);
       return process.exit(1);
     }
 

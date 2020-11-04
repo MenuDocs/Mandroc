@@ -1,4 +1,9 @@
-import { Color, command, MandrocCommand, capitalize } from "@lib";
+/*
+ * Copyright (c) MenuDocs 2020.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
+import { capitalize, Color, command, MandrocCommand } from "@lib";
 import { Message, MessageEmbed } from "discord.js";
 import ms from "ms";
 import os from "os";
@@ -18,16 +23,13 @@ export default class AvatarCommand extends MandrocCommand {
     ];
 
     let commandLength = 0;
-
-    for (const [_, category] of this.handler.categories) {
+    for (const [, category] of this.handler.categories) {
       commandLength += category.map((cmd) => cmd.aliases[0]).length;
     }
 
     const embed = new MessageEmbed()
       .setColor(Color.Primary)
-      .setThumbnail(
-        this.client.user?.displayAvatarURL({ size: 2048 }) as string
-      )
+      .setThumbnail(this.client.user?.displayAvatarURL({ size: 2048 })!)
       .setDescription([
         "**Description**",
         "The official community bot of **MenuDocs**.",
@@ -48,6 +50,6 @@ export default class AvatarCommand extends MandrocCommand {
         `**❯ Library:** [discord.js](https://discord.js.org/)`,
       ]);
 
-    message.util?.send(embed);
+    return message.util?.send(embed);
   }
 }
