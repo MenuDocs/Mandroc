@@ -4,25 +4,38 @@
  */
 
 import IORedis from "ioredis";
-
-import type { Mandroc } from "../Client";
+import { Logger } from "@ayanaware/logger";
 
 export class Redis {
   /**
+   * The redis instance.
+   * @private
+   */
+  private static _instance?: Redis;
+
+  /**
    * The mandroc instance.
    */
-  public readonly mandroc: Mandroc;
+  public readonly logger = Logger.get(Redis);
 
   /**
    * The IORedis instance.
    */
   public client!: IORedis.Redis;
 
+  constructor() {
+    Redis._instance = this;
+  }
+
   /**
-   * @param client The mandroc instance.
+   * Get the redis instance.
    */
-  public constructor(client: Mandroc) {
-    this.mandroc = client;
+  public static get(): Redis {
+    if (!this._instance) {
+      this._instance = new Redis();
+    }
+
+    return this._instance;
   }
 
   /**
@@ -31,7 +44,7 @@ export class Redis {
    */
   public async infractionCount(defaultCount = 0): Promise<number> {
     let infractions: number | string | null = await this.client.get(
-      "admin:infractions"
+        "admin:infractions"
     );
     if (!infractions) {
       infractions = defaultCount;
@@ -52,10 +65,8 @@ export class Redis {
     try {
       this.client = new IORedis();
     } catch (e) {
-      this.mandroc.log.error(e);
+      this.logger.error(e);
       return process.exit(1);
     }
-
-    this.mandroc.log.info("Connected to redis.");
   }
 }

@@ -18,7 +18,7 @@ import { config } from "./util/Config";
 import { MandrocCommand } from "./classes/Command";
 import { join } from "path";
 import { Color } from "./util/constants";
-import { Redis } from "./database/Redis";
+import { Redis } from "./database/redis/Redis";
 import { Moderation } from "./adminstrative/Moderation";
 import { Scheduler } from "./classes/Scheduler";
 import { Tag } from "./database/entities/tag.entity";
