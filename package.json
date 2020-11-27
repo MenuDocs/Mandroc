@@ -19,13 +19,15 @@
   },
   "dependencies": {
     "@ayanaware/logger": "^2.2.1",
+    "@mikro-orm/core": "^4.3.0",
+    "@mikro-orm/mongodb": "^4.3.0",
+    "@mikro-orm/reflection": "^4.3.0",
     "discord-akairo": "^8.1.0",
     "discord.js": "^12.3.1",
     "ioredis": "^4.19.1",
     "js-beautify": "^1.13.0",
     "module-alias": "^2.2.2",
     "moment": "^2.29.1",
-    "mongodb": "^3.6.2",
     "turndown": "^6.0.0",
     "typeorm": "^0.2.28"
   },
