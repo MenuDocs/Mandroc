@@ -51,6 +51,16 @@ declare module "discord.js" {
     permissionLevel: PermissionLevel | null;
   }
 
+  interface DeletedMessage {
+    content: string;
+    attachments: string[];
+    author: string;
+  }
+
+  interface TextBasedChannelFields {
+    lastDeletedMessages?: DeletedMessage[];
+  }
+
   interface Message {
     createReactionCollector(
       filter: ReactionCollectorFilter,
