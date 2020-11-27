@@ -11,7 +11,7 @@ import { Message, MessageEmbed, User } from "discord.js";
   description: {
     content: "Pays money to a user.",
     examples: (prefix: string) => [
-      `${prefix}pay @R1zeN 60`,
+      `${prefix}pay @R1zeN#0001 60`,
       `${prefix}pay @duncte123#1245 80`,
       `${prefix}pay T3NED#0001 2`,
     ],
