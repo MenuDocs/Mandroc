@@ -28,6 +28,7 @@ import type { GuildMember, Message } from "discord.js";
         retry: "I need a reason for this infraction.",
       },
     },
+    {},
   ],
 })
 export default class BanCommand extends MandrocCommand {
@@ -40,7 +41,7 @@ export default class BanCommand extends MandrocCommand {
     }
 
     if (message.deletable) {
-      message.delete()
+      message.delete();
     }
 
     await this.client.moderation.ban({
