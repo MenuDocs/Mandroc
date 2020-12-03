@@ -3,6 +3,7 @@
  * You may not share this code outside of the MenuDocs Team unless given permission by Management.
  */
 
+import "./lib/util/Prototypes";
 import "./util/Formatter";
 import "./extensions/GuildMember";
 import "./extensions/Message";

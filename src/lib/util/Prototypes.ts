@@ -5,7 +5,9 @@ import { isClass } from "./Functions";
 
 import type { Class } from "type-fest";
 
-AkairoHandler.prototype.findExport = function (module: Dictionary): Class<AkairoModule> | null {
+AkairoHandler.prototype.findExport = function (
+  module: Dictionary
+): Class<AkairoModule> | null {
   if (module.__esModule) {
     const _default = Reflect.get(module, "default");
     if (isClass(_default)) {
@@ -23,11 +25,14 @@ AkairoHandler.prototype.findExport = function (module: Dictionary): Class<Akairo
     return _class as Class<AkairoModule> | null;
   }
 
-  return isClass(module) ? module as Class<AkairoModule> : null;
-}
+  return isClass(module) ? (module as Class<AkairoModule>) : null;
+};
 
 // @ts-expect-error
-AkairoHandler.prototype.load = function (thing: string | typeof AkairoModule, isReload: boolean): AkairoModule | undefined {
+AkairoHandler.prototype.load = function (
+  thing: string | typeof AkairoModule,
+  isReload: boolean
+): AkairoModule | undefined {
   let Module: Class<AkairoModule>;
   if (typeof thing === "function") {
     Module = thing;
@@ -36,7 +41,7 @@ AkairoHandler.prototype.load = function (thing: string | typeof AkairoModule, is
       return;
     }
 
-    const exported = this.findExport(require(thing))
+    const exported = this.findExport(require(thing));
     delete require.cache[require.resolve(thing)];
 
     if (!exported) {
@@ -53,11 +58,11 @@ AkairoHandler.prototype.load = function (thing: string | typeof AkairoModule, is
   const module: AkairoModule = new Module();
   if (this.modules.has(module.id)) {
     // @ts-expect-error
-    throw new AkairoError('ALREADY_LOADED', this.classToHandle.name, module.id);
+    throw new AkairoError("ALREADY_LOADED", this.classToHandle.name, module.id);
   }
 
   this.register(module, typeof thing === "function" ? undefined : thing);
   this.emit("load", module, isReload);
 
   return module;
-}
+};
