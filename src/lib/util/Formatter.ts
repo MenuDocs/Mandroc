@@ -14,21 +14,24 @@ import {
 } from "@ayanaware/logger";
 import { dim, gray } from "ansi-styles";
 
-const { LOG_PACKAGE_PATH } = DefaultFormatterColor;
+const { LOG_PACKAGE_PATH, LOG_TIMESTAMP } = DefaultFormatterColor;
 
-DEFAULT_FORMATTER_COLORS.set(LOG_PACKAGE_PATH, Color.BRIGHT_BLUE);
+DEFAULT_FORMATTER_COLORS.set(LOG_PACKAGE_PATH, Color.BRIGHT_BLUE).set(
+  LOG_TIMESTAMP,
+  Color.GRAY
+);
 
 export class Formatter extends DefaultFormatter {
   protected formatLevel(level: Exclude<LogLevel, LogLevel.OFF>): string {
-    const figures = {
-      [LogLevel.TRACE]: "✈️",
-      [LogLevel.DEBUG]: "🚧",
-      [LogLevel.ERROR]: "💢",
-      [LogLevel.INFO]: "📜",
-      [LogLevel.WARN]: "⚠️",
-    };
+    // const figures = {
+    //   [LogLevel.TRACE]: "✈️",
+    //   [LogLevel.DEBUG]: "🚧",
+    //   [LogLevel.ERROR]: "💢",
+    //   [LogLevel.INFO]: "📜",
+    //   [LogLevel.WARN]: "⚠️",
+    // };
 
-    return `${figures[level]} ${super.formatLevel(level).toLowerCase()}`;
+    return `${super.formatLevel(level).toLowerCase()}`;
   }
 
   protected formatUniqueMarker(uniqueMarker?: string): string {
@@ -59,5 +62,4 @@ export class Formatter extends DefaultFormatter {
 }
 
 Logger.setFormatter(new Formatter());
-
 Logger.getDefaultTransport().setLevel(LogLevel.TRACE);
