@@ -9,7 +9,7 @@ import { Argument } from "discord-akairo";
 import type { Message } from "discord.js";
 
 @command("snipe", {
-  aliases: [ "snipe" ],
+  aliases: ["snipe"],
   description: "Get the last deleted message of a text channel.",
   channel: "guild",
   args: [
@@ -33,10 +33,12 @@ export default class SnipeCommand extends MandrocCommand {
     let passed = false;
     for (const snipe of sniped.slice(0, amount).reverse()) {
       const user = await this.client.users.fetch(snipe.author, true);
-      const content = [ `Author : "${user.tag} (${snipe.author})"`, "\n```" ];
+      const content = [`Author : "${user.tag} (${snipe.author})"`, "\n```"];
 
       if (snipe.attachments.length) {
-        const attachments = snipe.attachments.map((a, i) => `[Att ${i + 1}](${a})`).join(", ");
+        const attachments = snipe.attachments
+          .map((a, i) => `[Att ${i + 1}](${a})`)
+          .join(", ");
         content.push(`**Attachments**: ${attachments || "none"}`);
       }
 

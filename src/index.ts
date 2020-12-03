@@ -9,8 +9,8 @@ import "module-alias/register";
 import { Mandroc } from "@lib";
 import { Logger } from "@ayanaware/logger";
 
+const main = Logger.get("main");
 const mandroc = new Mandroc();
-export const main = Logger.get("main");
 
 (() => mandroc.launch())().catch((e) => {
   main.error(e);
