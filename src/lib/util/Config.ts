@@ -7,7 +7,7 @@ import * as path from "path";
 import * as fs from "fs";
 import Logger from "@ayanaware/logger";
 
-import { DN } from "./DotNotation";
+import { dotprop } from "./DotNotation";
 
 const log = Logger.get("Config");
 class Config {
@@ -62,7 +62,7 @@ class Config {
    * @param defaultValue Default value to return.
    */
   public get<T>(path: string, defaultValue?: T): T {
-    return DN.get(this._data, path, defaultValue) as T;
+    return dotprop.get(this._data, path, defaultValue) as T;
   }
 }
 

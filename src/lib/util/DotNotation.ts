@@ -9,37 +9,37 @@
 
 import { isObj } from "./Functions";
 
-function isValidPath(segments: string[]): boolean {
-  const disallowedKeys = ["__proto__", "prototype", "constructor"];
+export namespace dotprop {
+  function isValidPath(segments: string[]): boolean {
+    const disallowedKeys = ["__proto__", "prototype", "constructor"];
 
-  return !segments.some((s) => disallowedKeys.includes(s));
-}
-
-function getPathSegments(path: string): string[] {
-  const segments = path.split("."),
-    parts = [];
-
-  for (let i = 0; i < segments.length; i++) {
-    let p = segments[i];
-
-    while (p[p.length - 1] === "\\" && segments[i + 1] !== undefined) {
-      p = p.slice(0, -1) + ".";
-      p += segments[++i];
-    }
-
-    parts.push(p);
+    return !segments.some((s) => disallowedKeys.includes(s));
   }
 
-  return !isValidPath(parts) ? [] : parts;
-}
+  function getPathSegments(path: string): string[] {
+    const segments = path.split("."),
+      parts = [];
 
-export const DN = {
+    for (let i = 0; i < segments.length; i++) {
+      let p = segments[i];
+
+      while (p[p.length - 1] === "\\" && segments[i + 1] !== undefined) {
+        p = p.slice(0, -1) + ".";
+        p += segments[++i];
+      }
+
+      parts.push(p);
+    }
+
+    return !isValidPath(parts) ? [] : parts;
+  }
+
   /**
    * Whether or not an object has a property.
    * @param object The object
    * @param path The path to the property.
    */
-  has(object: Dictionary, path: string): boolean {
+  export function has(object: Dictionary, path: string): boolean {
     if (!isObj(object)) return false;
 
     const segments = getPathSegments(path);
@@ -55,7 +55,7 @@ export const DN = {
     }
 
     return true;
-  },
+  }
 
   /**
    * Get a value.
@@ -63,7 +63,11 @@ export const DN = {
    * @param path The path to the value.
    * @param defaultValue The default value.
    */
-  get<T>(obj: Dictionary, path: string, defaultValue?: T): T | undefined {
+  export function get<T>(
+    obj: Dictionary,
+    path: string,
+    defaultValue?: T
+  ): T | undefined {
     if (!isObj(obj)) {
       return defaultValue === undefined ? (obj as T) : defaultValue;
     }
@@ -84,7 +88,7 @@ export const DN = {
     }
 
     return obj as T;
-  },
+  }
 
   /**
    * Set a value.
@@ -92,7 +96,11 @@ export const DN = {
    * @param path The path.
    * @param value The value.
    */
-  set(object: Dictionary, path: string, value: unknown): Dictionary {
+  export function set(
+    object: Dictionary,
+    path: string,
+    value: unknown
+  ): Dictionary {
     if (!isObj(object)) return object;
 
     const root = object,
@@ -106,14 +114,14 @@ export const DN = {
     }
 
     return root;
-  },
+  }
 
   /**
    * Delete a property.
    * @param object The object.
    * @param path The path.
    */
-  delete(object: Dictionary, path: string): void {
+  export function del(object: Dictionary, path: string): void {
     if (!isObj(object)) return;
 
     const segments = getPathSegments(path);
@@ -127,5 +135,5 @@ export const DN = {
       object = object[p];
       if (!isObj(object)) return;
     }
-  },
-};
+  }
+}
