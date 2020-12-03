@@ -69,10 +69,10 @@ export function isString(value: unknown): value is string {
  * @param value
  */
 export function isPromise(value: unknown): value is Promise<unknown> {
+  let val = value as any;
+
   return (
-    value &&
-    typeof (value as Promise<unknown>).then === "function" &&
-    typeof (value as Promise<unknown>).catch === "function"
+    !!value && typeof val.then === "function" && typeof val.catch === "function"
   );
 }
 
