@@ -4,13 +4,34 @@
  */
 
 import { Listener } from "discord-akairo";
-import { listener } from "@lib";
+import { Embed, IDS, listener } from "@lib";
 
-import type { Message } from "discord.js";
+import type { Message, TextChannel } from "discord.js";
 
 @listener("message-deleted", { event: "messageDelete", emitter: "client" })
 export default class MessageDeletedListener extends Listener {
   public exec(message: Message): any {
+    this.snipe(message);
+
+    const logs = message.guild?.channels.cache.get(IDS.LOG_CHANNEL) as
+        | TextChannel
+        | undefined,
+      embed = Embed.Primary()
+        .setTimestamp()
+        .setAuthor(
+          "Message Deleted",
+          message.author.displayAvatarURL({ dynamic: true })
+        )
+        .setDescription([
+          `**Author**: ${message.author.tag} \`(${message.author.id})\``,
+          `**Channel**: ${message.channel} \`(${message.channel.id})\``,
+        ])
+        .addField("\u200E", message.cleanContent);
+
+    logs?.send(embed);
+  }
+
+  snipe(message: Message) {
     if (message.partial || message.channel.type === "dm") {
       return;
     }

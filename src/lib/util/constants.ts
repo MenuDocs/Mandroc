@@ -3,15 +3,17 @@
  * You may not share this code outside of the MenuDocs Team unless given permission by Management.
  */
 
-import type { BodyguardTier } from "../database/entities/profile.entity";
-import type { ImageURLOptions } from "discord.js";
 import { PermissionLevel } from "../classes/Command";
+
+import type { ImageURLOptions } from "discord.js";
+import type { BodyguardTier } from "../database/entities/profile.entity";
 
 export const IDS = {
   GUILD: "762898486571827232",
   MOD_LOGS: "762898487700094992",
   PROJECTIONS: "762898487700094993",
-  VERIFICATION_MESSAGE: "784119446071410709",
+  VERIFICATION_MESSAGE: "784139980737216562",
+  LOG_CHANNEL: "762898487201234997",
   ROLES: {
     [PermissionLevel.Member]: "Verified Member",
     [PermissionLevel.Donator]: "762898486923886611",
