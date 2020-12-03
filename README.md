@@ -4,14 +4,14 @@
     <a href="https://discord.gg/menudocs">
         <img src="https://img.shields.io/discord/416512197590777857.svg?colorB=Blue&logo=discord&label=Support&style=for-the-badge" alt="Support">
     </a>
-    <a href="https://github.com/MenuDocs/Mandroc">
-        <img src="https://img.shields.io/github/languages/top/MenuDocs/Mandroc-Rewrite.svg?style=for-the-badge">
+    <a href="https://github.com/MenuDocs/Mandrocs-Rewrite">
+        <img src="https://img.shields.io/github/languages/top/MenuDocs/Mandrocs-Rewrite.svg?style=for-the-badge">
     </a>
-    <a href="https://github.com/MenuDocs/MenuDocs-Rewrite/issues">
-        <img src="https://img.shields.io/github/issues/MenuDocs/Mandroc-Rewrite.svg?style=for-the-badge">
+    <a href="/issues">
+        <img src="https://img.shields.io/github/issues/MenuDocs/Mandrocs-Rewrite.svg?style=for-the-badge">
     </a>
-    <a href="https://github.com/ionadev/image-gen-api/pulls">
-        <img src="https://img.shields.io/github/issues-pr/MenuDocs/Mandroc-Rewrite.svg?style=for-the-badge">
+    <a href="https://github.com/menudocs/mandrocs-rewrite/pulls">
+        <img src="https://img.shields.io/github/issues-pr/MenuDocs/Mandrocs-Rewrite.svg?style=for-the-badge">
     </a>
     <br>
 </div>
@@ -33,6 +33,7 @@ _Anybody that contributes to the bot will be shown in the contributors section b
 **Main Libraries Used**:
 
 - [Discord.js](https://www.npmjs.com/package/discord.js) - A powerful JavaScript library to interact with Discord API
+- [discord-akairo](https://npmjs.com/discord-akairo) - A powerful and flexible discord.js bot framework.
 
 ## Links
 
@@ -49,6 +50,7 @@ Here are some links that are associated with MenuDocs:
 - [**MenuDocs**](https://twitter.com/menudocs "MenuDocs' Twitter Account")
 - [**Connor Moriarty**](https://github.com/strandxo "Connor's Github Account")
 - [**Jonas Schiøtt (R1zeN)**](https://github.com/JonasSchiott "Jonas' Github Account")
+- [**Gino (melike2d)**](https://github.com/melike2d "Gino's Github Account")
 
 
 ## Contributors
