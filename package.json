@@ -1,13 +1,13 @@
 {
   "name": "@menudocs/mandroc",
   "version": "3.0.0",
-  "description": "Version 3 of Mandroc: The guild bound bot for the MenuDocs Discord server..",
+  "description": "Version 3 of Mandroc: The guild bound bot for the MenuDocs Discord server.",
   "main": "dist/index.js",
   "repository": "https://github.com/MenuDocs/MenuDocs-Rewrite.git",
   "author": "MenuDocs Team",
   "contributors": [
     "JonasSchiott",
-    "MeLike2D"
+    "melike2d"
   ],
   "_moduleAliases": {
     "@lib": "dist/lib"
@@ -19,15 +19,14 @@
   },
   "dependencies": {
     "@ayanaware/logger": "^2.2.1",
-    "@mikro-orm/core": "^4.3.0",
-    "@mikro-orm/mongodb": "^4.3.0",
-    "@mikro-orm/reflection": "^4.3.0",
     "discord-akairo": "^8.1.0",
     "discord.js": "^12.3.1",
     "ioredis": "^4.19.1",
     "js-beautify": "^1.13.0",
     "module-alias": "^2.2.2",
     "moment": "^2.29.1",
+    "mongodb": "^3.6.3",
+    "reflect-metadata": "^0.1.13",
     "turndown": "^6.0.0",
     "typeorm": "^0.2.28"
   },
@@ -44,7 +43,7 @@
     "typescript": "^4.0.2"
   },
   "engines": {
-    "node": "14.x.x"
+    "node": ">=14.x.x"
   },
   "license": "MIT"
 }
