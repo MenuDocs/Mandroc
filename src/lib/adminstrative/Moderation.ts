@@ -124,7 +124,7 @@ export class Moderation {
   ): Promise<Message | undefined> {
     try {
       // @ts-expect-error
-      return user.send(...args);
+      return await user.send(...args);
     } catch (e) {
       void e;
       return;
