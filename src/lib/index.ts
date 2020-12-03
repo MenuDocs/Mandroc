@@ -15,6 +15,7 @@ import type TurndownService from "turndown";
 import type { Moderation } from "./adminstrative/Moderation";
 import type { Database } from "./database/Database";
 import type { PermissionLevel } from "./classes/Command";
+import type { Class } from "type-fest";
 
 export * from "./classes/Command";
 export * from "./classes/decorators";
@@ -68,6 +69,12 @@ declare module "discord.js" {
     ): ReactionCollector;
 
     prompt(question: string, embeddable?: boolean): Promise<boolean>;
+  }
+}
+
+declare module "discord-akairo" {
+  interface AkairoHandler {
+    findExport(module: Dictionary): Class<AkairoModule> | null;
   }
 }
 
