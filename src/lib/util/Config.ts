@@ -5,10 +5,11 @@
 
 import * as path from "path";
 import * as fs from "fs";
+import Logger from "@ayanaware/logger";
 
 import { DN } from "./DotNotation";
-import { main } from "../../index";
 
+const log = Logger.get("Config");
 class Config {
   /**
    * The configuration data from "config.json"
@@ -30,7 +31,7 @@ class Config {
     const file = path.join(process.cwd(), "config.json");
 
     if (!fs.existsSync(file)) {
-      main.error(
+      log.error(
         `File "${path.basename(file)}" does not exist... please create it.`
       );
       return process.exit(1);
@@ -38,8 +39,8 @@ class Config {
 
     fs.access(file, fs.constants.F_OK, (err) => {
       if (err) {
-        main.info(`Cannot read from "${path.basename(file)}"`);
-        main.error(err);
+        log.info(`Cannot read from "${path.basename(file)}"`);
+        log.error(err);
         return process.exit(1);
       }
     });
@@ -49,8 +50,8 @@ class Config {
     try {
       this._data = JSON.parse(data);
     } catch (e) {
-      main.info(`Cannot load "${path.basename(file)}"`);
-      main.error(e);
+      log.info(`Cannot load "${path.basename(file)}"`);
+      log.error(e);
       process.exit(1);
     }
   }
