@@ -4,7 +4,7 @@
  */
 
 import { Listener } from "discord-akairo";
-import { listener, load } from "@lib";
+import { listener, MDN } from "@lib";
 
 @listener("ready", { event: "ready", emitter: "client" })
 export default class ReadyListener extends Listener {
@@ -13,7 +13,7 @@ export default class ReadyListener extends Listener {
       `Mandroc is now ready... Serving ${this.client.users.cache.size} users!`
     );
 
-    load()
+    MDN.load()
       .then(() => this.client.log.debug("Loaded all MDN entries."))
       .catch((e) => {
         this.client.log.error("Error loading MDN", e);

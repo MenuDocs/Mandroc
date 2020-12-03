@@ -3,7 +3,7 @@
  * You may not share this code outside of the MenuDocs Team unless given permission by Management.
  */
 
-import { Color, command, MandrocCommand, Resource, search } from "@lib";
+import { Color, command, MandrocCommand, MDN } from "@lib";
 import { Message, MessageEmbed } from "discord.js";
 
 @command("mdn", {
@@ -25,7 +25,7 @@ import { Message, MessageEmbed } from "discord.js";
         retry: "Please try again.",
       },
       match: "rest",
-      type: (_, p) => search(p),
+      type: (_, p) => MDN.search(p),
     },
   ],
 })
@@ -61,5 +61,5 @@ export default class MDNCommand extends MandrocCommand {
 }
 
 type args = {
-  resource: Resource;
+  resource: MDN.Resource;
 };
