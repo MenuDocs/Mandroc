@@ -10,6 +10,8 @@ import { PermissionLevel } from "../classes/Command";
 export const IDS = {
   GUILD: "762898486571827232",
   MOD_LOGS: "762898487700094992",
+  PROJECTIONS: "762898487700094993",
+  VERIFICATION_MESSAGE: "784119446071410709",
   ROLES: {
     [PermissionLevel.Member]: "Verified Member",
     [PermissionLevel.Donator]: "762898486923886611",
