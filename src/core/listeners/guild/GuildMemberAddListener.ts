@@ -18,7 +18,7 @@ export default class GuildMemberAddListener extends Listener {
       return;
     }
 
-    await projections.send(Embed.Primary(this.joinMessage(member.user)))
+    await projections.send(Embed.Primary(this.joinMessage(member.user)));
   }
 
   joinMessage(user: User) {
@@ -35,9 +35,9 @@ export default class GuildMemberAddListener extends Listener {
       `Everyone welcome **${user.tag}**!`,
       `Glad you're here, **${user.tag}**.`,
       `Good to see you, **${user.tag}**.`,
-      `Yay you made it, **${user.tag}**!`
+      `Yay you made it, **${user.tag}**!`,
     ];
 
-    return messages[Math.floor(Math.random() * messages.length)]
+    return messages[Math.floor(Math.random() * messages.length)];
   }
 }

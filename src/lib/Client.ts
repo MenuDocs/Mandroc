@@ -102,7 +102,7 @@ export class Mandroc extends AkairoClient {
           .add("GUILD_MESSAGES")
           .add("GUILD_MEMBERS")
           .add("GUILD_BANS")
-          .add("GUILD_MESSAGE_REACTIONS")
+          .add("GUILD_MESSAGE_REACTIONS"),
       },
     });
 
