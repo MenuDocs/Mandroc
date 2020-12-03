@@ -5,9 +5,11 @@
 
 import { Logger } from "@ayanaware/logger";
 import { config } from "@lib";
-import { MikroORM } from "@mikro-orm/core";
+import { createConnection, Connection } from "typeorm";
 
-import { RedisCacheAdapter } from "./redis/RedisCacheAdapter";
+import { Infraction } from "./entities/infraction.entity";
+import { Profile } from "./entities/profile.entity";
+import { Tag } from "./entities/tag.entity";
 
 export class Database {
   public readonly log = Logger.get(Database);
@@ -15,33 +17,23 @@ export class Database {
   /**
    * The database connection.
    */
-  public connection!: MikroORM;
+  public connection!: Connection;
 
   /**
    * Starts the database.
    */
   public async launch() {
-    this.connection = await MikroORM.init({
-      type: "mongo",
-      entitiesTs: [],
-      clientUrl: config.get("database"),
+    this.connection = await createConnection({
+      type: "mongodb",
+      url: config.get<string>("database"),
+      entities: [Profile, Infraction, Tag],
+      synchronize: true,
+      useUnifiedTopology: true,
       cache: {
-        adapter: RedisCacheAdapter,
-        enabled: true
-      }
-    })
-
-    // this.connection = await createConnection({
-    //   type: "mongodb",
-    //   url: config.get<string>("database"),
-    //   entities: [ Profile, Infraction, Tag ],
-    //   synchronize: true,
-    //   useUnifiedTopology: true,
-    //   cache: {
-    //     type: "ioredis",
-    //     alwaysEnabled: true,
-    //   },
-    // });
+        type: "ioredis",
+        alwaysEnabled: true,
+      },
+    });
 
     this.log.info("Connected to MongoDB");
   }

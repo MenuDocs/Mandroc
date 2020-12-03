@@ -3,8 +3,7 @@
  * You may not share this code outside of the MenuDocs Team unless given permission by Management.
  */
 
-import { Property } from "@mikro-orm/core";
-import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn } from "typeorm";
+import { Column, BaseEntity, Entity, ObjectID, ObjectIdColumn } from "typeorm";
 
 export enum InfractionType {
   Warn = "warn",
@@ -18,27 +17,27 @@ export class Infraction extends BaseEntity {
   @ObjectIdColumn()
   _id!: ObjectID;
 
-  @Property({ type: "number" })
+  @Column()
   id!: number;
 
-  @Property({ type: "string" })
+  @Column()
   offender!: string;
 
-  @Property({ type: "string" })
+  @Column()
   moderator!: string;
 
-  @Property("string")
+  @Column()
   reason!: string;
 
-  @Property({ type: "timestamp", default: Date.now() })
+  @Column({ type: "timestamp", default: Date.now() })
   createdAt: number = Date.now();
 
-  @Property({ type: "string" })
+  @Column({ type: "enum", enum: InfractionType })
   type!: InfractionType;
 
-  @Column({ default: {} })
+  @Column({ type: "json", default: {} })
   meta: Dictionary = {};
 
-  @Property({ columnType: "string",  nullable: true  })
+  @Column({ type: "string", nullable: true })
   messageId!: string | null;
 }

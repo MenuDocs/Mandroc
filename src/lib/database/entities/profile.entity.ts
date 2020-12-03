@@ -3,40 +3,38 @@
  * You may not share this code outside of the MenuDocs Team unless given permission by Management.
  */
 
-import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import { Column, BaseEntity, Entity, ObjectIdColumn, ObjectID } from "typeorm";
 
-import type { ObjectId } from "@mikro-orm/mongodb";
+@Entity("profiles")
+export class Profile extends BaseEntity {
+  @ObjectIdColumn()
+  _id!: ObjectID;
 
-@Entity({ collection: "profiles" })
-export class Profile {
-  @PrimaryKey()
-  _id!: ObjectId;
-
-  @Property({ columnType: "string" })
+  @Column()
   userId!: string;
 
-  @Property({ columnType: "number", default: 0 })
+  @Column({ default: 0 })
   pocket: number = 0;
 
-  @Property({ columnType: "number", default: 0 })
+  @Column({ default: 0 })
   bank: number = 0;
 
-  @Property({ columnType: "number", default: 0 })
+  @Column({ default: 0 })
   xp: number = 0;
 
-  @Property({ columnType: "number", default: 1 })
+  @Column({ default: 1 })
   level: number = 1;
 
-  @Property({ columnType: "number", default: 0 })
+  @Column({ default: 0 })
   boosters: number = 0;
 
-  @Property({ columnType: "string", nullable: true })
+  @Column({ type: "string", nullable: true })
   bodyguard?: BodyguardTier;
 
-  @Property({ columnType: "number", default: 0 })
+  @Column({ default: 0 })
   infractions: number = 0;
 
-  @Property({ columnType: "array" })
+  @Column({ type: "array" })
   repBy: string[] = [];
 }
 
