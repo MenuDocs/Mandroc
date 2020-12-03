@@ -24,6 +24,10 @@ export class Redis {
   public client!: IORedis.Redis;
 
   constructor() {
+    if (Redis._instance) {
+      return Redis._instance;
+    }
+
     Redis._instance = this;
   }
 
@@ -44,7 +48,7 @@ export class Redis {
    */
   public async infractionCount(defaultCount = 0): Promise<number> {
     let infractions: number | string | null = await this.client.get(
-        "admin:infractions"
+      "admin:infractions"
     );
     if (!infractions) {
       infractions = defaultCount;

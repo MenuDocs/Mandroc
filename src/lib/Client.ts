@@ -111,7 +111,7 @@ export class Mandroc extends AkairoClient {
 
     this.scheduler = new Scheduler(this);
 
-    this.redis = new Redis(this);
+    this.redis = new Redis();
 
     this.moderation = new Moderation(this);
 
