@@ -36,6 +36,26 @@ export class Profile extends BaseEntity {
 
   @Column({ type: "array" })
   repBy: string[] = [];
+
+  @Column({ type: "string", default: null })
+  lastRobbedDateString?: string | null = null;
+
+  @Column({ type: "array", default: [] })
+  inventory: Array<Tool> = [];
 }
 
 export type BodyguardTier = "rookie" | "gold" | "deluxe" | "chad";
+export type ItemTier = "Basic" | "Common" | "Rare" | "Exotic";
+
+export interface Tool {
+  name: string;
+  durability: number;
+}
+
+export interface Item {
+  name: string;
+  price: number;
+  tier: ItemTier;
+}
+
+export type Tools = "Fishing Rod";
