@@ -4,12 +4,9 @@
  */
 
 import { Logger } from "@ayanaware/logger";
-import { config } from "@lib";
 import { createConnection, Connection } from "typeorm";
 
-import { Infraction } from "./entities/infraction.entity";
-import { Profile } from "./entities/profile.entity";
-import { Tag } from "./entities/tag.entity";
+import { Infraction, Profile, Tag, config } from "@lib";
 
 export class Database {
   public readonly log = Logger.get(Database);
