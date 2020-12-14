@@ -14,7 +14,7 @@
   },
   "scripts": {
     "build": "rm -rf dist && tsc --removeComments",
-    "start": "yarn format && yarn build && node dist/index.js",
+    "start": "yarn format && yarn build && node .",
     "format": "prettier --write src/"
   },
   "dependencies": {
