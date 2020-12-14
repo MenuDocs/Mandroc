@@ -3,7 +3,7 @@
  * You may not share this code outside of the MenuDocs Team unless given permission by Management.
  */
 
-import "./lib/util/Prototypes";
+import "./util/Prototypes";
 import "./util/Formatter";
 import "./extensions/GuildMember";
 import "./extensions/Message";
@@ -88,5 +88,12 @@ declare global {
      * @param lowerRest
      */
     capitalize(lowerRest?: boolean): string;
+  }
+
+  interface Array<T> {
+    /**
+     * Returns random entry of array.
+     */
+    random(): T;
   }
 }
