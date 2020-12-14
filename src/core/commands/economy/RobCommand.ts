@@ -1,5 +1,11 @@
-import { /* Color, */ command, MandrocCommand /*, Profile */ } from "@lib";
+import {
+  Color,
+  /* Color, */ command,
+  MandrocCommand,
+  Profile /*, Profile */,
+} from "@lib";
 import type { Message, User } from "discord.js";
+import { MessageEmbed } from "discord.js";
 //import { MessageEmbed } from "discord.js";
 
 @command("rob", {
@@ -25,8 +31,8 @@ import type { Message, User } from "discord.js";
   ],
 })
 export default class RobCommand extends MandrocCommand {
-  async exec(_message: Message, {}: args) {
-    /*const robberProfile =
+  async exec(message: Message, { toRob }: args) {
+    const robberProfile =
       (await Profile.findOne({ _id: message.author.id })) ??
       (await Profile.create({ _id: message.author.id }));
     const toRobProfile =
@@ -89,7 +95,7 @@ export default class RobCommand extends MandrocCommand {
     }
 
     robberProfile.lastRobbedDateString = `${date.getDate()}:${date.getMonth()}:${date.getFullYear()}:${date.getHours()}:${date.getMinutes()}`;
-    robberProfile.save();*/
+    robberProfile.save();
   }
 }
 
