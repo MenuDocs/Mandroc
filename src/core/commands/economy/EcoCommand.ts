@@ -59,7 +59,7 @@ import { Message, MessageEmbed, User } from "discord.js";
 })
 export default class EcoCommand extends MandrocCommand {
   public async exec(
-    message: Message,
+    { channel }: Message,
     { receiver, action, account, amount }: args
   ) {
     const actionRegex = /(set|remove|add)/gm;
@@ -75,7 +75,7 @@ export default class EcoCommand extends MandrocCommand {
         .setColor(Color.Warning)
         .setDescription("Your action must match `set|remove|add`");
 
-      return message.channel.send(embed);
+      return channel.send(embed);
     }
 
     if (!accountRegex.exec(account)) {
@@ -83,7 +83,7 @@ export default class EcoCommand extends MandrocCommand {
         .setColor(Color.Warning)
         .setDescription("Your account must match `pocket|bank`");
 
-      return message.channel.send(embed);
+      return channel.send(embed);
     }
 
     action = action.toLocaleLowerCase();
@@ -123,7 +123,7 @@ export default class EcoCommand extends MandrocCommand {
         `Successfully ran \`${action}\` affecting ${receiver}'s \`${account}\``
       );
 
-    message.channel.send(embed);
+    channel.send(embed);
   }
 }
 
