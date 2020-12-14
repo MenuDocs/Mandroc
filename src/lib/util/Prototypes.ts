@@ -1,7 +1,7 @@
 import { AkairoError } from "discord-akairo";
 import { AkairoHandler, AkairoModule } from "discord-akairo";
 import { extname } from "path";
-import { isClass } from "./Functions";
+import { isClass } from "@lib";
 
 import type { Class } from "type-fest";
 
