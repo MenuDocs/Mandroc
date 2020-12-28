@@ -1,0 +1,57 @@
+{
+  "name": "@menudocs/mandroc",
+  "version": "3.0.0",
+  "description": "Version 3 of Mandroc: The guild bound bot for the MenuDocs Discord server.",
+  "main": "dist/index.js",
+  "repository": "https://github.com/MenuDocs/MenuDocs-Rewrite.git",
+  "author": "MenuDocs Team",
+  "contributors": [
+    "JonasSchiott",
+    "melike2d"
+  ],
+  "_moduleAliases": {
+    "@lib": "dist/lib"
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc --removeComments",
+    "start": "yarn build && NODE_ENV=production node .",
+    "format": "prettier --write src/",
+    "dev": "yarn build && NODE_ENV=development node ."
+  },
+  "dependencies": {
+    "@ayanaware/logger": "^2.2.1",
+    "@sentry/node": "^5.29.2",
+    "@sentry/tracing": "^5.29.2",
+    "discord-akairo": "^8.1.0",
+    "discord.js": "^12.5.1",
+    "ioredis": "^4.19.4",
+    "js-beautify": "^1.13.0",
+    "module-alias": "^2.2.2",
+    "moment": "^2.29.1",
+    "mongodb": "^3.6.3",
+    "reflect-metadata": "^0.1.13",
+    "string-similarity": "^4.0.3",
+    "turndown": "^7.0.0",
+    "typeorm": "0.2.28"
+  },
+  "devDependencies": {
+    "@types/ioredis": "^4.17.9",
+    "@types/js-beautify": "^1.13.1",
+    "@types/moment": "^2.13.0",
+    "@types/ms": "^0.7.31",
+    "@types/node": "^14.14.14",
+    "@types/node-fetch": "^2.5.7",
+    "@types/string-similarity": "^4.0.0",
+    "@types/turndown": "^5.0.0",
+    "prettier": "^2.2.1",
+    "type-fest": "^0.20.2",
+    "typescript": "^4.1.3"
+  },
+  "resolutions": {
+    "typeorm": "0.2.28"
+  },
+  "engines": {
+    "node": ">=14.x.x"
+  },
+  "license": "MIT"
+}
