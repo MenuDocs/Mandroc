@@ -7,18 +7,21 @@ import { Color, command, MandrocCommand, Item, ItemTier, Profile, Embed } from "
 import { Message, MessageEmbed } from "discord.js";
 import ms from "ms";
 
-@command("fish", {
-  aliases: ["fish"],
+@command("mine", {
+  aliases: ["mine"],
   description: {
-    content: "Fishes after goods in the sea.",
-    examples: (prefix: string) => [`${prefix}fish`],
+    content: "Shovels after goods in the ground.",
+    examples: (prefix: string) => [`${prefix}shovel`],
     usage: "",
   },
 })
-export default class FishCommand extends MandrocCommand {
+export default class MineCommand extends MandrocCommand {
   private items: Array<Item> = [
-    { name: "Worn Boot", price: 60, tier: "basic" },
-    { name: "Baby Shark", price: 200, tier: "rare" },
+    { name: "Diamond", price: 400, tier: "exotic" },
+    { name: "Emerald", price: 260, tier: "rare" },
+    { name: "Sapphire", price: 288, tier: "rare"},
+    { name: "Stone", price: 8, tier: "basic" },
+    { name: "Cobblestone", price: 50, tier: "common" }
   ];
 
   private itemTiers: ItemTier[] = ["basic", "common", "rare", "exotic"];
@@ -30,7 +33,7 @@ export default class FishCommand extends MandrocCommand {
   ];
 
   public async exec(message: Message) {
-    const { author } = message
+    const { author } = message;
     const profile =
       (await Profile.findOne({ _id: author.id })) ??
       (await Profile.create({ _id: author.id }));
@@ -39,20 +42,20 @@ export default class FishCommand extends MandrocCommand {
 
     const embed = new MessageEmbed().setColor(Color.PRIMARY);
 
-    if (!profile.inventory.find((x) => x.name == "Fishing Rod"))
+    if (!profile.inventory.find((x) => x.name == "Pickaxe"))
       return message.util?.send(
-        "You must possess a fishing rod in order to run this command."
+        "You must possess a pickaxe in order to run this command."
       );
 
-    if (profile.lastFished && profile.lastFished < Date.now() + ms("25m")) {
+    if (profile.lastMined && profile.lastMined < Date.now() + ms("25m")) {
       return message.util?.send(Embed.Warning("You can only access this command every 25 minutes."));
     }
 
-    profile.inventory.find((x) => x.name === "Fishing Rod")!.durability -= 1;
+    profile.inventory.find((x) => x.name === "Pickaxe")!.durability -= 1;
 
     if (Math.floor(Math.random() * 100) <= 33) {
       await profile.save();
-      return message.util?.send("Your fishing rod didn't catch anything.");
+      return message.util?.send("You didn't find anything in the mine.");
     }
 
     let i = 0;
@@ -67,7 +70,7 @@ export default class FishCommand extends MandrocCommand {
         profile.pocket += grantedItem.price;
         message.util?.send(
           embed.setDescription(
-            `Wow, you caught a ${grantedItem.name}, it's value of \`${grantedItem.price}₪\` has been added to your pocket.`
+            `Wow, you mined a ${grantedItem.name}, it's value of \`${grantedItem.price} ₪\` has been added to your pocket.`
           )
         );
       }

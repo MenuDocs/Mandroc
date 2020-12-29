@@ -38,6 +38,10 @@ export class Economy extends Monitor {
       name: "Fishing Rod",
       durability: Number.random(50, 100),
     },
+    {
+      name: "Axe",
+      durability: Number.random(50, 500)
+    }
   ];
 
   async exec(message: Message) {

@@ -26,14 +26,14 @@ export default class DailyCommand extends MandrocCommand {
 
       if (lastDaily < date + ms("1d")) {
         const embed = Embed.Warning(
-          "You can only get a your weekly coins once a week.!"
+          "You can only get a your weekly coins once a week!"
         );
         return message.util?.send(embed);
       }
     }
 
     const embed = Embed.Warning(
-      "Your weekly **2000₪** has been added to your pocket."
+      "Your weekly **2000 ₪** has been added to your pocket."
     );
     profile.pocket += 200;
     profile.lastWeekly = date;

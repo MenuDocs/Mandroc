@@ -9,7 +9,6 @@ import ms from "ms";
 
 @command("chop", {
   aliases: ["chop"],
-  cooldown: ms("5m"),
   description: {
     content: "Chops trees.",
     examples: (prefix: string) => [`${prefix}chop`],
@@ -25,9 +24,13 @@ export default class ChopCommand extends MandrocCommand {
     const logs = ["Oak", "Birch", "Apple", "Pine"].shuffle();
 
 
-   /* if (!profile.inventory.find(x => x.name === "Axe")) {
+    if (!profile.inventory.find(x => x.name === "Axe")) {
       return message.util?.send(Embed.Warning("You must possess an axe to run this command."));
-    }*/
+    }
+
+    if (profile.lastChopped && profile.lastChopped < Date.now() + ms("25m")) {
+      return message.util?.send(Embed.Warning("You can only access this command every 25 minutes."));
+    }
 
     const generateAmount = () => [...Array(10).keys()].slice(1).shuffle();
 
