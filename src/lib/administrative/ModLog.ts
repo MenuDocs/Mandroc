@@ -169,6 +169,9 @@ export class ModLog {
       case InfractionType.UNBAN:
         color = Color.DANGER;
         break;
+      default:
+        color = Color.DANGER
+        break;
     }
 
     const offender = this.#client.users.cache.get(this.offender.id),
