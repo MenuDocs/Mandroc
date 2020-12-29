@@ -33,7 +33,7 @@ export default class DailyCommand extends MandrocCommand {
       "Your daily **200 ₪** has been added to your pocket."
     );
     profile.pocket += 200;
-    profile.lastWeekly = Date.now();
+    profile.lastDaily = Date.now();
 
     await profile.save();
     await message.util?.send(embed);
