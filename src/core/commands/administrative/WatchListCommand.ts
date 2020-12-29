@@ -32,7 +32,7 @@ import type { User } from "discord.js";
 })
 export default class KickCommand extends MandrocCommand {
   async exec(_: Message, {  }: args) {
-    //Profile.if();
+    console.log("hi")
   }
 }
 
