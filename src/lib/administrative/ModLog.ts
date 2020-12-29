@@ -5,10 +5,7 @@
 
 import { GuildMember, MessageEmbed, User } from "discord.js";
 
-import {
-  Infraction,
-  InfractionType,
-} from "../database/entities/infraction.entity";
+import { Infraction, InfractionType } from "../database/entities/infraction.entity";
 import { Color, imageUrlOptions } from "../util/constants";
 
 import ms from "ms";
@@ -168,6 +165,9 @@ export class ModLog {
       case InfractionType.BAN:
       case InfractionType.UNBAN:
         color = Color.DANGER;
+        break;
+      case InfractionType.TIMEOUT:
+        color = Color.INTERMEDIATE;
         break;
       default:
         color = Color.DANGER

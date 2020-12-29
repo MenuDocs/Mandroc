@@ -270,6 +270,48 @@ export class Moderation {
     }
   }
 
+  /**
+   * Times out a user/blacklists them from help channels
+   * @param data - the punsishment data
+   * @param dm
+   */
+  async timeout(data: PunishData, dm = DEFAULT_DM_VALUE): Promise<Infraction> {
+    const modlog = new ModLog(this.client)
+      .setOffender(data.offender)
+      .setReason(data.reason)
+      .setModerator(data.moderator)
+      .setType(InfractionType.TIMEOUT);
+
+    if (data.duration) {
+      modlog.setDuration(data.duration);
+      await modlog.schedule();
+    }
+
+    await this.timeoutMember(data.offender, data.reason, modlog.duration?.ms, dm);
+    return await modlog.finish();
+  }
+
+  async timeoutMember(
+    member: GuildMember,
+    reason: string,
+    duration?: number | null,
+    dm = DEFAULT_DM_VALUE
+  ) {
+    if (dm) {
+      const _duration = duration ? ms(duration, { long: true }) : null;
+
+      const embed = Embed.Danger(
+        `You've been timed out (blacklisted from help channels) in **MenuDocs** ${
+          _duration ? `for **${_duration}**` : "permanently"
+        }.\n${code`${reason}`}`
+      );
+
+      await this.tryDm(member.user, embed);
+    }
+
+    await member.roles.add(IDs.TIMEDOUT); // NEED TO CREATE AN ACTUAL ROLE FOR THIS
+  }
+
   protected async tryDm(
     user: User,
     ...args: any[]
