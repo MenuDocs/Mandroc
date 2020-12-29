@@ -12,6 +12,7 @@ export enum InfractionType {
   MUTE = "mute",
   UNBAN = "unban",
   UNMUTE = "unmute",
+  TIMEOUT = "timeout"
 }
 
 @Entity("infractions")
