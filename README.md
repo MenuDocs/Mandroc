@@ -56,3 +56,5 @@ Here are some links that are associated with MenuDocs:
 ## Contributors
 
 - [**MenuDocs**](https://twitter.com/menudocs "MenuDocs' Twitter Account")
+- [**George (T3NED)**](https://github.com/T3NED "George's Github Account")
+- [**Matthew (Lupine)**](https://github.com/alphalupine "Matthew's Github Account")
