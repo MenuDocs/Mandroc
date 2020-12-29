@@ -159,18 +159,13 @@ export class ModLog {
         color = Color.WARNING;
         break;
       case InfractionType.MUTE:
+      case InfractionType.TIMEOUT:
       case InfractionType.UNMUTE:
         color = Color.INTERMEDIATE;
         break;
       case InfractionType.BAN:
       case InfractionType.UNBAN:
         color = Color.DANGER;
-        break;
-      case InfractionType.TIMEOUT:
-        color = Color.INTERMEDIATE;
-        break;
-      default:
-        color = Color.DANGER
         break;
     }
 
