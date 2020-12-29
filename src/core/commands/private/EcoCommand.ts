@@ -113,6 +113,7 @@ export default class EcoCommand extends MandrocCommand {
       }
     }
 
+
     if (action === "remove") {
       if (account === "pocket") {
         receiverProfile!.pocket -= amount;

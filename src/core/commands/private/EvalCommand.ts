@@ -51,6 +51,7 @@ export default class EvalCommand extends MandrocCommand {
     if (args.async || code.includes("await")) {
       code = `(async () => {${code}})()`;
     }
+    message.member?.getProfile()
 
     let res;
     try {
