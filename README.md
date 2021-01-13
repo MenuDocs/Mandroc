@@ -38,7 +38,6 @@ _Anybody that contributes to the bot will be shown in the contributors section b
 ## Links
 
 Here are some links that are associated with MenuDocs:
-
 - [Discord](https://discord.gg/menudocs "Link to the official Discord Server.")
 - [Twitter](https://menudocs.link/twitter "Link to the official Twitter.")
 - [Facebook](https://menudocs.link/facebook "Link to the official facebook page.")

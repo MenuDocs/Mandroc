@@ -6,17 +6,13 @@
 import { Embed, Moderation, Redis } from "@lib";
 
 import type { Message, MessageEmbed, MessageReaction, User } from "discord.js";
-import type {
-  ActionData,
-  ActionManager,
-  RawPendingAction,
-} from "./ActionManager";
+import type { ActionData, ActionManager, RawPendingAction } from "./ActionManager";
 
 enum ActionReaction {
-  BAN = "790907634378211349",
-  MUTE = "790907634101256252",
-  CANCEL = "790907963186872320",
-  KICK = "👢",
+  BAN = "🚫",
+  MUTE = "🔇",
+  DELETE = "❌",
+  KICK = "👢"
 }
 
 export class PendingAction {
@@ -41,7 +37,7 @@ export class PendingAction {
    */
   constructor(
     manager: ActionManager,
-    data: ActionData & { messageId: string }
+    data: ActionData & { messageId: string },
   ) {
     this.manager = manager;
     this.data = data;
@@ -52,10 +48,10 @@ export class PendingAction {
     await Promise.all(
       [
         ActionReaction.MUTE,
-        ActionReaction.CANCEL,
+        ActionReaction.DELETE,
         ActionReaction.BAN,
         ActionReaction.KICK,
-      ].map((r) => message.react(r))
+      ].map((r) => message.react(r)),
     );
   }
 
@@ -73,7 +69,7 @@ export class PendingAction {
    */
   static async fromRaw(
     manager: ActionManager,
-    raw: RawPendingAction
+    raw: RawPendingAction,
   ): Promise<PendingAction> {
     const subject = await manager.client.guild.members.fetch(raw.subject);
 
@@ -104,9 +100,12 @@ export class PendingAction {
 
     const id = reaction.emoji.id ?? reaction.emoji.name;
     switch (id) {
-      case ActionReaction.CANCEL:
+      case ActionReaction.DELETE:
         str = "didn't do anything.";
         canDispose = true;
+        // Delete the redis key.
+        await Redis.get().client.del(`actions.${this.messageId}`);
+
         break;
       case ActionReaction.KICK:
         str = `took action by **kicking** them.`;
@@ -158,7 +157,7 @@ export class PendingAction {
       embed = PendingAction.getEmbed(this.data)
         .setAuthor(
           "Action Completed",
-          this.data.subject.user.displayAvatarURL()
+          this.data.subject.user.displayAvatarURL(),
         )
         .setColor("#33b05f");
 
@@ -169,7 +168,6 @@ export class PendingAction {
     await message.edit(embed);
     await message.reactions.removeAll();
 
-    // Delete the redis key.
-    await Redis.get().client.del(`actions.${this.messageId}`);
+
   }
 }

@@ -5,11 +5,11 @@
 
 import { Collection, StringResolvable } from "discord.js";
 import { randomBytes } from "crypto";
-import { EventEmitter } from "events";
 import { Redis } from "../database/Redis";
 
-import { UnbanTask } from "./tasks/Unban";
-import { UnmuteTask } from "./tasks/Unmute";
+import { UnbanTask } from "./tasks/UnbanTask";
+import { UnmuteTask } from "./tasks/UnmuteTask";
+import { BoostersTask } from "./tasks/BoostersTask";
 
 import type { Mandroc } from "../Client";
 import type { ScheduledTask, ScheduledTaskInfo } from "./tasks/ScheduledTask";
@@ -17,7 +17,7 @@ import type { ScheduledTask, ScheduledTaskInfo } from "./tasks/ScheduledTask";
 export const TASK = (task: string, id: string) => `tasks:${task}.${id}`;
 export const META = (task: string, id: string) => `tasks-meta:${task}.${id}`;
 
-export class Scheduler extends EventEmitter {
+export class Scheduler {
   private static _instance: Scheduler | undefined;
 
   /**
@@ -35,14 +35,12 @@ export class Scheduler extends EventEmitter {
    */
   constructor(client: Mandroc) {
     if (Scheduler._instance) {
-      throw new Error("This class should not be instatiated more than once.");
+      throw new Error("This class should not be instantiated more than once.");
     }
-
-    super();
 
     this.client = client;
     this.tasks = new Collection();
-    for (const task of [new UnbanTask(), new UnmuteTask()]) {
+    for (const task of [ new UnbanTask(), new UnmuteTask(), new BoostersTask() ]) {
       this.tasks.set(task.name, task);
     }
 
@@ -72,14 +70,14 @@ export class Scheduler extends EventEmitter {
    * @param key The redis key to parse.
    */
   static parse(
-    key: string
+    key: string,
   ): { meta: boolean; id: string; task: string } | null {
     const regex = /^tasks(-meta)?:(\w+)\.(.*)$/im;
     if (!regex.test(key)) {
       return null;
     }
 
-    const [, meta, task, id] = regex.exec(key)!;
+    const [ , meta, task, id ] = regex.exec(key)!;
 
     return {
       meta: !!meta,
@@ -91,7 +89,7 @@ export class Scheduler extends EventEmitter {
   /**
    * The redis wrapper.
    */
-  private get redis(): Redis {
+  private static get redis(): Redis {
     return Redis.get();
   }
 
@@ -106,7 +104,7 @@ export class Scheduler extends EventEmitter {
     task: string,
     runAt: number,
     id: string = Scheduler.generateRandomId(),
-    meta: Dictionary<number | StringResolvable> = {}
+    meta: Dictionary<number | StringResolvable> = {},
   ): Promise<string> {
     if (!this.tasks.has(task)) {
       throw new TypeError(`The task "${task}" doesn't exist.`);
@@ -119,10 +117,10 @@ export class Scheduler extends EventEmitter {
     let metaKey;
     if (meta && Object.keys(meta).length > 0) {
       metaKey = META(task, id);
-      await this.redis.client.hset(metaKey, meta);
+      await Scheduler.redis.client.hset(metaKey, meta);
     }
 
-    await this.redis.client.hset(TASK(task, id), {
+    await Scheduler.redis.client.hset(TASK(task, id), {
       metaKey: metaKey ?? "",
       runAt,
     });
@@ -139,30 +137,30 @@ export class Scheduler extends EventEmitter {
   }
 
   async cleanup(task: string, id: string) {
-    await this.redis.client.del(TASK(task, id), META(task, id));
+    await Scheduler.redis.client.del(TASK(task, id), META(task, id));
   }
 
   /**
    * Iterates through every active task and checks whether their run date has been passed.
    */
   private async _check() {
-    const scheduled = await this.redis.scan("tasks:*");
+    const scheduled = await Scheduler.redis.scan("tasks:*");
     for (const key of scheduled) {
-      const data: ScheduledTaskInfo = (await this.redis.client.hgetall(
-        key
+      const data: ScheduledTaskInfo = (await Scheduler.redis.client.hgetall(
+        key,
       )) as any;
 
       if (+data.runAt <= Date.now()) {
         const meta = data.metaKey
-          ? await this.redis.client.hgetall(data.metaKey)
+          ? await Scheduler.redis.client.hgetall(data.metaKey)
           : {};
 
         await this.tasks
           .get(Scheduler.parse(key)!.task)
           ?.execute(this.client, meta, data);
 
-        await this.redis.client.del(
-          ...(data.metaKey ? [data.metaKey, key] : [key])
+        await Scheduler.redis.client.del(
+          ...(data.metaKey ? [ data.metaKey, key ] : [ key ]),
         );
       }
     }

@@ -36,15 +36,18 @@ export class Profile extends BaseEntity {
   level: number = 1;
 
   @Column({ default: 0 })
-  boosters: number = 0;
+  boosters: ProfileBoosters = {
+    xp: 1,
+    coin: 1,
+  };
 
-  @Column({
-    type: "string",
-    nullable: true,
-  })
+  @Column("array")
+  badges: string[] = [];
+
+  @Column("string", { nullable: true })
   bodyguard?: BodyguardTier;
 
-  @Column({ type: "array" })
+  @Column("array")
   repBy: string[] = [];
 
   @Column({ nullable: true })
@@ -71,16 +74,13 @@ export class Profile extends BaseEntity {
   @Column({ nullable: true })
   lastShoveled?: number | null = null;
 
-  @Column({
-    type: "array",
-    default: [],
-  })
+  @Column("array", { default: [] })
   inventory: Array<Tool> = [];
 
-  @Column({ type: "boolean", default: false })
+  @Column("boolean", { default: false })
   blocked?: boolean = false;
 
-  @Column({ type: "array", default: [] })
+  @Column("array", { default: [] })
   notes?: { note: string; issuer: string }[] = [];
 
   /**
@@ -89,14 +89,14 @@ export class Profile extends BaseEntity {
    * @returns The found/created document.
    */
   static findOneOrCreate(
-    options: FindOneOptions<Profile> & { create?: DeepPartial<Profile> }
+    options: FindOneOptions<Profile> & { create?: DeepPartial<Profile> },
   ): Promise<Profile> {
     return new Promise((res, rej) => {
       return this.findOne(options)
         .then((p) =>
           res(
-            p ?? (options.create ? this.create(options.create) : this.create())
-          )
+            p ?? (options.create ? this.create(options.create) : this.create()),
+          ),
         )
         .catch(rej);
     });
@@ -114,7 +114,7 @@ export class Profile extends BaseEntity {
       where.type = type;
     }
 
-    return Infraction.findAndCount(where).then(([, c]) => c);
+    return Infraction.findAndCount(where).then(([ , c ]) => c);
   }
 }
 
@@ -134,3 +134,9 @@ export interface Item {
 }
 
 export type Tools = "Fishing Rod";
+
+
+export interface ProfileBoosters {
+  coin: number;
+  xp: number;
+}

@@ -3,62 +3,53 @@
  * You may not share this code outside of the MenuDocs Team unless given permission by Management.
  */
 
-import {
-  command,
-  Embed,
-  MandrocCommand,
-  PermissionLevel,
-} from "@lib";
+import { command, Embed, MandrocCommand, PermissionLevel, ScheduledTaskInfo, Scheduler } from "@lib";
 
-import type { Message } from "discord.js";
+import type { GuildMember, Message } from "discord.js";
 
 @command("timeleft", {
-  aliases: ["timeleft"],
+  aliases: [ "time-left", "tl" ],
   description: {
     content: "Returns the time left on an infraction.",
     examples: (prefix: string) => [
       `${prefix}timeleft`,
       `${prefix}timeleft @T3NED#0001`,
     ],
-    usage: "[punishedId]",
+    usage: "[member]",
   },
+  args: [
+    {
+      id: "member",
+      type: "member",
+    },
+  ],
 })
 export default class TimeLeftCommand extends MandrocCommand {
-  public async exec(message: Message, { punishedId }: args) {
-    const embed = Embed;
-    if (message.member?.permissionLevel! < PermissionLevel.MOD) {
-      const [key] = await this.client.redis.scan(
-          `tasks:*.${message.member?.id}`
-        ),
-        data = await this.client.redis.client.hgetall(key);
-
-      if (!data) {
-        embed.Primary("You do not have any currently on-going infractions.");
-
-        return message.util?.send(embed);
-      }
-      embed.Primary(`You have ${+data.runAt} remaining`);
-
+  async exec(message: Message, { member }: args) {
+    const mod = message.member?.above(PermissionLevel.TRIAL_MOD);
+    if (mod && !member) {
+      const embed = Embed.Warning("I don't think you know how this works...");
       return message.util?.send(embed);
     }
 
-    const [key] = await this.client.redis.scan(
-      `tasks:*.${punishedId}`
-      ),
-      data = await this.client.redis.client.hgetall(key);
+    return await this.respond(message, mod ? member.id : message.author.id);
+  }
 
-    if (!data) {
-      embed.Warning("User does not have any on-going infractions.");
+  private async respond(message: Message, id: string) {
+    const [ key ] = await this.client.redis.scan(`tasks:*.${id}`),
+      data = await this.client.redis.client.hgetall(key) as unknown as ScheduledTaskInfo,
+      { task } = Scheduler.parse(key)!;
 
-      return message.util?.send(embed)
+    if (!data || ![ "unban", "unmute" ].includes(task)) {
+      const embed = Embed.Warning("No on-going bans on mutes.");
+      return message.util?.send(embed);
     }
 
-    embed.Primary(`They have ${+data.runAt} remaining`);
-
+    const embed = Embed.Primary(`<@${id}> \`(${id})\` has **${+data.runAt}** remaining for their **${task}**.`);
     return message.util?.send(embed);
   }
 }
 
 type args = {
-  punishedId: string;
+  member: GuildMember;
 };
