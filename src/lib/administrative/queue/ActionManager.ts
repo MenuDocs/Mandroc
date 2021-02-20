@@ -22,7 +22,7 @@ export class ActionManager {
    */
   readonly moderation: Moderation;
 
-  /**2
+  /**
    * The current pending actions.
    */
   readonly pending: Collection<string, PendingAction>;

@@ -9,6 +9,7 @@ import { Argument } from "discord-akairo";
 import type { Collection, Message, TextChannel, User } from "discord.js";
 import { SnowflakeUtil } from "discord.js";
 import ms from "ms";
+import { AntiMassModeration } from "../../../lib/administrative/automation/modules/AntiMassModeration";
 
 @adminCommand("purge", {
   aliases: ["purge", "clear", "prune"],
@@ -88,6 +89,8 @@ export default class PurgeCommand extends MandrocCommand {
           break;
       }
     }
+
+    AntiMassModeration.incrememtCommandUsage(message);
   }
 
   private _deleteMessages(

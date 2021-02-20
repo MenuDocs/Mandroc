@@ -8,6 +8,7 @@ import { captureException } from "@sentry/node";
 import ms from "ms";
 
 import type { GuildMember, Message } from "discord.js";
+import { AntiMassModeration } from "../../../lib/administrative/automation/modules/AntiMassModeration";
 
 @adminCommand("mute", {
   aliases: ["mute", "m", "tempmute"],
@@ -60,6 +61,7 @@ export class MuteCommand extends MandrocCommand {
         `Successfully muted **${member}** ${dur}with reason \`${reason}\``
       );
 
+    AntiMassModeration.incrememtCommandUsage(message);
     return message.channel.send(embed).then((m) => m.delete({ timeout: 6000 }));
   }
 }

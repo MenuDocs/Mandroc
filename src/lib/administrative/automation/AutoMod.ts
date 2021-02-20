@@ -16,6 +16,7 @@ import { AntiSpam } from "./modules/AntiSpam";
 import type { GuildMember, Message } from "discord.js";
 import type { Module } from "./Module";
 import { AntiMassMention } from "./modules/AntiMassMention";
+import { AntiMassModeration } from "./modules/AntiMassModeration";
 
 export class AutoMod {
   public readonly moderation: Moderation;
@@ -37,6 +38,7 @@ export class AutoMod {
       AntiBadWords,
       AntiSpam,
       AntiMassMention,
+      AntiMassModeration
     ].map((mod) => new mod(this));
 
     moderation.client.on("message", this._runModules.bind(this));

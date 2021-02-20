@@ -7,6 +7,7 @@ import { adminCommand, Embed, MandrocCommand } from "@lib";
 import { captureException } from "@sentry/node";
 
 import type { GuildMember, Message } from "discord.js";
+import { AntiMassModeration } from "../../../lib/administrative/automation/modules/AntiMassModeration";
 
 @adminCommand("warn", {
   aliases: ["warn"],
@@ -44,6 +45,8 @@ export default class WarnCommand extends MandrocCommand {
     const embed = Embed.Primary(
       `Successfully warned **${offender}** for \`${reason}\``
     );
+
+    AntiMassModeration.incrememtCommandUsage(message);
     await message.channel.send(embed).then((m) => m.delete({ timeout: 6000 }));
   }
 }

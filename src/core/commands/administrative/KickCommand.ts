@@ -6,6 +6,7 @@
 import { adminCommand, Embed, MandrocCommand } from "@lib";
 
 import type { GuildMember, Message } from "discord.js";
+import { AntiMassModeration } from "../../../lib/administrative/automation/modules/AntiMassModeration";
 
 @adminCommand("kick", {
   aliases: ["kick", "k"],
@@ -47,6 +48,8 @@ export default class KickCommand extends MandrocCommand {
     const response = Embed.Success(
       `Successfully kicked **${target}** \`(${target.id})\``
     );
+
+    AntiMassModeration.incrememtCommandUsage(message);
     return message.util?.send(response);
   }
 }

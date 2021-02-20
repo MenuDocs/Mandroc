@@ -7,6 +7,7 @@ import { adminCommand, Embed, MandrocCommand, PermissionLevel } from "@lib";
 
 import type { GuildMember, Message } from "discord.js";
 import ms from "ms";
+import { AntiMassModeration } from "../../../lib/administrative/automation/modules/AntiMassModeration";
 
 @adminCommand("ban", {
   aliases: ["ban", "b", "banish"],
@@ -68,6 +69,8 @@ export default class BanCommand extends MandrocCommand {
         duration ? `for **${ms(duration, { long: true })}**` : "permanently"
       }`
     );
+
+    AntiMassModeration.incrememtCommandUsage(message);
     return message.channel.send(embed).then((m) => m.delete({ timeout: 6000 }));
   }
 }

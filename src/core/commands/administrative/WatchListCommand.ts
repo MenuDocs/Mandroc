@@ -2,11 +2,10 @@
  * Copyright (c) MenuDocs 2020.
  * You may not share this code outside of the MenuDocs Team unless given permission by Management.
  */
-// @ts-ignore
-import { adminCommand, MandrocCommand, Profile } from "@lib";
 
-import type { Message } from "discord.js";
-import type { User } from "discord.js";
+import { adminCommand, MandrocCommand, PermissionLevel } from "@lib";
+
+import type { Message, User } from "discord.js";
 
 @adminCommand("watchlist", {
   aliases: ["watchlist"],
@@ -30,9 +29,19 @@ import type { User } from "discord.js";
     },
   ],
 })
-export default class KickCommand extends MandrocCommand {
-  async exec(_: Message, {  }: args) {
-    console.log("hi")
+export default class WatchListCommand extends MandrocCommand {
+  async exec(message: Message, { action, user, note }: args) {
+    if (message.member?.permissionLevel! < PermissionLevel.TRIAL_MOD) {
+      // return
+    } else {
+      if (!user) {
+
+      }
+      if (action === "list") {
+        // display list of notes for user
+        note
+      }
+    }
   }
 }
 
