@@ -3,9 +3,10 @@
  * You may not share this code outside of the MenuDocs Team unless given permission by Management.
  */
 
-import { PermissionLevel } from "@lib";
-import { Collection, Message } from "discord.js";
+import { IDs, PermissionLevel } from "@lib";
+import { Collection, Message, TextChannel } from "discord.js";
 import { Module } from "../Module";
+import ms from "ms";
 
 export class AntiSpam extends Module {
   buckets = new Collection<string, number[]>();
@@ -18,9 +19,11 @@ export class AntiSpam extends Module {
 
     const bucket = this.getBucket(message.author.id);
     bucket.push(message.createdTimestamp);
+    const first = bucket.shift()!;
+
+    const lastUnmute = this.getLastUnmute(message.author.id);
 
     if (bucket.length >= 5) {
-      const first = bucket.shift()!;
       if (
         message.editedTimestamp &&
         message.editedTimestamp > message.createdTimestamp
@@ -28,15 +31,41 @@ export class AntiSpam extends Module {
         return false;
       }
 
-      if (message.createdTimestamp - first <= 3000) {
+      if (lastUnmute && message.createdTimestamp - lastUnmute <= ms("1h 15m")) {
         this.clearBucket(message.author.id);
-        await this.moderation.warn({
+        await this.moderation.ban({
           offender: message.member!,
           moderator: "automod",
-          reason: `Spamming in ${message.channel}`,
+          duration: "7d",
+          reason: `(Excessive) Spamming in ${message.channel}`,
         });
 
         return true;
+      }
+
+      if (bucket.length > 8) {
+        if (message.createdTimestamp - first <= 3000) {
+          this.clearBucket(message.author.id);
+          await this.moderation.mute({
+            offender: message.member!,
+            moderator: "automod",
+            duration: "1h",
+            reason: `Spamming in ${message.channel}`,
+          });
+
+          return true;
+        }
+      }
+
+        if (message.createdTimestamp - first <= 3000) {
+          this.clearBucket(message.author.id);
+          await this.moderation.warn({
+            offender: message.member!,
+            moderator: "automod",
+            reason: `Spamming in ${message.channel}`,
+          });
+
+          return true;
       }
     }
 
@@ -51,6 +80,20 @@ export class AntiSpam extends Module {
         this.buckets.delete(k);
       }
     }
+  }
+
+  /**
+   *
+   * @param user The user id.
+   */
+  private getLastUnmute(user: string): number | null {
+    const modlogs = <TextChannel>this.client.channels.cache.get(IDs.MOD_LOGS);
+    return [...modlogs.messages.cache.values()].slice(0, 5).filter(msg => {
+      const msgEmbed = msg.embeds[0];
+      return msgEmbed
+        && msgEmbed.description?.includes(user)
+        && msgEmbed.author?.name?.includes("unmute")
+    })[0].createdTimestamp ?? null
   }
 
   /**

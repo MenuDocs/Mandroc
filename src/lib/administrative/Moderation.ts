@@ -249,7 +249,48 @@ export class Moderation {
   }
 
   /**
-   * Bans a user.
+   * Soft-bans a user.
+   * @param data The punishment data.
+   * @param dm
+   */
+  async softBan(data: PunishData, dm = DEFAULT_DM_VALUE) {
+    const modLog = new ModLog(this.client)
+      .setReason(data.reason)
+      .setOffender(data.offender)
+      .setModerator(data.moderator)
+      .setType(InfractionType.SOFTBAN);
+
+    if (data.duration) {
+      modLog.setDuration(data.duration);
+      await modLog.schedule();
+    }
+
+    await this.softBanMember(data.offender, data.reason, data.delDays = 7, dm);
+    return modLog.finish();
+  }
+
+  async softBanMember(
+    member: GuildMember,
+    reason: string,
+    delDays: number,
+    dm = DEFAULT_DM_VALUE
+  ) {
+    if (dm) {
+      const embed = Embed.Danger(
+        `You've been soft-banned from **MenuDocs**`
+      );
+
+      await this.tryDm(member.user, embed);
+    }
+
+    await member.ban({
+      days: delDays,
+      reason,
+    });
+  }
+
+  /**
+   * Un-bans a user.
    * @param data The punishment data.
    * @param guild The guild instance.
    */
@@ -331,5 +372,6 @@ export interface PunishData<O = GuildMember> {
   moderator: GuildMember | User | "automod";
   reason: string;
   type?: InfractionType;
+  delDays?: number;
   duration?: number | string;
 }

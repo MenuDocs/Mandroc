@@ -6,11 +6,10 @@
 import { adminCommand, Embed, MandrocCommand, PermissionLevel } from "@lib";
 
 import type { GuildMember, Message } from "discord.js";
-import ms from "ms";
 import { AntiMassModeration } from "../../../lib/administrative/automation/modules/AntiMassModeration";
 
-@adminCommand("ban", {
-  aliases: ["ban", "b", "banish"],
+@adminCommand("softban", {
+  aliases: ["softban", "sb", "softbanish"],
   editable: false,
   clientPermissions: ["BAN_MEMBERS"],
   permissionLevel: PermissionLevel.ADMIN,
@@ -24,10 +23,10 @@ import { AntiMassModeration } from "../../../lib/administrative/automation/modul
       },
     },
     {
-      id: "duration",
-      type: "duration",
+      id: "delDays",
+      type: "number",
       match: "option",
-      flag: ["-d", "--duration"],
+      flag: ["-dd", "--del-days"],
     },
     {
       id: "noDm",
@@ -44,8 +43,8 @@ import { AntiMassModeration } from "../../../lib/administrative/automation/modul
     },
   ],
 })
-export default class BanCommand extends MandrocCommand {
-  public async exec(message: Message, { target, duration, reason }: args) {
+export default class SoftBanCommand extends MandrocCommand {
+  public async exec(message: Message, { target, delDays, reason }: args) {
     if (!target.manageable) {
       const embed = Embed.Warning(
         `You do not have permission to interact with ${target} \`(${target.id})\`.`
@@ -57,17 +56,17 @@ export default class BanCommand extends MandrocCommand {
       message.delete();
     }
 
-    await this.client.moderation.ban({
+    await this.client.moderation.softBan({
       moderator: message.member!,
       offender: target,
+      delDays,
       reason,
-      duration,
     });
 
+    await message.guild?.members.unban(target);
+
     const embed = Embed.Success(
-      `Successfully banned **${target}** \`(${target.id})\` ${
-        duration ? `for **${ms(duration, { long: true })}**` : "permanently"
-      }`
+      `Successfully soft-banned **${target}** \`(${target.id})\``
     );
 
     AntiMassModeration.incrememtCommandUsage(message);
@@ -77,6 +76,6 @@ export default class BanCommand extends MandrocCommand {
 
 type args = {
   target: GuildMember;
-  duration: number;
+  delDays: 1 | 2 | 3 | 4 | 5 | 6 | 7;
   reason: string;
 };

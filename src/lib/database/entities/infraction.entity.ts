@@ -8,6 +8,7 @@ import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn } from "typeorm";
 export enum InfractionType {
   WARN = "warn",
   BAN = "ban",
+  SOFTBAN = "softban",
   KICK = "kick",
   MUTE = "mute",
   UNBAN = "unban",

@@ -164,6 +164,7 @@ export class ModLog {
         color = Color.INTERMEDIATE;
         break;
       case InfractionType.BAN:
+      case InfractionType.SOFTBAN:
       case InfractionType.UNBAN:
         color = Color.DANGER;
         break;

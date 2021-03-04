@@ -49,6 +49,7 @@ export default class NotesCommand extends MandrocCommand {
         : this.client.redis.client.hgetall(countKey);
     };
     
+    // @ts-ignore
     const list = await operation(!!user).then((res: any) => {
       if (user === null) {
         if (res) {
