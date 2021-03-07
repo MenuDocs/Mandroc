@@ -90,7 +90,7 @@ export default class PurgeCommand extends MandrocCommand {
       }
     }
 
-    AntiMassModeration.incrememtCommandUsage(message);
+    AntiMassModeration.incrementCommandUsage(message);
   }
 
   private _deleteMessages(

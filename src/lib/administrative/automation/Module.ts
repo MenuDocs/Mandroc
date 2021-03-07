@@ -14,7 +14,7 @@ export abstract class Module {
   /**
    * The priority of this module.
    */
-  public readonly priority: number = 10;
+  public readonly priority: number;
 
   /**
    * Whether this module is for messages.
@@ -23,9 +23,11 @@ export abstract class Module {
 
   /**
    * @param automod AutoMod instance.
+   * @param priority The priority of this module.
    */
-  public constructor(automod: AutoMod) {
+  public constructor(automod: AutoMod, priority: number = 10) {
     this.automod = automod;
+    this.priority = priority;
   }
 
   /**

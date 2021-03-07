@@ -5,9 +5,9 @@ import { MessageEmbed } from "discord.js";
 import type { Mandroc } from "lib/Client";
 import type { ScheduledTask } from "./ScheduledTask";
 
-export class UnmuteTask implements ScheduledTask<data> {
+export class UnmuteTask implements ScheduledTask<UnmuteMeta> {
   readonly name = "unmute";
-  async execute(client: Mandroc, { caseId: _cid, offenderId }: data) {
+  async execute(client: Mandroc, { caseId: _cid, offenderId }: UnmuteMeta) {
     const infraction = await Infraction.findOne({ where: { id: +_cid } });
     if (!infraction) {
       return;
@@ -46,7 +46,7 @@ export class UnmuteTask implements ScheduledTask<data> {
   }
 }
 
-type data = {
+export interface UnmuteMeta {
   offenderId: string;
-  caseId: string;
-};
+  caseId: number;
+}

@@ -3,10 +3,10 @@ import { MessageEmbed } from "discord.js";
 
 import type { ScheduledTask } from "./ScheduledTask";
 
-export class UnbanTask implements ScheduledTask<data> {
+export class UnbanTask implements ScheduledTask<UnbanMeta> {
   readonly name = "unban";
 
-  async execute(client: Mandroc, { caseId: _cid, offenderId }: data) {
+  async execute(client: Mandroc, { caseId: _cid, offenderId }: UnbanMeta) {
     const infraction = await Infraction.findOne({ where: { id: +_cid } });
     if (!infraction) {
       return;
@@ -38,7 +38,7 @@ export class UnbanTask implements ScheduledTask<data> {
   }
 }
 
-type data = {
+export interface UnbanMeta {
   offenderId: string;
-  caseId: string;
-};
+  caseId: number;
+}

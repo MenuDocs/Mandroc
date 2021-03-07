@@ -49,7 +49,7 @@ export default class KickCommand extends MandrocCommand {
       `Successfully kicked **${target}** \`(${target.id})\``
     );
 
-    AntiMassModeration.incrememtCommandUsage(message);
+    AntiMassModeration.incrementCommandUsage(message);
     return message.util?.send(response);
   }
 }

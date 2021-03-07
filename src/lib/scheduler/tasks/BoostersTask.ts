@@ -5,13 +5,13 @@
 
 import { Mandroc, Profile, ScheduledTask } from "@lib";
 
-export class BoostersTask implements ScheduledTask<data> {
+export class BoostersTask implements ScheduledTask<BoostersMeta> {
   name = "boosters";
 
   async execute(_: Mandroc, {
     booster,
     userId,
-  }: data) {
+  }: BoostersMeta) {
     const profile = await Profile.findOneOrCreate({
       where: { userId },
       create: { userId },
@@ -22,7 +22,7 @@ export class BoostersTask implements ScheduledTask<data> {
   }
 }
 
-type data = {
+export interface BoostersMeta {
   booster: "coin" | "xp";
   userId: string;
 }

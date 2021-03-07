@@ -11,34 +11,45 @@ import type { AutoMod } from "../AutoMod";
 import { Color } from "@lib";
 
 export class AntiMassModeration extends Module {
-    readonly priority = 2;
-    static bucket = new Collection<string, number>();
+  /**
+   * The command buckets.
+   */
+  static BUCKETS = new Collection<string, number>();
 
-    constructor(automod: AutoMod) {
-        super(automod);
-        setInterval(() => AntiMassModeration.bucket.clear(), 30000)
+  /**
+   * @param automod The automod instance.
+   */
+  constructor(automod: AutoMod) {
+    super(automod, 2);
+
+    this.client.setInterval(() => {
+      AntiMassModeration.BUCKETS.clear();
+    }, 30000);
+  }
+
+  async run(message: Message): Promise<boolean> {
+    const bUser = AntiMassModeration.BUCKETS.get(message.author.id);
+    if (!bUser || bUser < 5) {
+      return false;
     }
 
-    async run(message: Message): Promise<boolean> {
-        const bUser = AntiMassModeration.bucket.get(message.author.id);
+    const embed = new MessageEmbed()
+      .setColor(Color.WARNING)
+      .setDescription("You've temporarily been denied from using staff commands, due to a recent over-use.");
 
-        if (!bUser) return false;
-        if (bUser >= 5) {
-            const embed = new MessageEmbed()
-              .setColor(Color.WARNING)
-              .setDescription("You've temporarily been denied from using staff commands, due to a recent over-use.");
+    message.util?.send(embed);
+    return true;
+  }
 
-            message.util?.send(embed);
-            return true;
-        }
-
-        return false
-    }
-
-    static incrememtCommandUsage(message: Message) {
-        AntiMassModeration.bucket.set(
-          message.author.id,
-          AntiMassModeration.bucket.get(message.author.id) ?? 0
-          )
-    }
+  /**
+   * Increments the amount of command invocations by a Staff Member.
+   *
+   * @param {Message} message
+   */
+  static incrementCommandUsage(message: Message) {
+    AntiMassModeration.BUCKETS.set(
+      message.author.id,
+      (AntiMassModeration.BUCKETS.get(message.author.id) ?? 0) + 1,
+    );
+  }
 }

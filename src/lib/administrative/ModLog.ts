@@ -207,14 +207,13 @@ export class ModLog {
       this.duration &&
       ModLog.TEMPORARY.includes(this.type)
     ) {
-      let task = this.type === InfractionType.MUTE ? "unmute" : "unban";
       await Scheduler.get().schedule(
-        task,
+        this.type === InfractionType.MUTE ? "unmute" : "unban",
         startDate + this.duration.ms,
         this.offender.id,
         {
           offenderId: this.offender.id,
-          caseId: this.#caseId,
+          caseId: this.#caseId!!,
         }
       );
     }

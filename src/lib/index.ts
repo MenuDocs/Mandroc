@@ -78,6 +78,10 @@ declare module "discord.js" {
     lastDeletedMessages?: DeletedMessage[];
   }
 
+  interface Collection<K, V> {
+    randomAmount(amount: number): V[];
+  }
+
   interface Message {
     createReactionCollector(
       filter: ReactionCollectorFilter,

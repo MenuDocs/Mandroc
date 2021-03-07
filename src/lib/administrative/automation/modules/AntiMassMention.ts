@@ -5,8 +5,7 @@
 
 import { Module } from "../Module";
 
-import type { Message } from "discord.js"
-import type { User } from "discord.js";
+import type { Message, User } from "discord.js";
 import type { AutoMod } from "../AutoMod";
 import ms from "ms";
 import { AntiRaid } from "./AntiRaid";
@@ -15,21 +14,17 @@ export class AntiMassMention extends Module {
   /**
    * Mention cache
    */
-  #mentionSpamCache = new Array<User>()
+  #mentionSpamCache = new Array<User>();
 
   #massMentionCache = new Array<User>();
 
-  /**
-   * The priority of this automation module
-   */
-  readonly priority = 1;
-
   constructor(automod: AutoMod) {
-    super(automod);
-    setInterval(() => {
+    super(automod, 1);
+
+    this.client.setInterval(() => {
       this.#massMentionCache = [];
       this.#mentionSpamCache = [];
-    }, ms("1m"))
+    }, ms("1m"));
   }
 
   /**
@@ -58,7 +53,9 @@ export class AntiMassMention extends Module {
    * @private
    */
   private _antiMultipleMentions(message: Message): boolean {
-    if (message.mentions.users.size < 3) return false;
+    if (message.mentions.users.size < 3) {
+      return false;
+    }
     if (this.#massMentionCache.filter(x => x.id === message.author.id).length > 4) {
       AntiRaid.onGoingRaid = true;
     }

@@ -69,7 +69,7 @@ export default class SoftBanCommand extends MandrocCommand {
       `Successfully soft-banned **${target}** \`(${target.id})\``
     );
 
-    AntiMassModeration.incrememtCommandUsage(message);
+    AntiMassModeration.incrementCommandUsage(message);
     return message.channel.send(embed).then((m) => m.delete({ timeout: 6000 }));
   }
 }

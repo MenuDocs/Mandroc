@@ -61,7 +61,7 @@ export class MuteCommand extends MandrocCommand {
         `Successfully muted **${member}** ${dur}with reason \`${reason}\``
       );
 
-    AntiMassModeration.incrememtCommandUsage(message);
+    AntiMassModeration.incrementCommandUsage(message);
     return message.channel.send(embed).then((m) => m.delete({ timeout: 6000 }));
   }
 }

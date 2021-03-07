@@ -70,7 +70,7 @@ export default class BanCommand extends MandrocCommand {
       }`
     );
 
-    AntiMassModeration.incrememtCommandUsage(message);
+    AntiMassModeration.incrementCommandUsage(message);
     return message.channel.send(embed).then((m) => m.delete({ timeout: 6000 }));
   }
 }

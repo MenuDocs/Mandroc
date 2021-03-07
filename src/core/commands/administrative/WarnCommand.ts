@@ -46,7 +46,7 @@ export default class WarnCommand extends MandrocCommand {
       `Successfully warned **${offender}** for \`${reason}\``
     );
 
-    AntiMassModeration.incrememtCommandUsage(message);
+    AntiMassModeration.incrementCommandUsage(message);
     await message.channel.send(embed).then((m) => m.delete({ timeout: 6000 }));
   }
 }

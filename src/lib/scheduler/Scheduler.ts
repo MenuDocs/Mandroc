@@ -3,13 +3,14 @@
  * You may not share this code outside of the MenuDocs Team unless given permission by Management.
  */
 
-import { Collection, StringResolvable } from "discord.js";
+import { Collection } from "discord.js";
 import { randomBytes } from "crypto";
 import { Redis } from "../database/Redis";
 
-import { UnbanTask } from "./tasks/UnbanTask";
-import { UnmuteTask } from "./tasks/UnmuteTask";
-import { BoostersTask } from "./tasks/BoostersTask";
+import { UnbanMeta, UnbanTask } from "./tasks/UnbanTask";
+import { UnmuteMeta, UnmuteTask } from "./tasks/UnmuteTask";
+import { BoostersMeta, BoostersTask } from "./tasks/BoostersTask";
+import { GiveawayMeta, GiveawayTask } from "./tasks/GiveawayTask";
 
 import type { Mandroc } from "../Client";
 import type { ScheduledTask, ScheduledTaskInfo } from "./tasks/ScheduledTask";
@@ -40,7 +41,7 @@ export class Scheduler {
 
     this.client = client;
     this.tasks = new Collection();
-    for (const task of [ new UnbanTask(), new UnmuteTask(), new BoostersTask() ]) {
+    for (const task of [ new UnbanTask(), new UnmuteTask(), new BoostersTask(), new GiveawayTask() ]) {
       this.tasks.set(task.name, task);
     }
 
@@ -100,11 +101,11 @@ export class Scheduler {
    * @param id
    * @param meta Any metadata to supply.
    */
-  async schedule(
-    task: string,
+  async schedule<K extends keyof MetaMap, M extends MetaMap[K]>(
+    task: K,
     runAt: number,
     id: string = Scheduler.generateRandomId(),
-    meta: Dictionary<number | StringResolvable> = {},
+    meta: M = {} as M,
   ): Promise<string> {
     if (!this.tasks.has(task)) {
       throw new TypeError(`The task "${task}" doesn't exist.`);
@@ -117,7 +118,7 @@ export class Scheduler {
     let metaKey;
     if (meta && Object.keys(meta).length > 0) {
       metaKey = META(task, id);
-      await Scheduler.redis.client.hset(metaKey, meta);
+      await Scheduler.redis.client.hset(metaKey, meta as Dictionary);
     }
 
     await Scheduler.redis.client.hset(TASK(task, id), {
@@ -165,4 +166,11 @@ export class Scheduler {
       }
     }
   }
+}
+
+type MetaMap = {
+  giveaway: GiveawayMeta;
+  unban: UnbanMeta;
+  unmute: UnmuteMeta;
+  boosters: BoostersMeta
 }
