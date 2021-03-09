@@ -17,18 +17,20 @@ export default class GuildMemberAddListener extends Listener {
 
     AntiRaid.recentJoins.push(member);
 
-    await member.roles.add(IDs.Unverified);
+    await member.roles.add(IDs.UNVERIFIED);
     const roles = await Redis.get().client.lrange(
       `member.${member.id}:roles`,
       0,
       -1
     );
+
     if (roles.length) {
       if (roles.includes(IDs.MUTED)) {
-        await this.client.moderation.ban({
-          offender: member,
-          moderator: "automod",
-          reason: "Mute Evasion",
+        await member.roles.add(IDs.MUTED);
+        await this.client.moderation.actions.queue({
+          subject: member,
+          reason: "Mute evasion",
+          description:                 `User *${member.user.tag}* \`(${member.id})\` has attempted to evade their mute punishment.`
         });
 
         return;
