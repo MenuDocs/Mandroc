@@ -9,10 +9,10 @@ import ms from "ms";
 import os from "os";
 
 @command("botinfo", {
-  aliases: ["botinfo", "bi"],
+  aliases: [ "botinfo", "bi" ],
   description: {
     content: "Displays bot info",
-    examples: (prefix: string) => [`${prefix}botinfo`],
+    examples: (prefix: string) => [ `${prefix}botinfo` ],
   },
 })
 export default class AvatarCommand extends MandrocCommand {
@@ -22,10 +22,9 @@ export default class AvatarCommand extends MandrocCommand {
       this.client.users.cache.get("277211104390807552"),
     ];
 
-    let commandLength = 0;
-    for (const [, category] of this.handler.categories) {
-      commandLength += category.map((cmd) => cmd.aliases[0]).length;
-    }
+    const commandCount = this.handler.modules
+      .filter(c => c.aliases.length > 0)
+      .size;
 
     const embed = new MessageEmbed()
       .setColor(Color.PRIMARY)
@@ -39,10 +38,10 @@ export default class AvatarCommand extends MandrocCommand {
       ])
       .addField("Bot Info", [
         `**❯ Name:** ${this.client.user?.tag}`,
-        `**❯ Commands:** ${commandLength}`,
+        `**❯ Commands:** ${commandCount}`,
         `**❯ Total Users:** ${this.client.guilds.cache.reduce(
           (a, b) => a + b.memberCount,
-          0
+          0,
         )}`,
         `**❯ Total Guilds:** ${this.client.guilds.cache.size}`,
         `**❯ Developers:** ${developers.join(", ")}`,
