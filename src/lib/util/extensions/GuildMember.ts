@@ -14,7 +14,7 @@ class GuildMember extends Structures.get("GuildMember") {
       }
     }
 
-    return this.roles.cache.has(IDs.Unverified) ? null : PermissionLevel.MEMBER;
+    return this.roles.cache.has(IDs.UNVERIFIED) ? null : PermissionLevel.MEMBER;
   }
 
   // @ts-expect-error

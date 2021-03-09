@@ -29,8 +29,8 @@ export default class MessageReactionAddListener extends Listener {
           break;
         }
 
-        if (member?.roles.cache.has(IDs.Unverified)) {
-          member?.roles.remove(IDs.Unverified);
+        if (member?.roles.cache.has(IDs.UNVERIFIED)) {
+          member?.roles.remove(IDs.UNVERIFIED);
         }
 
         break;

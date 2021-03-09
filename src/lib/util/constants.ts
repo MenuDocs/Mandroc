@@ -41,7 +41,7 @@ export const IDs = {
     [PermissionLevel.LOWER_MANAGEMENT]: "762898486945251337",
     [PermissionLevel.MANAGEMENT]: "762898486956916747",
   } as Record<PermissionLevel, string>,
-  Unverified: "762898486571827235",
+  UNVERIFIED: "762898486571827235",
 };
 
 export const imageUrlOptions = {
