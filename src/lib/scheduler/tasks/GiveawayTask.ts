@@ -3,6 +3,7 @@
  * You may not share this code outside of the MenuDocs Team unless given permission by Management.
  */
 
+import moment from "moment";
 import { Embed } from "../../util/Embed";
 
 import type { TextChannel } from "discord.js";
@@ -31,21 +32,24 @@ export class GiveawayTask implements ScheduledTask<GiveawayMeta> {
 
     const reactions = message.reactions.cache.get(GiveawayTask.EMOJI),
       potentialWinners = await reactions?.users.fetch();
+
     if (!potentialWinners?.size) {
       const embed = Embed.Primary("It seems that no one wanted the prize...");
       return message.util?.send(embed);
     }
 
-    const winners = potentialWinners.randomAmount(+amount),
-      winnersString = winners.length > 1
-        ? winners[0].toString()
-        : winners
-          .map((usr, idx, arr) => idx === 0 ? `${usr}` : `, ${idx === arr.length - 1 ? "and " : ""}${usr}`)
-          .join("")
-          .trim();
+    const winners = potentialWinners.filter(u => u.id !== client.user!.id).randomAmount(+amount),
+      winnersString = winners.size > 1
+        ? winners.array()
+          .map((usr, idx, arr) => idx === 0 ? `${usr}` : `, ${idx === arr.length - 1 ? "**and** " : ""}${usr}`).join("")
+        : `**${winners.first()!.toString()}**`;
 
-    const embed = Embed.Primary(`And the winner${winners.length > 1 ? "s are" : "is"}...\n${winnersString}`);
-    message.util?.send(embed);
+    const newEmbed = Embed.Primary(`Giveaway ended at **${moment().format("L LT")}**`)
+      .setTimestamp(Date.now())
+      .setFooter(`${winners.size} winner${winners.size > 1 ? "s" : ""}`);
+
+    await message.edit(newEmbed);
+    await message.channel.send(`@everyone, the winner${winners.size > 1 ? "s are" : " is"}... ${winnersString.trim()}`);
   }
 }
 

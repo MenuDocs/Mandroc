@@ -1,0 +1,46 @@
+/*
+ * Copyright (c) MenuDocs 2021.
+ * You may not share this code outside of the MenuDocs Team unless given permission by Management.
+ */
+
+import { adminCommand, Giveaway, MandrocCommand } from "@lib";
+import type { Message } from "discord.js";
+
+@adminCommand("giveaway-create", {
+  args: [
+    {
+      id: "duration",
+      type: "duration",
+      prompt: {
+        start: "Provide the duration of this giveaway.",
+        retry: "Provide a valid duration.",
+      },
+    },
+    {
+      id: "prize",
+      prompt: {
+        start: "Provide a prize lol.",
+      },
+    },
+    {
+      id: "winners",
+      type: "number",
+      default: 1,
+    },
+  ],
+})
+export class GiveawayStartSubCommand extends MandrocCommand {
+  async exec(message: Message, {
+    duration,
+    winners,
+    prize,
+  }: args) {
+    await Giveaway.create(message, duration, prize, winners);
+  }
+}
+
+type args = {
+  duration: number;
+  winners: number;
+  prize: string;
+}

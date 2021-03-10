@@ -51,7 +51,7 @@ export class Scheduler {
   /**
    * Generates a Random ID.
    */
-  private static generateRandomId(): string {
+  static generateRandomId(): string {
     return randomBytes(6).toString("base64");
   }
 
@@ -90,7 +90,7 @@ export class Scheduler {
   /**
    * The redis wrapper.
    */
-  private static get redis(): Redis {
+  static get redis(): Redis {
     return Redis.get();
   }
 
@@ -141,29 +141,37 @@ export class Scheduler {
     await Scheduler.redis.client.del(TASK(task, id), META(task, id));
   }
 
+  async _runKey(key: string, data: ScheduledTaskInfo) {
+    const meta = data.metaKey
+      ? await Scheduler.redis.client.hgetall(data.metaKey)
+      : {};
+
+    await this.tasks
+      .get(Scheduler.parse(key)!.task)
+      ?.execute(this.client, meta, data);
+
+    await Scheduler.redis.client.del(...(data.metaKey ? [ data.metaKey, key ] : [ key ]));
+  }
+
+  /**
+   * Checks a redis key.
+   *
+   * @param key The redis key.
+   */
+  async _checkKey(key: string) {
+    const data: ScheduledTaskInfo = (await Scheduler.redis.client.hgetall(key)) as any;
+    if (+data.runAt <= Date.now()) {
+      await this._runKey(key, data);
+    }
+  }
+
   /**
    * Iterates through every active task and checks whether their run date has been passed.
    */
   private async _check() {
     const scheduled = await Scheduler.redis.scan("tasks:*");
     for (const key of scheduled) {
-      const data: ScheduledTaskInfo = (await Scheduler.redis.client.hgetall(
-        key,
-      )) as any;
-
-      if (+data.runAt <= Date.now()) {
-        const meta = data.metaKey
-          ? await Scheduler.redis.client.hgetall(data.metaKey)
-          : {};
-
-        await this.tasks
-          .get(Scheduler.parse(key)!.task)
-          ?.execute(this.client, meta, data);
-
-        await Scheduler.redis.client.del(
-          ...(data.metaKey ? [ data.metaKey, key ] : [ key ]),
-        );
-      }
+      await this._checkKey(key);
     }
   }
 }

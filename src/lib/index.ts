@@ -26,6 +26,7 @@ export * from "./classes/resolver/Resolver";
 export * from "./classes/monitor/Monitor";
 export * from "./classes/Command";
 export * from "./classes/decorators";
+export * from "./classes/GiveawayHelper";
 
 export * from "./scheduler/tasks/ScheduledTask";
 export * from "./scheduler/Scheduler";
@@ -59,12 +60,14 @@ declare module "discord.js" {
 
   type ReactionCollectorFilter = (
     reaction: MessageReaction,
-    user: User
+    user: User,
   ) => boolean;
 
   interface GuildMember {
     permissionLevel: PermissionLevel | null;
+
     above(target: GuildMember | PermissionLevel): boolean;
+
     getProfile(): Promise<Profile>;
   }
 
@@ -79,13 +82,18 @@ declare module "discord.js" {
   }
 
   interface Collection<K, V> {
-    randomAmount(amount: number): V[];
+    /**
+     * Returns a collection with a random amount of entries from this Collection.
+     *
+     * @param amount The number of entries to take.
+     */
+    randomAmount(amount: number): Collection<K, V>;
   }
 
   interface Message {
     createReactionCollector(
       filter: ReactionCollectorFilter,
-      options?: ReactionCollectorOptions
+      options?: ReactionCollectorOptions,
     ): ReactionCollector;
 
     prompt(question: string, embeddable?: boolean): Promise<boolean>;
