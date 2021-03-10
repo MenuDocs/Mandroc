@@ -8,9 +8,9 @@ import {
   DEFAULT_FORMATTER_COLORS,
   DefaultFormatter,
   DefaultFormatterColor,
+  Logger,
   LogLevel,
   LogMeta,
-  Logger,
 } from "@ayanaware/logger";
 import { dim, gray } from "ansi-styles";
 
@@ -62,4 +62,4 @@ export class Formatter extends DefaultFormatter {
 }
 
 Logger.setFormatter(new Formatter());
-Logger.getDefaultTransport().setLevel(LogLevel.TRACE);
+Logger.getDefaultTransport().setLevel(process.env.NODE_ENV === "production" ? LogLevel.INFO : LogLevel.TRACE);
