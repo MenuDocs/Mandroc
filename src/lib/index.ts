@@ -136,5 +136,16 @@ declare global {
      * Returns random entry of array.
      */
     random(): T;
+
+    /**
+     * Format's this Array (includes markdown).
+     *
+     * @example ```js
+     * const arr = ["Gino", "Jonas", "Anthony", "Connor"];
+     *
+     * console.log(arr.format()) // => "Gino, Jonas, Anthony, **and** Connor"
+     * ```
+     * */
+    format(): string;
   }
 }

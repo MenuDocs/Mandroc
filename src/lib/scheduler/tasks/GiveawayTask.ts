@@ -39,17 +39,13 @@ export class GiveawayTask implements ScheduledTask<GiveawayMeta> {
     }
 
     const winners = potentialWinners.filter(u => u.id !== client.user!.id).randomAmount(+amount),
-      winnersString = winners.size > 1
-        ? winners.array()
-          .map((usr, idx, arr) => idx === 0 ? `${usr}` : `, ${idx === arr.length - 1 ? "**and** " : ""}${usr}`).join("")
-        : `**${winners.first()!.toString()}**`;
-
-    const newEmbed = Embed.Primary(`Giveaway ended at **${moment().format("L LT")}**`)
-      .setTimestamp(Date.now())
-      .setFooter(`${winners.size} winner${winners.size > 1 ? "s" : ""}`);
+      newEmbed = Embed.Primary(`Giveaway ended at **${moment().format("L LT")}**`)
+        .setTimestamp(Date.now())
+        .setFooter(`${winners.size} winner${winners.size > 1 ? "s" : ""}`);
 
     await message.edit(newEmbed);
-    await message.channel.send(`@everyone, the winner${winners.size > 1 ? "s are" : " is"}... ${winnersString.trim()}`);
+    await message.channel.send(`@everyone, the winner${winners.size > 1 ? "s are" : " is"}... ${winners.array()
+      .format()}`);
   }
 }
 
