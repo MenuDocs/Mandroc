@@ -3,7 +3,9 @@
  * You may not share this code outside of the MenuDocs Team unless given permission by Management.
  */
 
+import "dotenv/config";
 import "module-alias/register";
+
 import { config, Mandroc } from "@lib";
 import { Logger } from "@ayanaware/logger";
 import { captureException, init } from "@sentry/node";

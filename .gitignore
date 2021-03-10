@@ -6,3 +6,4 @@ dist/
 config.json
 yarn.lock
 dump.rdb
+.env

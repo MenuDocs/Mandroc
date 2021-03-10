@@ -19,11 +19,13 @@
     "dev": "yarn build && NODE_ENV=development node ."
   },
   "dependencies": {
+    "@ayanaware/errors": "^1.1.0",
     "@ayanaware/logger": "^2.2.1",
     "@sentry/node": "^5.29.2",
     "@sentry/tracing": "^5.29.2",
     "discord-akairo": "^8.1.0",
     "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0",
     "ioredis": "^4.19.4",
     "js-beautify": "^1.13.0",
     "module-alias": "^2.2.2",
