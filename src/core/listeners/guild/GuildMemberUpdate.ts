@@ -1,6 +1,7 @@
 import { Listener } from "discord-akairo";
 import { Embed, IDs, listener } from "@lib";
 import type { GuildMember, User } from "discord.js";
+import { Util } from "discord.js";
 
 @listener("guild-member-update", {
   event: "guildMemberUpdate",
@@ -26,7 +27,7 @@ export class GuildMemberUpdate extends Listener {
           moderator: entry.executor,
           reason: "unknown",
         },
-        false
+        false,
       );
 
       return;
@@ -55,10 +56,42 @@ export class GuildMemberUpdate extends Listener {
       return;
     }
 
-    const newRoles = member.roles.cache.filter(
-      (r) => !old.roles.cache.has(r.id)
-    );
-    if (newRoles.size) {
+    if (member.nickname !== old.nickname) {
+      const audit = await member.guild.fetchAuditLogs({
+          type: "MEMBER_UPDATE",
+        }),
+        entry = audit.entries
+          .sort((a, b) => b.createdTimestamp - a.createdTimestamp)
+          .filter((e) => (e.target as User).id === member.id)
+          .first();
+
+      if (!entry) {
+        return;
+      }
+
+      const logs = await this.client.moderation.logChannel(),
+        embed = Embed.Primary()
+          .setAuthor(`Member Nickname ${!member.nickname ? "Reset" : !old.nickname ? "Set" : "Updated"}`, entry.executor.displayAvatarURL())
+          .setDescription([
+            `**Member:** ${member} \`(${member.id})\``,
+            `**Moderator:** ${entry.executor} \`(${entry.executor.id})\``,
+            !member.nickname && old.nickname
+              ? `**Old Nickname:** ${Util.escapeMarkdown(old.nickname)}`
+              : member.nickname && !old.nickname
+              ? `**Set Nickname:** ${Util.escapeMarkdown(member.nickname)}`
+              : `**New/old Nickname:** ${Util.escapeMarkdown(member.nickname!)} / ${Util.escapeMarkdown(old.nickname!)}`,
+          ]);
+
+      await logs.send(embed);
+    }
+
+    const newRoles = member.roles.cache,
+      oldRoles = old.roles.cache;
+
+    if (newRoles.size !== oldRoles.size) {
+      const addedRoles = newRoles.filter((r) => !oldRoles.has(r.id)),
+        removedRoles = oldRoles.filter((r) => !newRoles.has(r.id));
+
       const audit = await member.guild.fetchAuditLogs({
           type: "MEMBER_ROLE_UPDATE",
         }),
@@ -73,11 +106,13 @@ export class GuildMemberUpdate extends Listener {
 
       const logs = await this.client.moderation.logChannel(),
         embed = Embed.Primary()
-          .setAuthor("Role Add", entry.executor.displayAvatarURL())
+          .setAuthor(`Updated Member Roles`, entry.executor.displayAvatarURL())
           .setDescription([
             `**Member:** ${member} \`(${member.id})\``,
-            `**Moderator:** ${entry.executor} \`(${member.id})\``,
-          ]);
+            `**Moderator:** ${entry.executor} \`(${entry.executor.id})\``,
+            addedRoles.size ? `**Added:** ${addedRoles.array().format()}` : "",
+            removedRoles.size ? `**Removed:** ${removedRoles.array().format()}` : "",
+          ].filter(Boolean));
 
       await logs.send(embed);
     }
