@@ -4,10 +4,11 @@
  */
 
 import { command, Embed, MandrocCommand, PermissionLevel, Tag } from "@lib";
+import { render } from "mustache";
 
 import type { Message, TextChannel } from "discord.js";
 
-const SUPPORT_CATEGORIES = ["762898487372677138", "762898487527473154"];
+const SUPPORT_CATEGORIES = [ "762898487372677138", "762898487527473154" ];
 
 @command("tag-show", {
   args: [
@@ -58,10 +59,24 @@ export default class ShowSubCommand extends MandrocCommand {
       }
     }
 
-    message.util?.send(
-      tag.embedded ? Embed.Primary(tag.contents) : tag.contents
-    );
+    const view = {
+        author: {
+          id: message.author.id,
+          name: message.author.username,
+          discrim: message.author.discriminator,
+          avatar: message.author.avatarURL(),
+          tag: message.author.tag,
+          nickname: message.member?.nickname,
+        },
+        guild: {
+          memberCount: message.guild!.members.cache.size,
+        },
+      },
+      contents = render(tag.contents, view);
+
+    message.util?.send(tag.embedded ? Embed.Primary(contents) : contents);
     tag.uses++;
+
     return tag.save();
   }
 }
