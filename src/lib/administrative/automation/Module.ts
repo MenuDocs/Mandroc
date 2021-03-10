@@ -3,10 +3,10 @@
  * You may not share this code outside of the MenuDocs Team unless given permission by Management.
  */
 
+import type { Mandroc } from "@lib";
 import type { Message } from "discord.js";
 import type { Moderation } from "../Moderation";
 import type { AutoMod } from "./AutoMod";
-import type { Mandroc } from "@lib";
 
 export abstract class Module {
   public readonly automod: AutoMod;

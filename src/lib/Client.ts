@@ -5,13 +5,7 @@
 
 import { Guild, Intents, MessageEmbed, Util } from "discord.js";
 import { Logger } from "@ayanaware/logger";
-import {
-  AkairoClient,
-  CommandHandler,
-  Flag,
-  InhibitorHandler,
-  ListenerHandler,
-} from "discord-akairo";
+import { AkairoClient, CommandHandler, Flag, InhibitorHandler, ListenerHandler } from "discord-akairo";
 import { join } from "path";
 import TurndownService from "turndown";
 import ms from "ms";
@@ -96,7 +90,7 @@ export class Mandroc extends AkairoClient {
         "424566306042544128",
         "277211104390807552",
       ],
-      partials: ["MESSAGE", "REACTION", "CHANNEL", "GUILD_MEMBER", "USER"],
+      partials: [ "MESSAGE", "REACTION", "CHANNEL", "GUILD_MEMBER", "USER" ],
       presence: {
         activity: {
           url: "https://twitch.tv/menudocs",
@@ -200,8 +194,8 @@ export class Mandroc extends AkairoClient {
       phrase = Util.cleanContent(phrase.toLowerCase(), message);
 
       let tags = await Tag.find();
-      const [tag] = tags.filter(
-        (t) => t.name === phrase || t.aliases.includes(phrase)
+      const [ tag ] = tags.filter(
+        (t) => t.name === phrase || t.aliases.includes(phrase),
       );
 
       return tag || null;
@@ -228,16 +222,16 @@ export class Mandroc extends AkairoClient {
 
         const phraseArr = phrase.split(",");
         phraseArr.forEach((s) =>
-          Util.cleanContent(s.trim().toLowerCase(), message)
+          Util.cleanContent(s.trim().toLowerCase(), message),
         );
 
         let tags = await Tag.find();
-        const [tag] = tags.filter(
-          (t) => t.name === phrase || t.aliases.includes(phrase)
+        const [ tag ] = tags.filter(
+          (t) => t.name === phrase || t.aliases.includes(phrase),
         );
 
         return tag ? Flag.fail(tag.name) : phrase;
-      }
+      },
     );
   }
 
@@ -264,11 +258,11 @@ export class Mandroc extends AkairoClient {
     await this.database.launch();
     await this.redis.launch();
 
-    this.monitorHandler.loadAll();
-    this.resolverHandler.loadAll();
-    this.listenerHandler.loadAll();
-    this.commandHandler.loadAll();
-    this.inhibitorHandler.loadAll();
+    await this.monitorHandler.loadAll();
+    await this.resolverHandler.loadAll();
+    await this.listenerHandler.loadAll();
+    await this.commandHandler.loadAll();
+    await this.inhibitorHandler.loadAll();
 
     await this.login(config.get<string>("token"));
   }
