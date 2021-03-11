@@ -24,7 +24,7 @@ It brings features such as moderation, economy, tags system, and miscellaneous c
 Mandroc wouldn't be up 24/7 without the help from our partner [Oxide Hosting](https://oxide.host "the official oxide site") with their reliable, fast and powerful hosting services.
 
 This bot is strictly open-source so that members can assist with making Mandroc the best it can be.
-The aim of this open-source project is to enable the assistance of the 1000+ members in the MenuDocs guild. Any member is welcome to send through their own pull requests with improved code.  
+The aim of this open-source project is to enable the assistance of the members within the MenuDocs guild. Any member is welcome to send through their own pull requests with improved code.  
 _Anybody that contributes to the bot will be shown in the contributors section below with their twitter or relevant social linked._
 
 - We will not provide support for the self-hosting of this code.
@@ -54,6 +54,3 @@ Here are some links that are associated with MenuDocs:
 
 ## Contributors
 
-- [**MenuDocs**](https://twitter.com/menudocs "MenuDocs' Twitter Account")
-- [**George (T3NED)**](https://github.com/T3NED "George's Github Account")
-- [**Matthew (Lupine)**](https://github.com/alphalupine "Matthew's Github Account")
