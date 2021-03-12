@@ -22,7 +22,7 @@ export default class DailyCommand extends MandrocCommand {
     const profile = await message.member!.getProfile();
     if (profile.lastDaily && profile.lastDaily + ms("1d") > Date.now()) {
       const embed = Embed.Primary(
-        `Ayo! It's only been **${ms(profile.lastDaily, {
+        `Ayo! It's only been **${ms(Date.now() - profile.lastDaily, {
           long: true,
         })}** since you last got your daily coins, chill.`
       );

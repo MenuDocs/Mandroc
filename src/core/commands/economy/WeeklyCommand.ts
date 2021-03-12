@@ -21,10 +21,10 @@ export default class DailyCommand extends MandrocCommand {
     const profile = await message.member?.getProfile()!,
       date = Date.now();
 
-    if (profile.lastDaily) {
-      const lastDaily = profile.lastDaily;
+    if (profile.lastWeekly) {
+      const lastWeekly = profile.lastWeekly;
 
-      if (lastDaily < date + ms("1d")) {
+      if (lastWeekly < date + ms("1d")) {
         const embed = Embed.Warning(
           "You can only get a your weekly coins once a week!"
         );
