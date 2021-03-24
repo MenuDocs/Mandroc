@@ -14,10 +14,10 @@ const DEFAULT_COMMAND_DESCRIPTION = {
 };
 
 @command("help", {
-  aliases: ["help", "halp", "commands"],
+  aliases: [ "help", "halp", "commands" ],
   description: {
     content: "Shows all commands that the invoker are able to use.",
-    examples: (prefix: string) => [`${prefix}help ban`],
+    examples: (prefix: string) => [ `${prefix}help ban` ],
     usage: "[command]",
   },
   args: [
@@ -42,7 +42,22 @@ export default class HelpCommand extends MandrocCommand {
           "(**required** - <>, **optional** - ())",
         ]);
 
-      for (const [id, category] of this.handler.categories) {
+      const categories = this.handler.categories.filter(c => {
+        switch (c.id) {
+          case "administrative":
+            if (!message.member) {
+              return true;
+            }
+
+            return message.member.permissionLevel ? message.member.permissionLevel >= PermissionLevel.TRIAL_MOD : false;
+          case "private":
+            return this.client.isOwner(message.author);
+          default:
+            return true;
+        }
+      });
+
+      for (const [ id, category ] of categories) {
         const mapped = category
           .filter((c) => c.aliases.length > 0)
           .map((c) => `\`${c.aliases[0]}\``);
@@ -50,7 +65,7 @@ export default class HelpCommand extends MandrocCommand {
         if (mapped.length) {
           embed.addField(
             `❯ ${id.capitalize()} (${mapped.length})`,
-            mapped.join(", ")
+            mapped.join(", "),
           );
         }
       }
@@ -66,7 +81,8 @@ export default class HelpCommand extends MandrocCommand {
       .addField("❯ General Information", [
         `**Category**: ${command.category.id}`,
         `**Aliases**: ${command.aliases.slice(1).join(", ") || "None"}`,
-        `**Accessible By**: ${PermissionLevel[command.permissionLevel].split("_").map((x: string) => x.capitalize(true)).join(" ")}`,
+        `**Accessible By**: ${PermissionLevel[command.permissionLevel].split("_").map((x: string) => x.capitalize(true))
+          .join(" ")}`,
         `**Usage**: \`${prefix}${command.aliases[0]}${
           description.usage ? ` ${description.usage}` : ""
         }\``,
@@ -81,7 +97,7 @@ export default class HelpCommand extends MandrocCommand {
       if (examples.length) {
         embed.addField(
           "❯ Examples",
-          examples.map((e) => `\`${e}\``)
+          examples.map((e) => `\`${e}\``),
         );
       }
     }
