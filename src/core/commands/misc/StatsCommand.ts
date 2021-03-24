@@ -19,6 +19,8 @@ export default class StatsCommand extends MandrocCommand {
   ];
 
   public async exec(message: Message) {
+    return message.util?.send(Embed.Primary("Sorry, this command is still WIP"))
+
     /**
      * TODO - ADD A FUCKING COOLDOWN
      * TODO - GET YOUTUBE | TWITCH | TWITTER API ACCESS
