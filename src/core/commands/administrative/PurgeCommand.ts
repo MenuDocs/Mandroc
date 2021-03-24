@@ -5,14 +5,12 @@
 
 import { adminCommand, Embed, MandrocCommand } from "@lib";
 import { Argument } from "discord-akairo";
-
-import type { Collection, Message, TextChannel, User } from "discord.js";
-import { SnowflakeUtil } from "discord.js";
-import ms from "ms";
 import { AntiMassModeration } from "../../../lib/administrative/automation/modules/AntiMassModeration";
 
+import type { Message, TextChannel, User } from "discord.js";
+
 @adminCommand("purge", {
-  aliases: ["purge", "clear", "prune"],
+  aliases: [ "purge", "clear", "prune" ],
   editable: false,
   args: [
     {
@@ -30,80 +28,71 @@ import { AntiMassModeration } from "../../../lib/administrative/automation/modul
     {
       id: "filter",
       type: [
-        ["invites", "i"],
-        ["embeds", "e"],
-        ["bots", "b"],
-        ["links", "l"],
+        [ "invites", "i" ],
+        [ "embeds", "e" ],
+        [ "bots", "b" ],
+        [ "links", "l" ],
       ],
       match: "option",
-      flag: ["-f", "--filter"],
+      flag: [ "-f", "--filter" ],
     },
     {
       id: "includePins",
       match: "flag",
-      flag: ["-ip", "--include-pins"],
+      flag: [ "-ip", "--include-pins" ],
     },
     {
       id: "silent",
       match: "flag",
-      flag: ["-s", "--silent"],
+      flag: [ "-s", "--silent" ],
     },
   ],
 })
 export default class PurgeCommand extends MandrocCommand {
   public async exec(message: Message, args: args) {
     if (args.user) {
-      let messages = (
-        await message.channel.messages.fetch(
-          { limit: args.amount > 100 ? 2000 : 500 },
-          false
-        )
-      )
-        .filter(
-          (m) =>
-            m.author.id === args.user.id &&
-            SnowflakeUtil.deconstruct(m.id).timestamp >= Date.now() + ms("2w")
-        )
-        .array()
-        .slice(0, args.amount);
+      let messages = (await message.channel.messages.fetch({ limit: args.amount }, false))
+        .filter((m) => m.author.id === args.user.id);
 
-      await this._deleteMessages(
-        message.channel as TextChannel,
-        messages.map((m) => m.id)
-      );
-      return Embed.Primary(
-        `Deleted **${messages.length}** by ${args.user} \`(${args.user.id})\`.`
-      );
-    }
+      await this._deleteMessages(message.channel as TextChannel, messages.keyArray());
 
-    let messages = await message.channel.messages.fetch({ limit: 100 }, false);
-    if (args.filter) {
-      switch (args.filter) {
-        case "bots":
-          messages = messages.filter((m) => m.author.bot);
-          break;
-        case "embeds":
-          messages = messages.filter((m) => m.embeds.length > 0);
-          break;
-        case "invites":
-          break;
+      message.util
+        ?.send(Embed.Primary(`Deleted **${messages.size} messages** by ${args.user} \`(${args.user.id})\`.`))
+        ?.then(m => m.delete({ timeout: 5000 }));
+    } else {
+      let messages = await message.channel.messages.fetch({ limit: 100 }, false);
+      if (args.filter) {
+        switch (args.filter) {
+          case "bots":
+            messages = messages.filter((m) => m.author.bot);
+            break;
+          case "embeds":
+            messages = messages.filter((m) => m.embeds.length > 0);
+            break;
+          case "invites":
+            break;
+        }
       }
+
+      await this._deleteMessages(message.channel as TextChannel, [ ...messages.keys() ]);
+
+      message.util
+        ?.send(Embed.Primary(`Deleted **${messages.size}**`))
+        ?.then(m => m.delete({ timeout: 5000 }));
     }
 
     AntiMassModeration.incrementCommandUsage(message);
   }
 
-  private _deleteMessages(
-    channel: TextChannel,
-    messages: string[]
-  ): Promise<Collection<string, Message>> {
+
+  private async _deleteMessages(channel: TextChannel, messages: string[]): Promise<any> {
     if (messages.length > 100) {
       return channel
-        .bulkDelete(messages.splice(0, 100))
+        .bulkDelete(messages.splice(0, 100), true)
         .then(() => this._deleteMessages(channel, messages));
     }
 
-    return channel.bulkDelete(messages);
+    await channel.bulkDelete(messages);
   }
 }
 
