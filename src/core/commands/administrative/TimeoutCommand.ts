@@ -37,11 +37,8 @@ import type { GuildMember, Message } from "discord.js";
 })
 export class TimeoutCommand extends MandrocCommand {
   async exec(message: Message, { duration, member, reason }: args) {
-
-    if (member.roles.cache.has(IDs.TIMEDOUT)) {
-      const embed = Embed.Warning(
-        "That member is already timed out."
-      );
+    if (member.roles.cache.has(IDs.TIMED_OUT)) {
+      const embed = Embed.Warning("That member is already timed out.");
       return message.util?.send(embed);
     }
 
@@ -56,10 +53,7 @@ export class TimeoutCommand extends MandrocCommand {
       message.delete().catch(captureException);
     }
 
-
-    const embed = Embed.Primary(
-      `Successfully timed out **${member}** ${ms(duration, { long: true })} with reason \`${reason}\``
-    );
+    const embed = Embed.Primary(`Successfully timed out **${member}** for ${ms(duration, { long: true })} with reason \`${reason}\``);
 
     return message.channel.send(embed).then((m) => m.delete({ timeout: 6000 }));
   }

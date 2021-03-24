@@ -23,7 +23,7 @@ export class Database {
   public async launch() {
     this.connection = await createConnection({
       type: "mongodb",
-      url: config.get<string>("database"),
+      url: config.get<string>("database-uri"),
       entities: [Profile, Infraction, Tag, ReactionRole],
       synchronize: true,
       useUnifiedTopology: true,

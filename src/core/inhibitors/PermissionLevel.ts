@@ -26,6 +26,6 @@ export default class PermissionLevelInhibitor extends Inhibitor {
       return false;
     }
 
-    return message.member.permissionLevel < command.permissionLevel;
+    return !message.member.above(command.permissionLevel);
   }
 }
