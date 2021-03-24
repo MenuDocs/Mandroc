@@ -3,46 +3,54 @@
  * You may not share this code outside of the MenuDocs Team unless given permission by Management.
  */
 
-import { Color, command, MandrocCommand, Item, ItemTier, Profile } from "@lib";
-import { Message, MessageEmbed } from "discord.js";
+import { command, Embed, Item, ItemTier, MandrocCommand } from "@lib";
+import type { Message } from "discord.js";
 
 @command("shovel", {
-  aliases: ["shovel"],
+  aliases: [ "shovel" ],
   description: {
     content: "Shovels after goods in the ground.",
-    examples: (prefix: string) => [`${prefix}shovel`],
+    examples: (prefix: string) => [ `${prefix}shovel` ],
     usage: "",
   },
 })
 export default class ShovelCommand extends MandrocCommand {
   private items: Array<Item> = [
-    { name: "Lilly", price: 60, tier: "basic" },
-    { name: "Dirt", price: 2, tier: "basic" },
-    { name: "Dropped iPhone", price: 2000, tier: "exotic"}
+    {
+      name: "Lilly",
+      price: 60,
+      tier: "basic",
+    },
+    {
+      name: "Dirt",
+      price: 2,
+      tier: "basic",
+    },
+    {
+      name: "Dropped iPhone",
+      price: 2000,
+      tier: "exotic",
+    },
   ];
 
-  private itemTiers: ItemTier[] = ["basic", "common", "rare", "exotic"];
+  private itemTiers: ItemTier[] = [ "basic", "common", "rare", "exotic" ];
   private chances: number[][] = [
-    [0, 40],
-    [41, 71],
-    [72, 94],
-    [95, 100],
+    [ 0, 40 ],
+    [ 41, 71 ],
+    [ 72, 94 ],
+    [ 95, 100 ],
   ];
 
   public async exec(message: Message) {
-    const { author } = message;
-    const profile =
-      (await Profile.findOne({ _id: author.id })) ??
-      (await Profile.create({ _id: author.id }));
+    const profile = await message.member!.getProfile(),
+      roll = Math.floor(Math.random() * 100),
+      embed = Embed.Primary();
 
-    const roll = Math.floor(Math.random() * 100);
-
-    const embed = new MessageEmbed().setColor(Color.PRIMARY);
-
-    if (!profile.inventory.find((x) => x.name == "Shovel"))
+    if (!profile.inventory.find((x) => x.name == "Shovel")) {
       return message.util?.send(
-        "You must possess a shovel in order to run this command."
+        "You must possess a shovel in order to run this command.",
       );
+    }
 
     profile.inventory.find((x) => x.name === "Shovel")!.durability -= 1;
 
@@ -54,7 +62,7 @@ export default class ShovelCommand extends MandrocCommand {
     let i = 0;
 
     for (const entry of this.chances) {
-      const [low, high] = entry;
+      const [ low, high ] = entry;
 
       if (roll <= low && roll >= high) {
         const grantedItem = this.items
@@ -63,13 +71,13 @@ export default class ShovelCommand extends MandrocCommand {
         profile.pocket += grantedItem.price;
         message.util?.send(
           embed.setDescription(
-            `Wow, you digged up a ${grantedItem.name}, it's value of \`${grantedItem.price} ₪\` has been added to your pocket.`
-          )
+            `Wow, you digged up a ${grantedItem.name}, it's value of \`${grantedItem.price} ₪\` has been added to your pocket.`,
+          ),
         );
       }
       i++;
     }
 
-    profile.save();
+    await profile.save();
   }
 }

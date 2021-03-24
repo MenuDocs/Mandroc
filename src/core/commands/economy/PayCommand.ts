@@ -5,10 +5,10 @@
 
 import { command, Embed, MandrocCommand } from "@lib";
 
-import type { Message, GuildMember } from "discord.js";
+import type { GuildMember, Message } from "discord.js";
 
 @command("pay", {
-  aliases: ["pay"],
+  aliases: [ "pay" ],
   channel: "guild",
   description: {
     content: "Pays money to a user.",
@@ -40,25 +40,19 @@ import type { Message, GuildMember } from "discord.js";
   ],
 })
 export default class PayCommand extends MandrocCommand {
-  public async exec(message: Message, { receiver, amount }: args) {
+  async exec(message: Message, { receiver, amount }: args) {
     const payer = await message.member!.getProfile();
     if (payer.pocket < amount) {
-      const embed = Embed.Warning(
-        "You don't have enough money in your pocket."
-      );
+      const embed = Embed.Warning("You don't have enough money in your pocket.",);
       return message.util?.send(embed);
     }
 
-    const receivee = await receiver.getProfile();
-
-    receivee.pocket += amount;
+    const receiverProfile = await receiver.getProfile();
+    receiverProfile.pocket += amount;
     payer.pocket -= amount;
-    await Promise.all([receivee, payer].map((p) => p.save()));
 
-    const embed = Embed.Primary(
-      `Successfully payed **${amount} ₪** to ${receiver}`
-    );
-    return message.util?.send(embed);
+    await message.util?.send(Embed.Primary(`Successfully payed **${amount} ₪** to ${receiverProfile}`));
+    await Promise.all([ receiverProfile, payer ].map((p) => p.save()));
   }
 }
 
