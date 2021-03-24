@@ -3,62 +3,58 @@
  * You may not share this code outside of the MenuDocs Team unless given permission by Management.
  */
 
-import { Color, command, MandrocCommand, Profile } from "@lib";
-import { Message, MessageEmbed } from "discord.js";
+import { command, Embed, MandrocCommand, paginate, Profile } from "@lib";
+import type { Message } from "discord.js";
 
 @command("leaderboard", {
-  aliases: ["leaderboard", "top"],
+  aliases: [ "leaderboard", "top" ],
   description: {
     content: "Displays bot info",
-    examples: (prefix: string) => [`${prefix}leaderboard`],
+    examples: (prefix: string) => [ `${prefix}leaderboard` ],
   },
   args: [
     {
+      id: "type",
+      type: [ [ "xp", "exp" ], [ "level", "lvl" ] ],
+      default: "xp"
+    },
+    {
       id: "page",
-      match: "option",
       type: "number",
-      prompt: {
-        retry: "Please provide a valid page number",
-      },
+      default: 1,
+      match: "option",
+      flag: [ "--page", "-p", "--select" ]
     },
   ],
 })
-export default class AvatarCommand extends MandrocCommand {
-  public async exec(message: Message, { page }: args) {
+export class LeaderboardCommand extends MandrocCommand {
+  public async exec(message: Message, { page: _current, type }: args) {
     const profiles = await Profile.find({
-      order: { xp: "DESC" },
+      order: { [type]: "DESC" },
     });
 
-    const embed = new MessageEmbed()
-      .setColor(Color.PRIMARY)
-      .setFooter("You can change the page doing: !top <page>");
+    const { max, page, current, } = paginate(profiles, 10, _current);
 
-    let embedDesc = "";
-    let i = 0;
+    let idx = (current - 1) * 10,
+      desc = "";
 
-    if (!page) {
-      for (const profile of profiles.slice(0, 9)) {
-        embedDesc += `**${i + 1}. ${
-          (await this.client.users.fetch(<string>(<unknown>profile._id))).tag
-        } | Level ${profile.level}**`;
-        embedDesc += `\u3000 **Exp:** ${profile.xp}`;
-      }
-      embed.setDescription(embedDesc);
-      message.util?.send(embed);
-    } else {
-      for (const profile of profiles.slice(page * 9, 9 + page * 9)) {
-        embedDesc += `**${i + 1}. ${
-          (await this.client.users.fetch(<string>(<unknown>profile._id))).tag
-        } | Level ${profile.level}**`;
-        embedDesc += `\u3000 **Exp:** ${profile.xp}`;
-      }
+    for (const profile of page) {
+      const user = await this.client.users.fetch(profile.userId);
 
-      embed.setDescription(embedDesc);
-      message.util?.send(embed);
+      desc += `\`#${`${++idx}`.padStart(2, "0")}\` *${user.tag}*\n`
+      desc += `\u3000**${type.capitalize()}:** ${profile[type].toLocaleString()}\n\n`
     }
+
+    const embed = Embed.Primary(desc);
+    if (max > 1) {
+      embed.setFooter(`Page: ${current}/${max}`);
+    }
+
+    return message.util?.send(embed);
   }
 }
 
 type args = {
-  page?: number;
+  page: number;
+  type: "xp" | "level";
 };
