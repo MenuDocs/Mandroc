@@ -10,7 +10,7 @@ import { Flag } from "discord-akairo";
 export default class RepCommand extends MandrocCommand {
   public *args() {
     const method = yield {
-      default: "view",
+      default: "rep-view",
       type: [
         ["rep-add", "add", "+"],
         ["rep-remove", "remove", "-"],

@@ -3,10 +3,10 @@
  * You may not share this code outside of the MenuDocs Team unless given permission by Management.
  */
 
-import { command, Embed, MandrocCommand, Profile } from "@lib";
+import { command, Embed, MandrocCommand } from "@lib";
+import ms from "ms";
 
 import type { GuildMember, Message } from "discord.js";
-import ms from "ms";
 
 @command("rep-add", {
   channel: "guild",
@@ -18,11 +18,9 @@ import ms from "ms";
   ],
   cooldown: ms("1d"),
 })
-export default class AddSubCommand extends MandrocCommand {
+export class RepAddSubCommand extends MandrocCommand {
   public async exec(message: Message, { member }: args) {
-    const profile =
-      (await Profile.findOne({ where: { userId: member.id } })) ??
-      (await Profile.create({ userId: member.id }).save());
+    const profile = await message.member!.getProfile();
 
     profile.repBy.push(message.author.id);
     return message.util?.send(
