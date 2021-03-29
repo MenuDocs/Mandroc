@@ -3,7 +3,7 @@
  * You may not share this code outside of the MenuDocs Team unless given permission by Management.
  */
 
-import { command, Embed, MandrocCommand, Profile } from "@lib";
+import { command, Embed, MandrocCommand } from "@lib";
 
 import type { Message } from "discord.js";
 
@@ -17,7 +17,7 @@ import type { Message } from "discord.js";
   args: [
     {
       id: "side",
-      match: "rest",
+      type: ["heads", "tails"],
       prompt: {
         start: "Please tell me which side you bet on.",
         retry:
@@ -25,47 +25,31 @@ import type { Message } from "discord.js";
       },
     },
     {
-      id: "amount",
+      id: "bet",
       match: "rest",
       prompt: {
         start: "Please tell me how much you wish to bet",
-        retry:
-          "Please try again... Example: `!coinflip <heads|tails> <amount>`",
+        retry: "Please try again... Example: `!coinflip <heads|tails> <amount>`",
       },
     },
   ],
 })
 export default class CoinflipCommand extends MandrocCommand {
-  async exec(message: Message, { side, amount }: args) {
-    const profile = await Profile.findOneOrCreate({
-      where: { _id: message.author.id },
-      create: { _id: message.author.id },
-    });
-
-    const flippedSide = ["tails", "heads"].random();
-
-    if (!new RegExp(/(heads)|(tails)/, "gi").exec(side))
-      return message.channel.send("Please pick a proper side. `heads|tails`");
-    if (amount > profile.pocket) {
-      return message.channel.send(
-        "You cant bet more than you have in your pocket!"
-      );
+  async exec(message: Message, { side, bet }: args) {
+    const profile = await message.member!.getProfile()
+    if (bet > profile.pocket) {
+      return message.util?.send("You cant bet more than you have in your pocket!");
     }
 
-    if (side === flippedSide) {
-      profile.pocket += amount / 3;
-      const embed = Embed.Success(
-        `Wow! It was \`${side}\` indeed! **You received: ${amount / 3} ₪**`
-      );
-
-      message.channel.send(embed);
+    const landed = ["tails", "heads"].random();
+    if (side === landed) {
+      const amount = Math.round(bet / 3)
+      profile.pocket += amount;
+      message.util?.send(Embed.Success(`Wow! It was \`${side}\` indeed! *You received:* **${amount} ₪**`));
     } else {
-      profile.pocket -= amount;
-      const embed = Embed.Success(
-        `Darn it ... it was \`${side}\`. **You lost: ${amount} ₪**`
-      );
-
-      message.channel.send(embed);
+      profile.pocket -= bet;
+      const embed = Embed.Success(`Darn it ... it was \`${side}\`. *You lost:* **${bet} ₪**`);
+      message.util?.send(embed);
     }
 
     return profile.save();
@@ -74,5 +58,5 @@ export default class CoinflipCommand extends MandrocCommand {
 
 type args = {
   side: string;
-  amount: number;
+  bet: number;
 };

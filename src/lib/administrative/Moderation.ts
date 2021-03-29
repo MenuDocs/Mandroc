@@ -350,7 +350,7 @@ export class Moderation {
       await this.tryDm(member.user, embed);
     }
 
-    await member.roles.add(IDs.TIMEDOUT); // NEED TO CREATE AN ACTUAL ROLE FOR THIS
+    await member.roles.add(IDs.TIMED_OUT); // NEED TO CREATE AN ACTUAL ROLE FOR THIS
   }
 
   protected async tryDm(

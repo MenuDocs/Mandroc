@@ -264,6 +264,6 @@ export class Mandroc extends AkairoClient {
     await this.commandHandler.loadAll();
     await this.inhibitorHandler.loadAll();
 
-    await this.login(config.get<string>("token"));
+    await this.login(config.get<string>("discord-token"));
   }
 }

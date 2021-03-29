@@ -50,9 +50,7 @@ export default class RobCommand extends MandrocCommand {
       victim = await member.getProfile();
 
     if (victim.pocket < 200) {
-      const embed = Embed.Warning(
-        "They do not have enough money to be robbed."
-      );
+      const embed = Embed.Warning("They do not have enough money to be robbed.");
       return message.channel.send(embed);
     }
 
@@ -62,19 +60,14 @@ export default class RobCommand extends MandrocCommand {
     }
 
     const rob = async (bodyguard = false) => {
-      const stolen = Math.floor(
-        (Math.random() * victim.pocket) / (bodyguard ? 8 : 9)
-      );
+      const stolen = Math.floor((Math.random() * victim.pocket) / (bodyguard ? 8 : 9));
 
       victim.pocket -= stolen;
       robber.pocket += stolen;
       robber.lastRobbed = Date.now();
 
-      const embed = Embed.Primary(
-        `You stole **${stolen} ₪** from ${member}.${
-          bodyguard ? "" : "\nThey should really get a bodyguard :eyes:"
-        }`
-      );
+      const embed = Embed.Primary(`You stole **${stolen} ₪** from ${member}.${bodyguard ? "" : "\nThey should really get a bodyguard :eyes:"}`);
+
       await message.util?.send(embed);
       await Promise.all([victim, robber].map((p) => p.save()));
     };

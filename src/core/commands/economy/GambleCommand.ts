@@ -3,15 +3,15 @@
  * You may not share this code outside of the MenuDocs Team unless given permission by Management.
  */
 
-import { command, Embed, MandrocCommand, Profile } from "@lib";
+import { command, Embed, MandrocCommand } from "@lib";
 
 import type { Message } from "discord.js";
 
 @command("gamble", {
-  aliases: ["gamble"],
+  aliases: [ "gamble" ],
   description: {
     content: "Guess a number between `x` and `y`.",
-    examples: (prefix: string) => [`${prefix}gamble 500`],
+    examples: (prefix: string) => [ `${prefix}gamble 500` ],
     usage: "!gamble <amount>",
   },
   args: [
@@ -27,25 +27,23 @@ import type { Message } from "discord.js";
 })
 export default class NumberGuesserCommand extends MandrocCommand {
   public async exec(message: Message, { amount }: args) {
-    const profile = await Profile.findOneOrCreate({
-      where: { _id: message.author.id },
-      create: { _id: message.author.id },
-    });
-
+    const profile = await message.member!.getProfile();
     if (amount <= 0) {
       return message.channel.send(
-        Embed.Warning("You must provide a valid number!")
+        Embed.Warning("You must provide a valid number!"),
       );
     }
 
     if (amount > profile.pocket) {
       return message.channel.send(
-        Embed.Warning("You may not gamble more than you have in your pocket!")
+        Embed.Warning("You may not gamble more than you have in your pocket!"),
       );
     }
 
-    const chances = [false, false, false, true];
-    if (message.member?.permissionLevel !== 1) chances.push(true);
+    const chances = [ false, false, false, true ];
+    if (message.member?.permissionLevel !== 1) {
+      chances.push(true);
+    }
 
     if (chances.random()) {
       profile.pocket += amount / 2;

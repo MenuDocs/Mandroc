@@ -11,7 +11,7 @@ import { Logger } from "@ayanaware/logger";
 import { captureException, init } from "@sentry/node";
 
 init({
-  dsn: config.get("dsn"),
+  dsn: config.get("sentry-dsn"),
   tracesSampleRate: 1.0,
   maxBreadcrumbs: 30,
   environment: process.env.NODE_ENV,

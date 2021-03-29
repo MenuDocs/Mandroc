@@ -24,7 +24,7 @@ export function isClass(input: unknown): input is Class<unknown> {
  * @param lowerRest
  */
 export function capitalize(str: string, lowerRest = true): string {
-  const [f, ...r] = str.split("");
+  const [ f, ...r ] = str.split("");
   return `${f.toUpperCase()}${
     lowerRest ? r.join("").toLowerCase() : r.join("")
   }`;
@@ -53,7 +53,7 @@ export function isEmitter(input: unknown): input is EventEmitter {
  * @param v
  */
 export function array<T>(v: T | T[]): T[] {
-  return Array.isArray(v) ? v : [v];
+  return Array.isArray(v) ? v : [ v ];
 }
 
 /**
@@ -138,7 +138,9 @@ export function mergeObjects<O extends Dictionary = Dictionary>(
   const o: Dictionary = {};
   for (const object of objects) {
     for (const key of Object.keys(object)) {
-      if (o[key] === null || o[key] === void 0) o[key] = object[key];
+      if (o[key] === null || o[key] === void 0) {
+        o[key] = object[key];
+      }
     }
   }
 
@@ -150,6 +152,33 @@ export function censorToken(token: string): string {
     .split(".")
     .map((v, i) => (i > 1 ? v.replace(/./g, "*") : v))
     .join(".");
+}
+
+/**
+ * Create a new pagination
+ *
+ * @param arr The array to paginate
+ * @param itemsPerPage How many items to list per page
+ * @param current The page you want to show
+ */
+export function paginate<T>(arr: T[], itemsPerPage: number, current = 1): PaginationResult<T> {
+  const maxPages = Math.ceil(arr.length / itemsPerPage);
+  if (current < 1 || current > maxPages || current === 0) {
+    current = maxPages;
+  }
+
+  const page = arr.slice((current - 1) * itemsPerPage, current * itemsPerPage);
+  return {
+    current,
+    max: maxPages,
+    page,
+  };
+}
+
+interface PaginationResult<T> {
+  current: number;
+  max: number;
+  page: T[];
 }
 
 export type TemplateTag<T> = (

@@ -60,20 +60,21 @@ export default class ShowSubCommand extends MandrocCommand {
     }
 
     const view = {
-        author: {
-          id: message.author.id,
-          name: message.author.username,
-          discrim: message.author.discriminator,
-          avatar: message.author.avatarURL(),
-          tag: message.author.tag,
-          nickname: message.member?.nickname,
-        },
-        guild: {
-          memberCount: message.guild!.members.cache.size,
-        },
+      author: {
+        id: message.author.id,
+        name: message.author.username,
+        discrim: message.author.discriminator,
+        avatar: message.author.avatarURL(),
+        tag: message.author.tag,
+        nickname: message.member?.nickname,
       },
-      contents = render(tag.contents, view);
 
+      guild: {
+        memberCount: message.guild!.members.cache.size,
+      },
+    };
+
+    const contents = render(tag.contents, view);
     message.util?.send(tag.embedded ? Embed.Primary(contents) : contents);
     tag.uses++;
 
