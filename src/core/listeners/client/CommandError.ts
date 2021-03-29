@@ -13,6 +13,7 @@ export class CommandError extends Listener {
         "Oops, I ran into an error. Please report this to the developers."
       )
     );
+
     captureException(error);
   }
 }

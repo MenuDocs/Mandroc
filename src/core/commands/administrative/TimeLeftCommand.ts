@@ -36,8 +36,12 @@ export default class TimeLeftCommand extends MandrocCommand {
   }
 
   private async respond(message: Message, id: string) {
-    const [ key ] = await this.client.redis.scan(`tasks:*.${id}`),
-      data = await this.client.redis.client.hgetall(key) as unknown as ScheduledTaskInfo,
+    const [ key ] = await this.client.redis.scan(`tasks:*.${id}`);
+    if (!key) {
+      const embed = Embed.Warning("Please provide a punished user.");
+      return message.util?.send(embed);
+    }
+    const data = await this.client.redis.client.hgetall(key) as unknown as ScheduledTaskInfo,
       { task } = Scheduler.parse(key)!;
 
     if (!data || ![ "unban", "unmute" ].includes(task)) {

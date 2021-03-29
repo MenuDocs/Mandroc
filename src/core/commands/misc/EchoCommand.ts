@@ -3,10 +3,11 @@
  * You may not share this code outside of the MenuDocs Team unless given permission by Management.
  */
 
-import { adminCommand, Embed, MandrocCommand } from "@lib";
+import { adminCommand, Embed, MandrocCommand, PermissionLevel } from "@lib";
 import type { Message } from "discord.js";
 
 @adminCommand("echo", {
+  permissionLevel: PermissionLevel.ADMIN,
   aliases: ["echo", "say", "repeat"],
   description: {
     content: "Makes the bot repeat after you",

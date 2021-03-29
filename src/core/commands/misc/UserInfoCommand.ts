@@ -66,7 +66,7 @@ export default class UserInfoCommand extends MandrocCommand {
         `**❯ Credits:**`,
         `\u3000 **Pocket:** ${profile.pocket} ₪`,
         `\u3000 **Bank:** ${profile.bank} ₪`,
-        `**❯ Boosters:** ${profile?.boosters || "None"}`,
+        "**❯ Boosters:** " + profile.boosters.xp ? `x${profile.boosters.xp}` : "None",
         `**❯ Bodyguard:** ${
           message.guild && message.author.id === user.id
             ? "DM me :wink:"

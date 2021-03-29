@@ -45,16 +45,16 @@ export default class NumberGuesserCommand extends MandrocCommand {
           return message.channel.send("You used all 25 attempts.");
         }
 
-        if (isNaN(answer) || answer < low || answer > high) {
+        if (isNaN(answer) || answer < 0 || answer > 500) {
           failAttempts++;
           message.channel.send(
-            `Please provide a number between \`${low}\`, \`${high}\``
+            `Please provide a number between \`0\`-\`500\``
           );
         } else {
           if (answer == num) {
             profile.pocket += num;
             profile.save();
-            return message.channel.send(
+            return message.util?.send(
               Embed.Primary(
                 `Correct! You wont the amount you guessed :wink: **${num} ₪** have been added to your account!`
               )
@@ -62,9 +62,9 @@ export default class NumberGuesserCommand extends MandrocCommand {
           }
 
           if (answer < num) {
-            message.channel.send("The number is lower than that!");
+            message.util?.send("The number is lower than that!");
           } else {
-            message.channel.send("The number is higher than that!");
+            message.util?.send("The number is higher than that!");
           }
         }
       });
