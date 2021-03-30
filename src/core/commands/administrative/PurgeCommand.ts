@@ -92,7 +92,7 @@ export default class PurgeCommand extends MandrocCommand {
         .then(() => this._deleteMessages(channel, messages));
     }
 
-    await channel.bulkDelete(messages);
+    await channel.bulkDelete(messages, true);
   }
 }
 

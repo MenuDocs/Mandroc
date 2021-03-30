@@ -79,7 +79,7 @@ export default class HelpCommand extends MandrocCommand {
     embed
       .setDescription(description.content)
       .addField("❯ General Information", [
-        `**Category**: ${command.category.id}`,
+        `**Category**: ${command.category.id.capitalize()}`,
         `**Aliases**: ${command.aliases.slice(1).join(", ") || "None"}`,
         `**Accessible By**: ${PermissionLevel[command.permissionLevel].split("_").map((x: string) => x.capitalize(true))
           .join(" ")}`,

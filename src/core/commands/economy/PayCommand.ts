@@ -51,7 +51,7 @@ export default class PayCommand extends MandrocCommand {
     receiverProfile.pocket += amount;
     payer.pocket -= amount;
 
-    await message.util?.send(Embed.Primary(`Successfully payed **${amount} ₪** to ${receiverProfile}`));
+    await message.util?.send(Embed.Primary(`Successfully payed **${amount} ₪** to ${receiver}`));
     await Promise.all([ receiverProfile, payer ].map((p) => p.save()));
   }
 }
