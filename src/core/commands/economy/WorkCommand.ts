@@ -10,6 +10,7 @@ import type { Message } from "discord.js";
 
 @command("work", {
   aliases: [ "work" ],
+  channel: "guild",
   description: {
     content: "Allows you to work",
     examples: (prefix: string) => [ `${prefix}weekly` ],
@@ -25,7 +26,7 @@ export default class DailyCommand extends MandrocCommand {
 
   async exec(message: Message) {
     const profile = await message.member?.getProfile()!;
-    if (profile.lastDaily && profile.lastDaily + ms("12h") > Date.now()) {
+    if (profile.lastWorked !== null && profile.lastWorked + ms("12h") > Date.now()) {
       return message.util?.send(Embed.Warning("You can only work once every 12 hours."));
     }
 
@@ -33,7 +34,7 @@ export default class DailyCommand extends MandrocCommand {
     profile.lastWorked = Date.now();
     profile.pocket += hourlyPay * hours;
 
-    await message.util?.send(Embed.Primary(this.stories(hourlyPay, hours).random()));
     await profile.save();
+    await message.util?.send(Embed.Primary(this.stories(hourlyPay, hours).random()));
   }
 }

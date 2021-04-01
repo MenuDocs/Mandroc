@@ -51,28 +51,28 @@ export class Profile extends BaseEntity {
   repBy: string[] = [];
 
   @Column({ nullable: true })
-  lastRobbed?: number | null = null;
+  lastRobbed: number | null = null;
 
   @Column({ nullable: true })
-  lastDaily?: number | null = null;
+  lastDaily: number | null = null;
 
   @Column({ nullable: true })
-  lastWeekly?: number | null = null;
+  lastWeekly: number | null = null;
 
   @Column({ nullable: true })
-  lastWorked?: number | null = null;
+  lastWorked: number | null = null;
 
   @Column({ nullable: true })
-  lastChopped?: number | null = null;
+  lastChopped: number | null = null;
 
   @Column({ nullable: true })
-  lastMined?: number | null = null;
+  lastMined: number | null = null;
 
   @Column({ nullable: true })
-  lastFished?: number | null = null;
+  lastFished: number | null = null;
 
   @Column({ nullable: true })
-  lastShoveled?: number | null = null;
+  lastShoveled: number | null = null;
 
   @Column("array", { default: [] })
   inventory: Array<Tool> = [];
