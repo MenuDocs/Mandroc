@@ -23,7 +23,7 @@ import type { Message } from "discord.js";
 export default class SnipeCommand extends MandrocCommand {
   public async exec(message: Message, { amount }: args) {
     const sniped = message.channel.lastDeletedMessages;
-    if (!sniped) {
+    if (!sniped?.length) {
       const embed = Embed.Primary("No sniped messages :flushed:");
       return message.util?.send(embed);
     }
