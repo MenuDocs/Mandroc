@@ -15,7 +15,7 @@ import type { Message, TextChannel, User } from "discord.js";
   args: [
     {
       id: "amount",
-      type: Argument.range("number", 2, 1000),
+      type: Argument.range("number", 2, 100),
       prompt: {
         start: "Please provide an amount of messages to delete.",
         retry: "I need an amount of messages to delete.",
@@ -50,6 +50,12 @@ import type { Message, TextChannel, User } from "discord.js";
 })
 export default class PurgeCommand extends MandrocCommand {
   public async exec(message: Message, args: args) {
+    if (message.deletable) {
+      await message.delete()
+    } else {
+      args.amount++;
+    }
+
     if (args.user) {
       let messages = (await message.channel.messages.fetch({ limit: args.amount }, false))
         .filter((m) => m.author.id === args.user.id);
@@ -60,7 +66,7 @@ export default class PurgeCommand extends MandrocCommand {
         ?.send(Embed.Primary(`Deleted **${messages.size} messages** by ${args.user} \`(${args.user.id})\`.`))
         ?.then(m => m.delete({ timeout: 5000 }));
     } else {
-      let messages = await message.channel.messages.fetch({ limit: 100 }, false);
+      let messages = await message.channel.messages.fetch({ limit: args.amount }, false);
       if (args.filter) {
         switch (args.filter) {
           case "bots":
