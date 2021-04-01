@@ -7,6 +7,10 @@ import { adminCommand, Giveaway, MandrocCommand } from "@lib";
 import type { Message } from "discord.js";
 
 @adminCommand("giveaway-create", {
+  description: {
+    content: "starts a new giveaway.",
+    usage: "<duration> <prize> [amount of winners]"
+  },
   args: [
     {
       id: "duration",

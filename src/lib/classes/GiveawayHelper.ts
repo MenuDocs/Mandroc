@@ -1,5 +1,5 @@
 import moment from "moment";
-import { Embed, ScheduledTaskInfo, Scheduler, TASK } from "@lib";
+import { config, Embed, ScheduledTaskInfo, Scheduler, TASK } from "@lib";
 import { GiveawayTask } from "../scheduler/tasks/GiveawayTask";
 
 import type { Message } from "discord.js";
@@ -9,7 +9,7 @@ export abstract class Giveaway {
     const end = Date.now() + duration,
       id = Scheduler.generateRandomId(),
       msg = await message.util?.send(
-        "@everyone",
+        `${config.get("giveaways.mention-everyone")}` === "true" ? "@everyone" : "",
         Embed.Primary(
           [
             `React with **${GiveawayTask.EMOJI}** to win \`${prize}\`!`,
@@ -25,6 +25,7 @@ export abstract class Giveaway {
       messageId: msg!.id,
       channelId: message.channel.id,
       amount: winners,
+      prize
     });
 
     return id;
