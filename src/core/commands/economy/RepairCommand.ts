@@ -17,11 +17,20 @@ import type { Message } from "discord.js";
 export default class ChopCommand extends MandrocCommand {
   public async exec(message: Message) {
     const profile = await message.member!.getProfile();
-    for (const item of profile.inventory) {
+    if (!profile.inventory.length) {
+      return message.util?.send(Embed.Primary("You dont have anything in your inventory."));
+    }
+
+    const toRepair = profile.inventory.filter(i => i.durability !== 100);
+    if (!toRepair.length) {
+      return message.util?.send(Embed.Primary("Nothing in your inventory is repairable."));
+    }
+
+    for (const item of toRepair) {
       item.durability = 100;
     }
 
     await profile.save();
-    return message.util?.send(Embed.Success("You repaired your entire inventory."));
+    return message.util?.send(Embed.Success("All items in your inventory have been repaired."));
   }
 }
