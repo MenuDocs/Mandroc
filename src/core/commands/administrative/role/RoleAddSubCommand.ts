@@ -12,6 +12,7 @@ import { GuildMemberRemoveListener } from "../../../listeners/guild/GuildMemberR
     content: "Used for adding a role to someone",
     usage: "<role> <member> [--persist]",
   },
+  channel: "guild",
   args: [
     {
       id: "role",
@@ -31,6 +32,7 @@ import { GuildMemberRemoveListener } from "../../../listeners/guild/GuildMemberR
     },
     {
       id: "persist",
+      match: "flag",
       flag: ["-p", "--persist"],
     },
   ],
@@ -42,11 +44,14 @@ export class RoleAddSubCommand extends MandrocCommand {
       return message.util?.send(embed);
     }
 
+    if (role.comparePositionTo(message.member!.roles.highest) < 0) {
+      const embed = Embed.Danger(`You cannot add this role to ${member}.`);
+      return message.util?.send(embed);
+    }
+
     await member.roles.add(role.id);
     if (persist) {
-      const persisted = await GuildMemberRemoveListener.getPersistentRoles(
-        member.id
-      );
+      const persisted = await GuildMemberRemoveListener.getPersistentRoles(member.id);
       if (!persisted.includes(role.id)) {
         await this.client.redis.client.lpush(
           `config.persistent-roles:${member.id}`,
@@ -57,11 +62,7 @@ export class RoleAddSubCommand extends MandrocCommand {
       }
     }
 
-    const embed = Embed.Primary(
-      `Successfully added role ${role} to ${member}${
-        persist ? ", the role will persist if and when they leave." : ""
-      }`
-    );
+    const embed = Embed.Primary(`Successfully added role ${role} to ${member}${persist ? ", the role will persist if and when they leave." : ""}`);
     return message.util?.send(embed);
   }
 }
