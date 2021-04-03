@@ -1,8 +1,3 @@
-/*
- * Copyright (c) MenuDocs 2020.
- * You may not share this code outside of the MenuDocs Team unless given permission by Management.
- */
-
 import { Color, command, Embed, Item, ItemTier, MandrocCommand } from "@lib";
 import { Message, MessageEmbed } from "discord.js";
 import ms from "ms";

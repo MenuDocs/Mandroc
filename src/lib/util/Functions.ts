@@ -1,8 +1,3 @@
-/*
- * Copyright (c) MenuDocs 2020.
- * You may not share this code outside of the MenuDocs Team unless given permission by Management.
- */
-
 import type { EventEmitter } from "events";
 import type { Class } from "type-fest";
 

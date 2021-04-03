@@ -1,8 +1,3 @@
-/*
- * Copyright (c) MenuDocs 2020.
- * You may not share this code outside of the MenuDocs Team unless given permission by Management.
- */
-
 /**
  * @file Dot Notation Utilities. Based Off https://github.com/sindresorhus/dot-prop
  */
