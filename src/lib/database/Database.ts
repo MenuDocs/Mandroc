@@ -1,7 +1,12 @@
 import { Logger } from "@ayanaware/logger";
 import { createConnection, Connection } from "typeorm";
 
-import { Infraction, Profile, Tag, config } from "@lib";
+import { config } from "../util/Config";
+
+/* entities */
+import { Tag } from "./entities/tag.entity";
+import { Infraction } from "./entities/infraction.entity";
+import { Profile } from "./entities/profile.entity";
 import { ReactionRole } from "./entities/reaction-role.entity";
 
 export class Database {
@@ -26,6 +31,10 @@ export class Database {
         type: "ioredis",
         duration: 30000,
         alwaysEnabled: true,
+        options: {
+          host: config.get("redis-host"),
+          port: config.get("redis-port")
+        }
       },
     });
 
