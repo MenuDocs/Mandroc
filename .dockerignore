@@ -1,0 +1,12 @@
+.git/
+.idea/
+.github/
+
+dist/
+node_modules/
+
+*.rdb
+
+.prettierrc
+.gitignore
+README.md

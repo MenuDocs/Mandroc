@@ -1,11 +1,17 @@
+FROM node:alpine AS deps
+
+WORKDIR /opt/mandroc
+
+COPY package.json yarn.lock ./
+RUN yarn
+
 FROM node:alpine
 
 WORKDIR /opt/mandroc
 
-COPY package.json yarn.lock tsconfig.json ./
-
-RUN yarn
-
 COPY src src
+COPY tsconfig.json .
+COPY --from=deps /opt/mandroc .
 
-CMD ["yarn", "start"]
+RUN yarn build
+CMD ["yarn", "start:prod"]
