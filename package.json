@@ -14,9 +14,10 @@
   },
   "scripts": {
     "build": "rm -rf dist && tsc --removeComments",
-    "start": "yarn build && NODE_ENV=production node .",
+    "start:prod": "NODE_ENV=production node .",
+    "start:dev": "NODE_ENV=development node .",
     "format": "prettier --write src/",
-    "dev": "yarn build && NODE_ENV=development node ."
+    "dev": "yarn build && yarn start:dev"
   },
   "dependencies": {
     "@ayanaware/errors": "^1.1.0",
