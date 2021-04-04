@@ -13,7 +13,6 @@ services:
       - "redis:/data"
   mandroc:
     container_name: mandroc
-    restart: always
     depends_on:
       - redis
       - mongo
