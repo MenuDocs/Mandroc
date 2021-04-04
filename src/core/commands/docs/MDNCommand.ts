@@ -20,7 +20,7 @@ import { Message, MessageEmbed } from "discord.js";
         retry: "Please try again.",
       },
       match: "rest",
-      type: (_, p) => MDN.search(p),
+      type: (_, p) => p ? MDN.search(p) : null,
     },
     {
       id: "first",
@@ -37,16 +37,16 @@ export default class MDNCommand extends MandrocCommand {
     )}`;
   }
 
-  async exec(message: Message, { docs, first }: args) {
-    if (!first) {
+  async exec(message: Message, { docs }: args) {
+    const match = docs[0].diff === 1
+
+    if (!match) {
       let str = "",
         idx = 0;
+
       for (const doc of docs) {
         const link = MDNCommand.makeMdnLink(doc.slug);
-        str += `\`${`${idx + 1}`.padStart(2, "0")}\` **[${
-          doc.title
-        }](${link})**\n`;
-        idx++;
+        str += `\`#${`${++idx}`.padStart(2, "0")}\` **[${doc.title}](${link})**\n`;
       }
 
       const embed = Embed.Primary()
@@ -61,7 +61,7 @@ export default class MDNCommand extends MandrocCommand {
         .setColor(Color.PRIMARY)
         .setTitle(doc.title)
         .setURL(MDNCommand.makeMdnLink(doc.slug))
-        .setDescription(this.client.turndown.turndown(doc.excerpt));
+        .setDescription(this.client.turndown.turndown(doc.summary));
 
     return message.util?.send(embed);
   }

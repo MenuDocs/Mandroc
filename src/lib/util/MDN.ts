@@ -41,10 +41,15 @@ export namespace MDN {
   }
 
   interface Document {
+    mdn_url: string;
+    score: number;
     title: string;
-    slug: string;
     locale: string;
-    excerpt: string;
+    slug: string;
+    popularity: number;
+    archived: boolean;
+    summary: string;
+    highlight: Object[];
   }
 
   export interface DocumentWithDifference extends Document {
