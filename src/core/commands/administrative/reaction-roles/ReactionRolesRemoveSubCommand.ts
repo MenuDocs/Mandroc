@@ -1,8 +1,3 @@
-/*
- * Copyright (c) MenuDocs 2020.
- * You may not share this code outside of the MenuDocs Team unless given permission by Management.
- */
-
 import { adminCommand, Embed, MandrocCommand, ReactionRole } from "@lib";
 
 import type { Emoji, Message, TextChannel } from "discord.js";

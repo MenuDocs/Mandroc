@@ -1,8 +1,3 @@
-/*
- * Copyright (c) MenuDocs 2021.
- * You may not share this code outside of the MenuDocs Team unless given permission by Management.
- */
-
 import { adminCommand, Giveaway, MandrocCommand } from "@lib";
 import type { Message } from "discord.js";
 

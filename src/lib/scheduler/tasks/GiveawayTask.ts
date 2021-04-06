@@ -1,15 +1,10 @@
-/*
- * Copyright (c) MenuDocs 2021.
- * You may not share this code outside of the MenuDocs Team unless given permission by Management.
- */
-
 import moment from "moment";
+import { config } from "@lib";
 import { Embed } from "../../util/Embed";
 
 import type { TextChannel } from "discord.js";
 import type { ScheduledTask } from "./ScheduledTask";
 import type { Mandroc } from "../../Client";
-import { config } from "@lib";
 
 export class GiveawayTask implements ScheduledTask<GiveawayMeta> {
   /**

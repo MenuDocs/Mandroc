@@ -1,5 +1,6 @@
 import { Command, Listener } from "discord-akairo";
 import { listener } from "@lib";
+
 import type { Message } from "discord.js";
 
 @listener("command-started", {

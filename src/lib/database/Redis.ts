@@ -1,10 +1,6 @@
-/*
- * Copyright (c) MenuDocs 2020.
- * You may not share this code outside of the MenuDocs Team unless given permission by Management.
- */
-
 import IORedis from "ioredis";
 import { Logger } from "@ayanaware/logger";
+import { config } from "../util/Config";
 
 export class Redis {
   /**
@@ -79,7 +75,10 @@ export class Redis {
    */
   async launch() {
     try {
-      this.client = new IORedis();
+      this.client = new IORedis({
+        host: config.get<string>("redis-host"),
+        port: config.get<number>("redis-port")
+      });
     } catch (e) {
       this.logger.error(e);
       return process.exit(1);

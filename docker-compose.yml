@@ -1,0 +1,61 @@
+version: "3.7"
+services:
+  mongo:
+    image: mongo:latest
+    restart: always
+    volumes:
+      - "mongo:/data/db"
+  redis:
+    image: redis:latest
+    restart: always
+    command: [ "redis-server", "--bind", "redis", "--port", "6379" ]
+    volumes:
+      - "redis:/data"
+  mandroc:
+    container_name: mandroc
+    depends_on:
+      - redis
+      - mongo
+    build:
+      context: .
+    environment:
+      SENTRY-DSN: "your sentry dsn"
+      DISCORD-TOKEN: "your bot token"
+      DATABASE-URI: "mongodb://mongo/mandroc"
+      REDIS-HOST: "redis"
+      REDIS-PORT: "6379"
+      GIVEAWAYS_MENTION-EVERYONE: "false"
+      # everything below is from testing
+      IDS_GUILD: "762898486571827232"
+      IDS_VERIFICATION-MESSAGE: "784139980737216562"
+      IDS_CHANNELS_LOGS: "762898487201234997"
+      IDS_CHANNELS_MOD-LOGS: "762898487700094992"
+      IDS_CHANNELS_PROJECTIONS: "762898487700094993"
+      IDS_CHANNELS_SUGGESTIONS: "762898487372677130"
+      IDS_CHANNELS_ACTIONS: "790909692313993217"
+      IDS_CHANNELS_VOICE: "762898487700094988"
+      IDS_ROLES_MUTED: "762898486932013061"
+      IDS_ROLES_TIMED-OUT: "763461655044554754"
+      IDS_ROLES_UNVERIFIED: "762898486571827235"
+      IDS_LEVELS_10: "762898486911827984"
+      IDS_LEVELS_20: "762898486911827985"
+      IDS_LEVELS_30: "762898486911827986"
+      IDS_LEVELS_40: "762898486911827987"
+      IDS_LEVELS_50: "762898486923886602"
+      IDS_LEVELS_60: "762898486923886603"
+      IDS_LEVELS_70: "762898486923886604"
+      IDS_LEVELS_80: "762898486923886605"
+      IDS_LEVELS_90: "762898486923886606"
+      IDS_LEVELS_100: "762898486923886607"
+      IDS_PERMISSIONS_MEMBER: "Verified Member"
+      IDS_PERMISSIONS_DONOR: "762898486923886611"
+      IDS_PERMISSIONS_HELPER: "762898486932013056"
+      IDS_PERMISSIONS_TRIAL-MOD: "762898486932013065"
+      IDS_PERMISSIONS_MOD: "762898486945251330"
+      IDS_PERMISSIONS_ADMIN: "762898486945251333"
+      IDS_PERMISSIONS_LOWER-MANAGEMENT: "762898486945251337"
+      IDS_PERMISSIONS_MANAGEMENT: "762898486956916747"
+
+volumes:
+  mongo:
+  redis:

@@ -1,7 +1,6 @@
 import { Listener } from "discord-akairo";
+import { GuildMember, User, Util } from "discord.js";
 import { Embed, IDs, listener } from "@lib";
-import type { GuildMember, User } from "discord.js";
-import { Util } from "discord.js";
 
 @listener("guild-member-update", {
   event: "guildMemberUpdate",
