@@ -25,7 +25,7 @@ import type { Message } from "discord.js";
     },
   ],
 })
-export default class NumberGuesserCommand extends MandrocCommand {
+export default class GambleCommand extends MandrocCommand {
   public async exec(message: Message, { amount }: args) {
     const profile = await message.member!.getProfile();
     if (amount <= 0) {

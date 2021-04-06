@@ -48,7 +48,7 @@ export default class CoinflipCommand extends MandrocCommand {
       message.util?.send(Embed.Success(`Wow! It was \`${side}\` indeed! *You received:* **${amount} ₪**`));
     } else {
       profile.pocket -= bet;
-      const embed = Embed.Success(`Darn it ... it was \`${side}\`. *You lost:* **${bet} ₪**`);
+      const embed = Embed.Warning(`Darn it ... it was \`${side}\`. *You lost:* **${bet} ₪**`);
       message.util?.send(embed);
     }
 
