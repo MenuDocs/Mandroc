@@ -1,7 +1,7 @@
 import { Logger } from "@ayanaware/logger";
 import { createConnection, Connection } from "typeorm";
 
-import { config } from "../util/Config";
+import { config } from "../util";
 
 /* entities */
 import { Tag } from "./entities/tag.entity";

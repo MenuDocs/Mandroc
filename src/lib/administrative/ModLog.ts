@@ -151,17 +151,17 @@ export class ModLog {
     switch (this.type) {
       case InfractionType.KICK:
       case InfractionType.WARN:
-        color = Color.WARNING;
+        color = Color.Warning;
         break;
       case InfractionType.MUTE:
       case InfractionType.TIMEOUT:
       case InfractionType.UNMUTE:
-        color = Color.INTERMEDIATE;
+        color = Color.Intermediate;
         break;
       case InfractionType.BAN:
       case InfractionType.SOFTBAN:
       case InfractionType.UNBAN:
-        color = Color.DANGER;
+        color = Color.Danger;
         break;
     }
 

@@ -1,15 +1,11 @@
-import { IDs, Moderation, Redis } from "@lib";
 import { Collection } from "discord.js";
 import { PendingAction } from "./PendingAction";
+import { Redis } from "../../database";
+import { IDs } from "../../util";
 
-import type { Mandroc } from "@lib";
-import type {
-  GuildMember,
-  MessageReaction,
-  PartialUser,
-  TextChannel,
-  User,
-} from "discord.js";
+import type { GuildMember, MessageReaction, PartialUser, TextChannel, User } from "discord.js";
+import type { Moderation } from "../Moderation";
+import type { Mandroc } from "../../Client";
 
 export class ActionManager {
   /**

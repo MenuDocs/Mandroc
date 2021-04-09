@@ -51,7 +51,7 @@ import type { Message } from "discord.js";
       flag: ["--supportOnly"],
     },
   ],
-  permissionLevel: PermissionLevel.HELPER,
+  permissionLevel: PermissionLevel.Helper,
 })
 export default class AddSubCommand extends MandrocCommand {
   public async exec(
@@ -76,7 +76,7 @@ export default class AddSubCommand extends MandrocCommand {
     const perms = DEFAULT_TAG_PERMISSIONS;
     if (
       message.member!.permissionLevel &&
-      message.member!.permissionLevel >= PermissionLevel.MOD
+      message.member!.permissionLevel >= PermissionLevel.Mod
     ) {
       if (roles) {
         perms.roles = roles.split(/[ ,]+/g);

@@ -8,7 +8,7 @@ import {
 import { Message, MessageEmbed, User } from "discord.js";
 
 @adminCommand("eco", {
-  permissionLevel: PermissionLevel.MANAGEMENT,
+  permissionLevel: PermissionLevel.Management,
   aliases: ["eco"],
   description: {
     content: "Adjust a user's economy.",
@@ -73,7 +73,7 @@ export default class EcoCommand extends MandrocCommand {
 
     if (!actionRegex.exec(action)) {
       embed
-        .setColor(Color.WARNING)
+        .setColor(Color.Warning)
         .setDescription("Your action must match `set|remove|add`");
 
       return channel.send(embed);
@@ -81,7 +81,7 @@ export default class EcoCommand extends MandrocCommand {
 
     if (!accountRegex.exec(account)) {
       embed
-        .setColor(Color.WARNING)
+        .setColor(Color.Warning)
         .setDescription("Your account must match `pocket|bank`");
 
       return channel.send(embed);
@@ -122,7 +122,7 @@ export default class EcoCommand extends MandrocCommand {
     await receiverProfile.save();
 
     embed
-      .setColor(Color.SUCCESS)
+      .setColor(Color.Success)
       .setDescription(
         `Successfully ran \`${action}\` affecting ${receiver}'s \`${account}\``
       );

@@ -29,7 +29,7 @@ export default class ChopCommand extends MandrocCommand {
     }
 
     const logAmounts = [ ...Array(10).keys() ].slice(1).shuffle(),
-      chance = message.member?.permissionLevel === PermissionLevel.DONATOR ? .40 : .20;
+      chance = message.member?.permissionLevel === PermissionLevel.Donor ? .40 : .20;
 
     profile.lastChopped = Date.now();
     if (Math.random() <= chance) {

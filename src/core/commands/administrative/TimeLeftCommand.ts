@@ -21,7 +21,7 @@ import type { GuildMember, Message } from "discord.js";
 })
 export default class TimeLeftCommand extends MandrocCommand {
   async exec(message: Message, { member }: args) {
-    const mod = message.member?.above(PermissionLevel.TRIAL_MOD);
+    const mod = message.member?.above(PermissionLevel.TrialMod);
     if (mod && !member) {
       const embed = Embed.Warning("I don't think you know how this works...");
       return message.util?.send(embed);

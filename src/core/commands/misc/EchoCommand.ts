@@ -2,7 +2,7 @@ import { adminCommand, Embed, MandrocCommand, PermissionLevel } from "@lib";
 import type { Message } from "discord.js";
 
 @adminCommand("echo", {
-  permissionLevel: PermissionLevel.ADMIN,
+  permissionLevel: PermissionLevel.Admin,
   aliases: ["echo", "say", "repeat"],
   description: {
     content: "Makes the bot repeat after you",

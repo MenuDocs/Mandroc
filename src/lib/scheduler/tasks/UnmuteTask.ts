@@ -26,7 +26,7 @@ export class UnmuteTask implements ScheduledTask<UnmuteMeta> {
       await infraction.save().catch(captureException);
 
       const embed = new MessageEmbed()
-        .setColor(Color.WARNING)
+        .setColor(Color.Warning)
         .setAuthor(
           `Moderation: Unmute (Case: ${_cid})`,
           member?.user.displayAvatarURL({ dynamic: true, format: "png" })

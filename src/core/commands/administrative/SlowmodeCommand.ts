@@ -31,14 +31,14 @@ export default class SlowmodeCommand extends MandrocCommand {
 
     if (!regex.exec(ratelimit)) {
       embed
-        .setColor(Color.DANGER)
+        .setColor(Color.Danger)
         .setDescription("You must provide a valid cooldown");
 
       return channel.send(embed);
     }
 
     embed
-      .setColor(Color.SUCCESS)
+      .setColor(Color.Success)
       .setDescription(`Successfully set the slowmode to: \`${ratelimit}\``);
 
     message.channel.send(embed);
@@ -54,7 +54,7 @@ export default class SlowmodeCommand extends MandrocCommand {
     }
 
     if (+ratelimit > 21600) {
-      embed.setColor(Color.DANGER).setDescription("The max is 6 hours.");
+      embed.setColor(Color.Danger).setDescription("The max is 6 hours.");
 
       return message.channel.send(embed);
     }

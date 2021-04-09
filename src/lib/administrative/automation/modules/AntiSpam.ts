@@ -29,7 +29,7 @@ export class AntiSpam extends Module {
 
   async run(message: Message): Promise<boolean> {
     const pl = message.member!.permissionLevel;
-    if (pl && pl >= PermissionLevel.MOD) {
+    if (pl && pl >= PermissionLevel.Mod) {
       return false;
     }
 

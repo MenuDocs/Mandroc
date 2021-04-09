@@ -54,7 +54,7 @@ export default class EvalCommand extends MandrocCommand {
       if (isPromise(res)) res = await res;
     } catch (e) {
       const embed = new MessageEmbed()
-        .setColor(Color.DANGER)
+        .setColor(Color.Danger)
         .setDescription([
           "Ran into an error while evaluating...",
           cb("js")`${e.stack}`,
@@ -84,7 +84,7 @@ export default class EvalCommand extends MandrocCommand {
         .replace(/@/g, `@${String.fromCharCode(8203)}`);
 
       const embed = new MessageEmbed()
-        .setColor(Color.PRIMARY)
+        .setColor(Color.Primary)
         .setDescription(cb("js")`${res}`);
 
       return message.util?.send(embed);

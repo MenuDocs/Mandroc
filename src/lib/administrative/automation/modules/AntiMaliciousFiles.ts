@@ -26,7 +26,7 @@ export class AntiMaliciousFiles extends Module {
   ];
 
   async run(message: Message): Promise<boolean> {
-    if (message.member?.above(PermissionLevel.TRIAL_MOD)) {
+    if (message.member?.above(PermissionLevel.TrialMod)) {
       return false;
     }
 

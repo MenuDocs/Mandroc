@@ -1,9 +1,9 @@
+import ms from "ms";
 import { Module } from "../Module";
+import { AntiRaid } from "./AntiRaid";
 
 import type { Message, User } from "discord.js";
 import type { AutoMod } from "../AutoMod";
-import ms from "ms";
-import { AntiRaid } from "./AntiRaid";
 
 export class AntiMassMention extends Module {
   /**

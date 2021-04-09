@@ -3,7 +3,7 @@ import type { Message } from "discord.js";
 
 @command("repair", {
   aliases: [ "repair" ],
-  permissionLevel: PermissionLevel.DONATOR,
+  permissionLevel: PermissionLevel.Donor,
   description: {
     content: "Repairs your entire inventory.",
     examples: (prefix: string) => [ `${prefix}repair` ],

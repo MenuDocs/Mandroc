@@ -17,7 +17,7 @@ export default class ServerInfo extends MandrocCommand {
     const roles = guild?.roles?.cache.sort((a, b) => b.position - a.position)!!;
 
     const embed = new MessageEmbed()
-      .setColor(Color.PRIMARY)
+      .setColor(Color.Primary)
       .setThumbnail(guild?.iconURL({ dynamic: true })!!)
       .addField("Server Info", [
         `**❯ Name:** ${guild?.name}`,

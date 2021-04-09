@@ -50,7 +50,7 @@ export default class MineCommand extends MandrocCommand {
   public async exec(message: Message) {
     const profile = await message.member!.getProfile(),
       roll = Math.floor(Math.random() * 100),
-      embed = new MessageEmbed().setColor(Color.PRIMARY);
+      embed = new MessageEmbed().setColor(Color.Primary);
 
     if (!profile.inventory.find((x) => x.name == "Pickaxe")) {
       embed.setDescription("You must possess a pickaxe in order to run this command.")

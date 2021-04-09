@@ -58,7 +58,7 @@ export default class MDNCommand extends MandrocCommand {
 
     const doc = docs[0],
       embed = new MessageEmbed()
-        .setColor(Color.PRIMARY)
+        .setColor(Color.Primary)
         .setTitle(doc.title)
         .setURL(MDNCommand.makeMdnLink(doc.slug))
         .setDescription(this.client.turndown.turndown(doc.summary));

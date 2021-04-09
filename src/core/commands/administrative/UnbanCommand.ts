@@ -12,7 +12,7 @@ import type { Message } from "discord.js";
 
 @command("unban", {
   aliases: ["unban"],
-  permissionLevel: PermissionLevel.ADMIN,
+  permissionLevel: PermissionLevel.Admin,
   args: [
     {
       id: "user",

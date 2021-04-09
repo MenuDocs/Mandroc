@@ -8,14 +8,11 @@ import ms from "ms";
 import { ResolverHandler } from "./classes/resolver/ResolverHandler";
 import { MonitorHandler } from "./classes/monitor/MonitorHandler";
 
-import { Tag } from "./database/entities/tag.entity";
-import { Database } from "./database/Database";
-import { Redis } from "./database/Redis";
+import { Database, Redis, Tag } from "./database";
 import { Scheduler } from "./scheduler/Scheduler";
 import { MandrocCommand } from "./classes/Command";
 import { Moderation } from "./administrative/Moderation";
-import { Color, IDs } from "./util/constants";
-import { config } from "./util/Config";
+import { Color, config, IDs } from "./util";
 
 export class Mandroc extends AkairoClient {
   /**
@@ -135,23 +132,23 @@ export class Mandroc extends AkairoClient {
         prompt: {
           modifyStart: (_, p) =>
             new MessageEmbed()
-              .setColor(Color.WARNING)
+              .setColor(Color.Warning)
               .setFooter("To cancel the prompt, send 'cancel'")
               .setDescription(p),
           modifyEnded: (_, p) =>
             new MessageEmbed()
-              .setColor(Color.WARNING)
+              .setColor(Color.Warning)
               .setFooter("To cancel the prompt, send 'cancel'")
               .setDescription(p),
           modifyCancel: (_, p) =>
-            new MessageEmbed().setColor(Color.PRIMARY).setDescription(p),
+            new MessageEmbed().setColor(Color.Primary).setDescription(p),
           modifyRetry: (_, p) =>
             new MessageEmbed()
-              .setColor(Color.WARNING)
+              .setColor(Color.Warning)
               .setFooter("To cancel the prompt, send 'cancel'")
               .setDescription(p),
           modifyTimeout: (_, p) =>
-            new MessageEmbed().setColor(Color.PRIMARY).setDescription(p),
+            new MessageEmbed().setColor(Color.Primary).setDescription(p),
           cancel: "Okay, I cancelled the prompt.",
           ended: "The prompt has ended.",
           timeout: "Sorry, you've ran out of time.",

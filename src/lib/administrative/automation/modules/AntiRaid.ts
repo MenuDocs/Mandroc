@@ -1,9 +1,9 @@
+import ms from "ms";
 import { Module } from "../Module";
+import { Embed } from "../../../util";
 
 import type { Message, GuildMember } from "discord.js";
 import type { AutoMod } from "../AutoMod";
-import ms from "ms";
-import { Embed } from "@lib";
 
 export class AntiRaid extends Module {
   readonly priority = 1;
@@ -66,7 +66,7 @@ export class AntiRaid extends Module {
             ].join("\n")
           )
         );
-        await member.kick("AutoMod - OnGoingRaid");
+        await member.kick("AutoMod - On Going Raid");
       }, ms("1s"));
     }
   }

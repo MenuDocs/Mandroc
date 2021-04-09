@@ -7,7 +7,7 @@ class MandrocMessage extends Structures.get("Message") {
   public prompt(content: string, embedded = true): Promise<boolean> {
     return new Promise(async (resolve) => {
       const _content = embedded
-        ? new MessageEmbed().setColor(Color.PRIMARY).setDescription(content)
+        ? new MessageEmbed().setColor(Color.Primary).setDescription(content)
         : content;
 
       await this.util?.send(_content);

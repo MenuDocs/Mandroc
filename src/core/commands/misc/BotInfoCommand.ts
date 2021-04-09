@@ -22,7 +22,7 @@ export default class AvatarCommand extends MandrocCommand {
       .size;
 
     const embed = new MessageEmbed()
-      .setColor(Color.PRIMARY)
+      .setColor(Color.Primary)
       .setThumbnail(this.client.user?.displayAvatarURL({ size: 2048 })!)
       .setDescription([
         "**Description**",

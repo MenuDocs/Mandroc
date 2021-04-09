@@ -1,9 +1,10 @@
-import { Redis } from "@lib";
 import fetch from "node-fetch";
+import { captureException } from "@sentry/node";
+
+import { Redis } from "../../../database";
 import { Module } from "../Module";
 
 import type { Message } from "discord.js";
-import { captureException } from "@sentry/node";
 
 export class AntiInvites extends Module {
   static WHITELISTED = [
@@ -15,7 +16,7 @@ export class AntiInvites extends Module {
     "222078108977594368", // (Development) Discord.js Support
     "336642139381301249", // (Development) Discord.py Support
     "613425648685547541", // (Discord) Developers
-    "81384788765712384", // (Discord) API
+    "81384788765712384", //  (Discord) API
     "197038439483310086", // (Discord) Testers
     "169256939211980800", // (Discord) Town-hall
   ];

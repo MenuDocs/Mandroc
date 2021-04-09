@@ -1,7 +1,7 @@
 import { Module } from "../Module";
+import { Embed } from "../../../util";
 
 import type { Message } from "discord.js";
-import { Embed } from "@lib";
 
 export class AntiCodeBlock extends Module {
   readonly priority = 1;

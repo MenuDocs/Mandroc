@@ -1,8 +1,9 @@
 import { AkairoHandler, AkairoHandlerOptions } from "discord-akairo";
-import { Resolver } from "./Resolver";
 import { captureException } from "@sentry/node";
 
-import type { Mandroc } from "@lib";
+import { Resolver } from "./Resolver";
+
+import type { Mandroc } from "../../Client";
 
 export class ResolverHandler extends AkairoHandler {
   constructor(client: Mandroc, options: AkairoHandlerOptions = {}) {

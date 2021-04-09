@@ -20,7 +20,7 @@ import { MessageEmbed } from "discord.js";
 export default class UnWatchCommand extends MandrocCommand {
   async exec(message: Message, { regex }: args) {
     const embed = new MessageEmbed()
-      .setColor(Color.PRIMARY);
+      .setColor(Color.Primary);
 
     await this.client.redis.client.lrem("config.blacklisted-words", 0, regex);
 

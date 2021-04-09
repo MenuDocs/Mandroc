@@ -34,14 +34,14 @@ export default class GitHubCommand extends MandrocCommand {
       return message.util?.send(
         new MessageEmbed()
           .setDescription(`Sorry, I couldn't find anything for \`${pkg}\``)
-          .setColor(Color.WARNING)
+          .setColor(Color.Warning)
       );
     }
 
     const version = res.versions[res["dist-tags"].latest];
 
     const embed = new MessageEmbed()
-      .setColor(Color.PRIMARY)
+      .setColor(Color.Primary)
       .setThumbnail(
         "https://static.npmjs.com/338e4905a2684ca96e08c7780fc68412.png"
       )

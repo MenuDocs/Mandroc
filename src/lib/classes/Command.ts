@@ -12,14 +12,14 @@ import type { Message } from "discord.js";
 import type { Moderation } from "../administrative/Moderation";
 
 export enum PermissionLevel {
-  MEMBER,
-  DONATOR,
-  HELPER,
-  TRIAL_MOD,
-  MOD,
-  ADMIN,
-  LOWER_MANAGEMENT,
-  MANAGEMENT,
+  Member,
+  Donor,
+  Helper,
+  TrialMod,
+  Mod,
+  Admin,
+  LowerManagement,
+  Management,
 }
 
 export class MandrocCommand extends Command {
@@ -38,7 +38,7 @@ export class MandrocCommand extends Command {
     super(id, options);
 
     this.description = this.description || null;
-    this.permissionLevel = options.permissionLevel ?? PermissionLevel.MEMBER;
+    this.permissionLevel = options.permissionLevel ?? PermissionLevel.Member;
   }
 
   /**

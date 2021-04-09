@@ -1,25 +1,11 @@
-import {
-  code,
-  Embed,
-  IDs,
-  Infraction,
-  InfractionType,
-  Mandroc,
-  ModLog,
-  Scheduler,
-} from "@lib";
+import { code, Embed, IDs, Infraction, InfractionType, Mandroc, ModLog, Scheduler } from "@lib";
 import ms from "ms";
-import { AutoMod } from "./automation/AutoMod";
-
-import type {
-  Guild,
-  GuildMember,
-  Message,
-  TextChannel,
-  User,
-} from "discord.js";
-import { ActionManager } from "./queue/ActionManager";
 import { captureException } from "@sentry/node";
+
+import { AutoMod } from "./automation/AutoMod";
+import { ActionManager } from "./queue/ActionManager";
+
+import type { Guild, GuildMember, Message, TextChannel, User } from "discord.js";
 
 const DEFAULT_DM_VALUE = true;
 
@@ -58,7 +44,7 @@ export class Moderation {
   logChannel(): Promise<TextChannel> {
     return this.client.channels.fetch(
       IDs.MOD_LOGS,
-      true
+      true,
     ) as Promise<TextChannel>;
   }
 
@@ -82,15 +68,14 @@ export class Moderation {
     member: GuildMember,
     reason: string,
     duration?: number | null,
-    dm = DEFAULT_DM_VALUE
+    dm = DEFAULT_DM_VALUE,
   ) {
     if (dm) {
       const _duration = duration ? ms(duration, { long: true }) : null;
-
       const embed = Embed.Danger(
         `You've been muted in **MenuDocs** ${
           _duration ? `for **${_duration}**` : "permanently"
-        }.\n${code`${reason}`}`
+        }.\n${code`${reason}`}`,
       );
 
       await this.tryDm(member.user, embed);
@@ -128,7 +113,7 @@ export class Moderation {
 
     if (dm) {
       const embed = Embed.Danger(
-        `You've been warned in ${data.offender.guild.name} for \`${data.reason}\``
+        `You've been warned in ${data.offender.guild.name} for \`${data.reason}\``,
       );
 
       await this.tryDm(data.offender.user, embed);
@@ -137,7 +122,7 @@ export class Moderation {
     const automated = await this.automation.runProfile(
       data.offender,
       null,
-      true
+      true,
     );
 
     if (automated) {
@@ -147,7 +132,7 @@ export class Moderation {
             data.offender,
             automated.reason,
             automated.duration?.ms,
-            dm
+            dm,
           );
 
           break;
@@ -156,7 +141,7 @@ export class Moderation {
             data.offender,
             automated.reason,
             automated.duration?.ms,
-            dm
+            dm,
           );
 
           break;
@@ -190,9 +175,7 @@ export class Moderation {
 
   async kickMember(member: GuildMember, reason: string, dm = DEFAULT_DM_VALUE) {
     if (dm) {
-      const embed = Embed.Danger(
-        `You've been kicked from **MenuDocs** for: ${code`${reason}`}`
-      );
+      const embed = Embed.Danger(`You've been kicked from **MenuDocs** for: ${code`${reason}`}`);
       await this.tryDm(member.user, embed);
     }
 
@@ -224,23 +207,16 @@ export class Moderation {
     member: GuildMember,
     reason: string,
     duration?: number,
-    dm = DEFAULT_DM_VALUE
+    dm = DEFAULT_DM_VALUE,
   ) {
     if (dm) {
       const _duration = duration ? ms(duration, { long: true }) : null;
-      const embed = Embed.Danger(
-        `You've been banned from **MenuDocs** ${
-          _duration ? `for **${_duration}**` : "permanently"
-        }.\n${code`${reason}`}`
-      );
+      const desc = `You've been banned from **MenuDocs** ${_duration ? `for **${_duration}**` : "permanently"}.\n${code`${reason}`}`
 
-      await this.tryDm(member.user, embed);
+      await this.tryDm(member.user, Embed.Danger(desc));
     }
 
-    await member.ban({
-      days: 7,
-      reason,
-    });
+    await member.ban({ days: 7, reason });
   }
 
   /**
@@ -264,24 +240,13 @@ export class Moderation {
     return modLog.finish();
   }
 
-  async softBanMember(
-    member: GuildMember,
-    reason: string,
-    delDays: number,
-    dm = DEFAULT_DM_VALUE
-  ) {
+  async softBanMember(member: GuildMember, reason: string, delDays: number, dm = DEFAULT_DM_VALUE) {
     if (dm) {
-      const embed = Embed.Danger(
-        `You've been soft-banned from **MenuDocs**`
-      );
-
+      const embed = Embed.Danger(`You've been soft-banned from **MenuDocs**`,);
       await this.tryDm(member.user, embed);
     }
 
-    await member.ban({
-      days: delDays,
-      reason,
-    });
+    await member.ban({ days: delDays, reason });
   }
 
   /**
@@ -331,7 +296,7 @@ export class Moderation {
     member: GuildMember,
     reason: string,
     duration?: number | null,
-    dm = DEFAULT_DM_VALUE
+    dm = DEFAULT_DM_VALUE,
   ) {
     if (dm) {
       const _duration = duration ? ms(duration, { long: true }) : null;
@@ -339,7 +304,7 @@ export class Moderation {
       const embed = Embed.Danger(
         `You've been timed out (blacklisted from help channels) in **MenuDocs** ${
           _duration ? `for **${_duration}**` : "permanently"
-        }.\n${code`${reason}`}`
+        }.\n${code`${reason}`}`,
       );
 
       await this.tryDm(member.user, embed);
@@ -348,10 +313,7 @@ export class Moderation {
     await member.roles.add(IDs.TIMED_OUT); // NEED TO CREATE AN ACTUAL ROLE FOR THIS
   }
 
-  protected async tryDm(
-    user: User,
-    ...args: any[]
-  ): Promise<Message | undefined> {
+  protected async tryDm(user: User, ...args: any[]): Promise<Message | undefined> {
     try {
       // @ts-expect-error
       return await user.send(...args);

@@ -30,10 +30,7 @@ export class PendingAction {
    * @param manager The action manager.
    * @param data The action data.
    */
-  constructor(
-    manager: ActionManager,
-    data: ActionData & { messageId: string },
-  ) {
+  constructor(manager: ActionManager, data: ActionData & { messageId: string }) {
     this.manager = manager;
     this.data = data;
     this.messageId = data.messageId;
@@ -90,20 +87,19 @@ export class PendingAction {
    * @param user The user.
    */
   async handleReaction(reaction: MessageReaction, user: User) {
-    let canDispose = true,
-      str: string | undefined;
+    let canDispose = true, action;
 
     const id = reaction.emoji.id ?? reaction.emoji.name;
     switch (id) {
       case ActionReaction.DELETE:
-        str = "didn't do anything.";
         canDispose = true;
-        // Delete the redis key.
+
+        /* Delete the redis key. */
         await Redis.get().client.del(`actions.${this.messageId}`);
 
         break;
       case ActionReaction.KICK:
-        str = `took action by **kicking** them.`;
+        action = "kicking";
         await this.moderation.kick({
           offender: this.data.subject,
           moderator: user,
@@ -112,7 +108,7 @@ export class PendingAction {
 
         break;
       case ActionReaction.BAN:
-        str = `took action by **banning** them.`;
+        action = "banning";
         await this.moderation.ban({
           offender: this.data.subject,
           moderator: user,
@@ -121,7 +117,7 @@ export class PendingAction {
 
         break;
       case ActionReaction.MUTE:
-        str = `took action by **muting** them.`;
+        action = "muting";
         await this.moderation.mute({
           offender: this.data.subject,
           moderator: user,
@@ -135,7 +131,7 @@ export class PendingAction {
     }
 
     if (canDispose) {
-      await this._dispose(str, user);
+      await this._dispose(action ? `took action by **${action}** them` : "didn't do anything.", user);
     }
   }
 
@@ -150,10 +146,7 @@ export class PendingAction {
     const channel = await this.manager.getChannel(),
       message = await channel.messages.fetch(this.messageId, false),
       embed = PendingAction.getEmbed(this.data)
-        .setAuthor(
-          "Action Completed",
-          this.data.subject.user.displayAvatarURL(),
-        )
+        .setAuthor("Action Completed", this.data.subject.user.displayAvatarURL())
         .setColor("#33b05f");
 
     if (str && user) {
@@ -162,7 +155,5 @@ export class PendingAction {
 
     await message.edit(embed);
     await message.reactions.removeAll();
-
-
   }
 }

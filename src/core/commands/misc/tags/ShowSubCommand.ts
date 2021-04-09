@@ -38,14 +38,14 @@ export default class ShowSubCommand extends MandrocCommand {
 
     if (
       tag.perms.staffOnly &&
-      message.member!.permissionLevel! < PermissionLevel.MOD
+      message.member!.permissionLevel! < PermissionLevel.Mod
     ) {
       return;
     }
 
     if (
       tag.perms.supportOnly &&
-      message.member!.permissionLevel! < PermissionLevel.MOD
+      message.member!.permissionLevel! < PermissionLevel.Mod
     ) {
       if (
         !SUPPORT_CATEGORIES.includes((message.channel as TextChannel).parentID!)

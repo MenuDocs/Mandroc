@@ -21,7 +21,7 @@ export default class AvatarCommand extends MandrocCommand {
     const embed = new MessageEmbed()
       .setTitle(`Avatar for ${user.tag}`)
       .setURL(user.displayAvatarURL(imageUrlOptions))
-      .setColor(Color.PRIMARY)
+      .setColor(Color.Primary)
       .setImage(user.displayAvatarURL(imageUrlOptions));
 
     return message.util?.send(embed);

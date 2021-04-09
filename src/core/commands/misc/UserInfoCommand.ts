@@ -44,7 +44,7 @@ export default class UserInfoCommand extends MandrocCommand {
         .join(", ") || "none";
 
     const embed = new MessageEmbed()
-      .setColor(Color.PRIMARY)
+      .setColor(Color.Primary)
       .setThumbnail(user.displayAvatarURL())
       .addField("User Info", [
         `**❯ Name:** ${user.tag}`,

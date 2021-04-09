@@ -1,17 +1,13 @@
 import moment from "moment";
-import type { Moderation, Profile } from "@lib";
-import { buildString, Infraction, InfractionType, ModLog } from "@lib";
 
-import { AntiInvites } from "./modules/AntiInvites";
-import { AntiBadWords } from "./modules/AntiBadWords";
-import { AntiCodeBlock } from "./modules/AntiCodeBlock";
-import { AntiMaliciousFiles } from "./modules/AntiMaliciousFiles";
-import { AntiSpam } from "./modules/AntiSpam";
+import * as Modules from "./modules";
+import { Infraction, InfractionType, Profile } from "../../database";
+import { ModLog } from "../ModLog";
+import { buildString } from "../../util";
 
 import type { GuildMember, Message } from "discord.js";
 import type { Module } from "./Module";
-import { AntiMassMention } from "./modules/AntiMassMention";
-import { AntiMassModeration } from "./modules/AntiMassModeration";
+import type { Moderation } from "../Moderation";
 
 export class AutoMod {
   public readonly moderation: Moderation;
@@ -26,15 +22,7 @@ export class AutoMod {
    */
   public constructor(moderation: Moderation) {
     this.moderation = moderation;
-    this.modules = [
-      AntiCodeBlock,
-      AntiMaliciousFiles,
-      AntiInvites,
-      AntiBadWords,
-      AntiSpam,
-      AntiMassMention,
-      AntiMassModeration
-    ].map((mod) => new mod(this));
+    this.modules = Object.values(Modules).map((mod) => new mod(this));
 
     moderation.client.on("message", this._runModules.bind(this));
     moderation.client.on("messageUpdate", async (old, message) => {
@@ -54,6 +42,7 @@ export class AutoMod {
 
   /**
    * Checks a profile for the warn thresholds.
+   *
    * @param profile The profile to check.
    * @param target The guild member of the profile.
    * @param increment Whether to increment the users current warn amount.
@@ -61,7 +50,7 @@ export class AutoMod {
   public async runProfile(
     target: GuildMember,
     profile?: Profile | null,
-    increment = true
+    increment = true,
   ): Promise<ModLog | null> {
     if (!profile) {
       profile = await target.getProfile();
@@ -97,14 +86,14 @@ export class AutoMod {
           await this.moderation.actions.queue({
             description: buildString((b) => {
               b.appendLine(
-                `User *${target.user.tag}* \`(${target.id})\` has reached **5** infractions.`
+                `User *${target.user.tag}* \`(${target.id})\` has reached **5** infractions.`,
               ).appendLine();
 
               infractions.forEach((infraction, idx) => {
                 b.appendLine(
                   `\`${`${idx + 1}`.padStart(2, "0")}\` **${moment(
-                    infraction.createdAt
-                  ).format("L LT")}** for \`${infraction.reason}\``
+                    infraction.createdAt,
+                  ).format("L LT")}** for \`${infraction.reason}\``,
                 );
               });
             }),
@@ -127,7 +116,7 @@ export class AutoMod {
       await message.fetch();
     }
 
-    if (!message.guild) {
+    if (!message.guild || message.author.bot) {
       return;
     }
 

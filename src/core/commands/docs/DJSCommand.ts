@@ -40,7 +40,7 @@ export default class DJSCommand extends MandrocCommand {
     if (query === "djs") {
       return message.util?.send(
         new MessageEmbed()
-          .setColor(Color.PRIMARY)
+          .setColor(Color.Primary)
           .setImage("https://i.redd.it/1gxyc19z70s51.jpg")
       );
     }
@@ -55,12 +55,12 @@ export default class DJSCommand extends MandrocCommand {
     if (!res) {
       const embed = new MessageEmbed()
         .setDescription(`Sorry, I couldn't find anything for \`${query}\``)
-        .setColor(Color.WARNING);
+        .setColor(Color.Warning);
 
       return message.util?.send(embed);
     }
 
-    const embed = new MessageEmbed(res).setColor(Color.PRIMARY);
+    const embed = new MessageEmbed(res).setColor(Color.Primary);
 
     return message.util?.send(embed);
   }

@@ -25,7 +25,7 @@ const DEFAULT_COMMAND_DESCRIPTION = {
 export default class HelpCommand extends MandrocCommand {
   public exec(message: Message, { command }: args): any {
     const embed = new MessageEmbed()
-      .setColor(Color.PRIMARY)
+      .setColor(Color.Primary)
       .setAuthor(message.author.tag, message.author.displayAvatarURL())
       .setTimestamp();
 
@@ -44,7 +44,7 @@ export default class HelpCommand extends MandrocCommand {
               return true;
             }
 
-            return message.member.permissionLevel ? message.member.permissionLevel >= PermissionLevel.TRIAL_MOD : false;
+            return message.member.permissionLevel ? message.member.permissionLevel >= PermissionLevel.TrialMod : false;
           case "private":
             return this.client.isOwner(message.author);
           default:

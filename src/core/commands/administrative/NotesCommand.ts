@@ -5,7 +5,7 @@ import { MessageEmbed } from "discord.js";
 
 @adminCommand("notes", {
   editable: false,
-  permissionLevel: PermissionLevel.TRIAL_MOD,
+  permissionLevel: PermissionLevel.TrialMod,
   args: [
     {
       id: "action",
@@ -34,7 +34,7 @@ import { MessageEmbed } from "discord.js";
 export default class NotesCommand extends MandrocCommand {
   async exec(message: Message, { action, user, note, id }: args) {
     const resUser = (uId: string) => this.client.users.cache.get(uId);
-    const embed = new MessageEmbed().setColor(Color.PRIMARY);
+    const embed = new MessageEmbed().setColor(Color.Primary);
 
     const notesKey = "config.member-notes:all";
     const countKey = "config.member-notes:count";

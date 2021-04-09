@@ -12,7 +12,7 @@ export default class ShopCommand extends MandrocCommand {
   public async exec(message: Message) {
     const embed = new MessageEmbed()
       .setTitle("Shop")
-      .setColor(Color.PRIMARY)
+      .setColor(Color.Primary)
       .setDescription([
         "*Type any of the following numbers to view the category ...*",
         "**1. Bodyguards**",

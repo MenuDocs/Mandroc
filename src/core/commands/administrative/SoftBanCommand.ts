@@ -7,7 +7,7 @@ import { AntiMassModeration } from "../../../lib/administrative/automation/modul
   aliases: ["softban", "sb", "softbanish"],
   editable: false,
   clientPermissions: ["BAN_MEMBERS"],
-  permissionLevel: PermissionLevel.ADMIN,
+  permissionLevel: PermissionLevel.Admin,
   args: [
     {
       id: "target",

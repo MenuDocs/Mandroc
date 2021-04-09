@@ -19,7 +19,7 @@ import type { Message } from "discord.js";
       },
     },
   ],
-  permissionLevel: PermissionLevel.HELPER,
+  permissionLevel: PermissionLevel.Helper,
 })
 export default class CategorySubCommand extends MandrocCommand {
   public async exec(message: Message, { tag, category }: args) {

@@ -34,13 +34,13 @@ export default class GitHubCommand extends MandrocCommand {
       return message.util?.send(
         new MessageEmbed()
           .setDescription(`Sorry, I couldn't find anything for \`${username}\``)
-          .setColor(Color.WARNING)
+          .setColor(Color.Warning)
       );
     }
 
     return message.util?.send(
       new MessageEmbed()
-        .setColor(Color.PRIMARY)
+        .setColor(Color.Primary)
         .setDescription(["**Description**", res.bio])
         .setThumbnail(res.avatar_url)
         .setURL(res.html_url)

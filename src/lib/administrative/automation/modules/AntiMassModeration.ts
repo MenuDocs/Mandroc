@@ -29,7 +29,7 @@ export class AntiMassModeration extends Module {
     }
 
     const embed = new MessageEmbed()
-      .setColor(Color.WARNING)
+      .setColor(Color.Warning)
       .setDescription("You've temporarily been denied from using staff commands, due to a recent over-use.");
 
     message.util?.send(embed);
