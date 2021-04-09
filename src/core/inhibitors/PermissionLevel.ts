@@ -21,7 +21,10 @@ export default class PermissionLevelInhibitor extends Inhibitor {
       return false;
     }
 
-    if (process.env.NODE_ENV === "development" && this.client.isOwner(message.author.id)) {
+    if (
+      process.env.NODE_ENV === "development" &&
+      this.client.isOwner(message.author.id)
+    ) {
       return false;
     }
 

@@ -8,27 +8,27 @@ import { Flag } from "discord-akairo";
     usage: "[add|remove] ...args",
     subcommands: {
       add: "role-add",
-      remove: "role-remove",
+      remove: "role-remove"
     },
     examples: (prefix: string) => [
       `${prefix}role add 2D Admin --persist`,
       `${prefix}role remove 2D FOTD`,
-      `${prefix}role remove 2D Admin`,
-    ],
-  },
+      `${prefix}role remove 2D Admin`
+    ]
+  }
 })
 export class InfractionCommand extends MandrocCommand {
   *args() {
     const method = yield {
       type: [
         ["role-add", "add", "+"],
-        ["role-remove", "remove", "rem", "rm", "-"],
+        ["role-remove", "remove", "rem", "rm", "-"]
       ],
       otherwise: Embed.Primary([
         "Please provide a subcommand.",
         "**`add`** - adds a role to the provided member",
-        "**`remove`** - removes a role from the provided member",
-      ]),
+        "**`remove`** - removes a role from the provided member"
+      ])
     };
 
     return Flag.continue(method);

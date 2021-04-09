@@ -1,7 +1,7 @@
 import {
   MandrocCommand,
   MandrocCommandOptions,
-  PermissionLevel,
+  PermissionLevel
 } from "./Command";
 
 import type { Class } from "type-fest";
@@ -59,6 +59,6 @@ export function adminCommand(id: string, options: MandrocCommandOptions = {}) {
   return command(id, {
     permissionLevel: PermissionLevel.TrialMod,
     channel: "guild",
-    ...options,
+    ...options
   });
 }

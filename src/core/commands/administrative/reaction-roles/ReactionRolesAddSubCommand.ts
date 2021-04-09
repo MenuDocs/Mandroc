@@ -7,7 +7,7 @@ export const emojiRegex = /(?:<:\w+:(\d+)>)|(\u00a9|\u00ae|[\u2000-\u3300]|\ud83
 @adminCommand("rr-add", {
   description: {
     content: "Adds a reaction role to the provided message.",
-    usage: "<channel> <message> <emoji> <role>",
+    usage: "<channel> <message> <emoji> <role>"
   },
   args: [
     {
@@ -16,53 +16,49 @@ export const emojiRegex = /(?:<:\w+:(\d+)>)|(\u00a9|\u00ae|[\u2000-\u3300]|\ud83
       prompt: {
         start:
           "You must provide a valid text channel so the provided message id can be fetched.",
-        retry: "Provide a valid text channel.",
-      },
+        retry: "Provide a valid text channel."
+      }
     },
     {
       id: "messageId",
       type: "string",
       prompt: {
         start: "You must provide a valid message id.",
-        retry: "Provide a valid message id",
-      },
+        retry: "Provide a valid message id"
+      }
     },
     {
       id: "emoji",
       match: "content",
-      type: async (message, content) => content
-        ? message.guild?.emojis.cache.get(content) ?? emojiRegex.exec(content)?.[1]
-        : null,
+      type: async (message, content) =>
+        content
+          ? message.guild?.emojis.cache.get(content) ??
+            emojiRegex.exec(content)?.[1]
+          : null,
       prompt: {
         start: "You must provide a valid emoji, whether it's custom or not.",
-        retry: "Provide a valid emoji.",
-      },
+        retry: "Provide a valid emoji."
+      }
     },
     {
       id: "role",
       type: "role",
       prompt: {
         start: "You must provide a valid role.",
-        retry: "Provide a valid role.",
-      },
+        retry: "Provide a valid role."
+      }
     },
     {
       id: "instantRemove",
       match: "flag",
-      flag: [ "-ir", "--instant-remove" ],
-    },
-  ],
+      flag: ["-ir", "--instant-remove"]
+    }
+  ]
 })
 export class ReactionRolesAddSubCommand extends MandrocCommand {
   async exec(
     message: Message,
-    {
-      channel,
-      messageId,
-      emoji,
-      role,
-      instantRemove,
-    }: args,
+    { channel, messageId, emoji, role, instantRemove }: args
   ) {
     const e = typeof emoji === "string" ? emoji : emoji.identifier;
 
@@ -71,7 +67,7 @@ export class ReactionRolesAddSubCommand extends MandrocCommand {
       msg = await channel.messages.fetch(messageId, true);
     } catch (e) {
       const embed = Embed.Danger(
-        `The provided message was not found in **${channel}**`,
+        `The provided message was not found in **${channel}**`
       );
       return message.util?.send(embed);
     }
@@ -79,13 +75,13 @@ export class ReactionRolesAddSubCommand extends MandrocCommand {
     const exists = await ReactionRole.findOne({
       where: {
         messageId,
-        emoji: e,
-      },
+        emoji: e
+      }
     });
 
     if (exists) {
       const embed = Embed.Danger(
-        `A reaction role for the emoji **${emoji}** already exists.`,
+        `A reaction role for the emoji **${emoji}** already exists.`
       );
       return message.util?.send(embed);
     }
@@ -94,12 +90,12 @@ export class ReactionRolesAddSubCommand extends MandrocCommand {
       messageId,
       emoji: e,
       removeReaction: instantRemove,
-      roleId: role.id,
+      roleId: role.id
     }).save();
 
     await msg.react(e);
     const embed = Embed.Primary(
-      `Created a reaction role for ${role} with the emoji ${emoji} in ${channel}.`,
+      `Created a reaction role for ${role} with the emoji ${emoji} in ${channel}.`
     );
     return message.util?.send(embed);
   }

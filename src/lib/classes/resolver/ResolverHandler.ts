@@ -9,7 +9,7 @@ export class ResolverHandler extends AkairoHandler {
   constructor(client: Mandroc, options: AkairoHandlerOptions = {}) {
     super(client, {
       classToHandle: Resolver,
-      ...options,
+      ...options
     });
   }
 

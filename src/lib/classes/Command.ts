@@ -5,7 +5,7 @@ import {
   Command,
   CommandOptions,
   ContentParserResult,
-  Flag,
+  Flag
 } from "discord-akairo";
 
 import type { Message } from "discord.js";
@@ -19,7 +19,7 @@ export enum PermissionLevel {
   Mod,
   Admin,
   LowerManagement,
-  Management,
+  Management
 }
 
 export class MandrocCommand extends Command {

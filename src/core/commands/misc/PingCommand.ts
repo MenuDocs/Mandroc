@@ -2,11 +2,11 @@ import { command, MandrocCommand } from "@lib";
 import type { Message } from "discord.js";
 
 @command("ping", {
-  aliases: ["ping", "latency"],
+  aliases: ["ping", "latency"]
 })
 export default class PingCommand extends MandrocCommand {
   public async exec(message: Message) {
-    return message.util?.send("Pinging the mainframe...").then((m) => {
+    return message.util?.send("Pinging the mainframe...").then(m => {
       const hb = Math.round(this.client.ws.ping);
       const api = m.createdTimestamp - message.createdTimestamp;
 

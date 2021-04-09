@@ -3,7 +3,7 @@ import {
   MandrocCommand,
   Embed,
   bodyguardTiers,
-  BodyguardTier,
+  BodyguardTier
 } from "@lib";
 import ms from "ms";
 
@@ -13,12 +13,12 @@ const failureMessages: Record<
   BodyguardTier,
   (target: GuildMember) => string
 > = {
-  chad: (g) =>
+  chad: g =>
     `NANI!?!?! **${g.user.tag}** had a **Chad** tier bodyguard <:monkaMEGA:515436779893948416>`,
-  deluxe: (g) =>
+  deluxe: g =>
     `Ohk... so **${g.user.tag}** had a good bodyguard. Better luck next time.`,
-  gold: (g) => `Wow. You failed to rob **${g.user.tag}**`,
-  rookie: (g) => `Lol. You really failed to rob **${g.user.tag}**...`,
+  gold: g => `Wow. You failed to rob **${g.user.tag}**`,
+  rookie: g => `Lol. You really failed to rob **${g.user.tag}**...`
 };
 
 @command("rob", {
@@ -29,9 +29,9 @@ const failureMessages: Record<
     examples: (prefix: string) => [
       `${prefix}rob @R1zeN#0001`,
       `${prefix}rob @duncte123#1245`,
-      `${prefix}rob T3NED#0001`,
+      `${prefix}rob T3NED#0001`
     ],
-    usage: "<user>",
+    usage: "<user>"
   },
   args: [
     {
@@ -39,10 +39,10 @@ const failureMessages: Record<
       type: "member",
       prompt: {
         start: "Please give me a user to rob.",
-        retry: "Please provide a user ... Example: `!rob @R1zeN#0001`",
-      },
-    },
-  ],
+        retry: "Please provide a user ... Example: `!rob @R1zeN#0001`"
+      }
+    }
+  ]
 })
 export default class RobCommand extends MandrocCommand {
   async exec(message: Message, { victim: member }: args) {
@@ -50,7 +50,9 @@ export default class RobCommand extends MandrocCommand {
       victim = await member.getProfile();
 
     if (victim.pocket < 200) {
-      const embed = Embed.Warning("They do not have enough money to be robbed.");
+      const embed = Embed.Warning(
+        "They do not have enough money to be robbed."
+      );
       return message.channel.send(embed);
     }
 
@@ -60,16 +62,22 @@ export default class RobCommand extends MandrocCommand {
     }
 
     const rob = async (bodyguard = false) => {
-      const stolen = Math.floor((Math.random() * victim.pocket) / (bodyguard ? 8 : 9));
+      const stolen = Math.floor(
+        (Math.random() * victim.pocket) / (bodyguard ? 8 : 9)
+      );
 
       victim.pocket -= stolen;
       robber.pocket += stolen;
       robber.lastRobbed = Date.now();
 
-      const embed = Embed.Primary(`You stole **${stolen} ₪** from ${member}.${bodyguard ? "" : "\nThey should really get a bodyguard :eyes:"}`);
+      const embed = Embed.Primary(
+        `You stole **${stolen} ₪** from ${member}.${
+          bodyguard ? "" : "\nThey should really get a bodyguard :eyes:"
+        }`
+      );
 
       await message.util?.send(embed);
-      await Promise.all([victim, robber].map((p) => p.save()));
+      await Promise.all([victim, robber].map(p => p.save()));
     };
 
     if (!victim.bodyguard) {

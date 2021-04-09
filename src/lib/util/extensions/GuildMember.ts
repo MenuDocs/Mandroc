@@ -49,7 +49,7 @@ class GuildMember extends Structures.get("GuildMember") {
   async getProfile(): Promise<Profile> {
     return Profile.findOneOrCreate({
       where: { userId: this.id },
-      create: { userId: this.id },
+      create: { userId: this.id }
     });
   }
 }

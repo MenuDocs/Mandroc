@@ -1,7 +1,11 @@
 import { Embed, Moderation, Redis } from "@lib";
 
 import type { Message, MessageEmbed, MessageReaction, User } from "discord.js";
-import type { ActionData, ActionManager, RawPendingAction } from "./ActionManager";
+import type {
+  ActionData,
+  ActionManager,
+  RawPendingAction
+} from "./ActionManager";
 
 enum ActionReaction {
   BAN = "🚫",
@@ -30,7 +34,10 @@ export class PendingAction {
    * @param manager The action manager.
    * @param data The action data.
    */
-  constructor(manager: ActionManager, data: ActionData & { messageId: string }) {
+  constructor(
+    manager: ActionManager,
+    data: ActionData & { messageId: string }
+  ) {
     this.manager = manager;
     this.data = data;
     this.messageId = data.messageId;
@@ -42,8 +49,8 @@ export class PendingAction {
         ActionReaction.MUTE,
         ActionReaction.DELETE,
         ActionReaction.BAN,
-        ActionReaction.KICK,
-      ].map((r) => message.react(r)),
+        ActionReaction.KICK
+      ].map(r => message.react(r))
     );
   }
 
@@ -61,7 +68,7 @@ export class PendingAction {
    */
   static async fromRaw(
     manager: ActionManager,
-    raw: RawPendingAction,
+    raw: RawPendingAction
   ): Promise<PendingAction> {
     const subject = await manager.client.guild.members.fetch(raw.subject);
 
@@ -70,7 +77,7 @@ export class PendingAction {
       description: raw.description,
       subject,
       messageId: raw.messageId,
-      reason: raw.reason,
+      reason: raw.reason
     });
   }
 
@@ -87,7 +94,8 @@ export class PendingAction {
    * @param user The user.
    */
   async handleReaction(reaction: MessageReaction, user: User) {
-    let canDispose = true, action;
+    let canDispose = true,
+      action;
 
     const id = reaction.emoji.id ?? reaction.emoji.name;
     switch (id) {
@@ -103,7 +111,7 @@ export class PendingAction {
         await this.moderation.kick({
           offender: this.data.subject,
           moderator: user,
-          reason: this.data.reason,
+          reason: this.data.reason
         });
 
         break;
@@ -112,7 +120,7 @@ export class PendingAction {
         await this.moderation.ban({
           offender: this.data.subject,
           moderator: user,
-          reason: this.data.reason,
+          reason: this.data.reason
         });
 
         break;
@@ -121,7 +129,7 @@ export class PendingAction {
         await this.moderation.mute({
           offender: this.data.subject,
           moderator: user,
-          reason: this.data.reason,
+          reason: this.data.reason
         });
 
         break;
@@ -131,7 +139,10 @@ export class PendingAction {
     }
 
     if (canDispose) {
-      await this._dispose(action ? `took action by **${action}** them` : "didn't do anything.", user);
+      await this._dispose(
+        action ? `took action by **${action}** them` : "didn't do anything.",
+        user
+      );
     }
   }
 
@@ -146,7 +157,10 @@ export class PendingAction {
     const channel = await this.manager.getChannel(),
       message = await channel.messages.fetch(this.messageId, false),
       embed = PendingAction.getEmbed(this.data)
-        .setAuthor("Action Completed", this.data.subject.user.displayAvatarURL())
+        .setAuthor(
+          "Action Completed",
+          this.data.subject.user.displayAvatarURL()
+        )
         .setColor("#33b05f");
 
     if (str && user) {

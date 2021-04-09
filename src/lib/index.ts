@@ -42,7 +42,7 @@ declare module "discord.js" {
 
   type ReactionCollectorFilter = (
     reaction: MessageReaction,
-    user: User,
+    user: User
   ) => boolean;
 
   interface GuildMember {
@@ -75,7 +75,7 @@ declare module "discord.js" {
   interface Message {
     createReactionCollector(
       filter: ReactionCollectorFilter,
-      options?: ReactionCollectorOptions,
+      options?: ReactionCollectorOptions
     ): ReactionCollector;
 
     prompt(question: string, embeddable?: boolean): Promise<boolean>;

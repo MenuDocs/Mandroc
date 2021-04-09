@@ -8,7 +8,7 @@ export namespace dotprop {
   function isValidPath(segments: string[]): boolean {
     const disallowedKeys = ["__proto__", "prototype", "constructor"];
 
-    return !segments.some((s) => disallowedKeys.includes(s));
+    return !segments.some(s => disallowedKeys.includes(s));
   }
 
   function getPathSegments(path: string): string[] {

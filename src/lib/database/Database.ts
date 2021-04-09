@@ -35,7 +35,7 @@ export class Database {
           host: config.get("redis-host"),
           port: config.get("redis-port")
         }
-      },
+      }
     });
 
     this.log.info("Connected to MongoDB");

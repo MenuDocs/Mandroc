@@ -12,10 +12,10 @@ import { MessageEmbed, TextChannel } from "discord.js";
       type: "lowercase",
       prompt: {
         start: "Please provide a rate-limit.",
-        retry: "I need a valid rate-limit!",
-      },
-    },
-  ],
+        retry: "I need a valid rate-limit!"
+      }
+    }
+  ]
 })
 export default class SlowmodeCommand extends MandrocCommand {
   public async exec(message: Message, { ratelimit }: args) {

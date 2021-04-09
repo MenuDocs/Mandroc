@@ -6,14 +6,14 @@ import ms from "ms";
   aliases: ["uptime"],
   description: {
     content: "Shows the bot's uptime.",
-    examples: (prefix: string) => [`${prefix}uptime`],
-  },
+    examples: (prefix: string) => [`${prefix}uptime`]
+  }
 })
 export default class PingCommand extends MandrocCommand {
   public async exec(message: Message) {
     return message.util?.send(
       `I have been up for: \`${ms(this.client.uptime as number, {
-        long: true,
+        long: true
       })}\``
     );
   }

@@ -22,7 +22,7 @@ export class AutoMod {
    */
   public constructor(moderation: Moderation) {
     this.moderation = moderation;
-    this.modules = Object.values(Modules).map((mod) => new mod(this));
+    this.modules = Object.values(Modules).map(mod => new mod(this));
 
     moderation.client.on("message", this._runModules.bind(this));
     moderation.client.on("messageUpdate", async (old, message) => {
@@ -50,7 +50,7 @@ export class AutoMod {
   public async runProfile(
     target: GuildMember,
     profile?: Profile | null,
-    increment = true,
+    increment = true
   ): Promise<ModLog | null> {
     if (!profile) {
       profile = await target.getProfile();
@@ -79,27 +79,27 @@ export class AutoMod {
         case 5:
           const infractions = await Infraction.find({
             where: {
-              offenderId: target.id,
-            },
+              offenderId: target.id
+            }
           });
 
           await this.moderation.actions.queue({
-            description: buildString((b) => {
+            description: buildString(b => {
               b.appendLine(
-                `User *${target.user.tag}* \`(${target.id})\` has reached **5** infractions.`,
+                `User *${target.user.tag}* \`(${target.id})\` has reached **5** infractions.`
               ).appendLine();
 
               infractions.forEach((infraction, idx) => {
                 b.appendLine(
                   `\`${`${idx + 1}`.padStart(2, "0")}\` **${moment(
-                    infraction.createdAt,
-                  ).format("L LT")}** for \`${infraction.reason}\``,
+                    infraction.createdAt
+                  ).format("L LT")}** for \`${infraction.reason}\``
                 );
               });
             }),
 
             subject: target,
-            reason: "Reached 5 infractions.",
+            reason: "Reached 5 infractions."
           });
 
           return null;

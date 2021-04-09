@@ -9,29 +9,29 @@ export class Economy extends Monitor {
     {
       name: "gold bag",
       value: 660,
-      type: "item",
+      type: "item"
     },
     {
       name: "after shave set from your grandma",
       value: 35,
-      type: "item",
+      type: "item"
     },
     {
       name: "gem ",
       value: Number.random(500, 5000),
-      type: "gems",
+      type: "gems"
     },
     {
       name: "bodyguard",
       type: "bodyguard",
-      value: 0,
-    },
+      value: 0
+    }
   ];
 
   private readonly toolList: Array<Tool> = [
     {
       name: "Fishing Rod",
-      durability: Number.random(50, 100),
+      durability: Number.random(50, 100)
     },
     {
       name: "Axe",
@@ -64,7 +64,7 @@ export class Economy extends Monitor {
             .send(
               `Congrats ${message.author} :tada: You progressed to **Level ${profile.level}**`
             )
-            .then((m) => m.delete({ timeout: 6000 }));
+            .then(m => m.delete({ timeout: 6000 }));
           if (IDs.LEVELS[profile.level]) {
             message.member?.roles?.add(IDs.LEVELS[profile.level]);
           }
@@ -79,7 +79,7 @@ export class Economy extends Monitor {
                   .send(
                     `${message.author}, you found a bag full of gems! Their value, of \`${randomItem.value} ₪, has been added to your pocket!\``
                   )
-                  .then((m) => m.delete({ timeout: 6000 }));
+                  .then(m => m.delete({ timeout: 6000 }));
 
                 break;
 
@@ -89,7 +89,7 @@ export class Economy extends Monitor {
                   .send(
                     `Amazing, you both leveled up and found a: \`${randomItem.name}\`, you sold it and got **${randomItem.value} ₪**`
                   )
-                  .then((m) => m.delete({ timeout: 6000 }));
+                  .then(m => m.delete({ timeout: 6000 }));
 
                 break;
 
@@ -100,7 +100,7 @@ export class Economy extends Monitor {
                   .send(
                     `${message.author}, you bent down and found a really awesome \`${tool.name}\`.`
                   )
-                  .then((m) => m.delete({ timeout: 6000 }));
+                  .then(m => m.delete({ timeout: 6000 }));
 
                 break;
 
@@ -110,19 +110,19 @@ export class Economy extends Monitor {
                     .send(
                       `${message.author}, you met a really nice guy who offered to be your bodyguard, you rejected though.`
                     )
-                    .then((m) => m.delete({ timeout: 6000 }));
+                    .then(m => m.delete({ timeout: 6000 }));
                 } else {
                   const bodyguard = [
                     "deluxe",
                     "gold",
-                    "rookie",
+                    "rookie"
                   ].random() as BodyguardTier;
                   profile.bodyguard = bodyguard;
                   message.channel
                     .send(
                       `${message.author}, a bodyguard of the tier **${bodyguard}** offered to protect you, and you said *yes please!*`
                     )
-                    .then((m) => m.delete({ timeout: 6000 }));
+                    .then(m => m.delete({ timeout: 6000 }));
                 }
 
                 break;

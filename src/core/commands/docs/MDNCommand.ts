@@ -8,26 +8,26 @@ import { Message, MessageEmbed } from "discord.js";
       "Allows members to search the MDN web documentation.\nMake sure to be specific or the requested document wont be found.",
     examples: (prefix: string) => [
       `${prefix}js String.prototype.split()`,
-      `${prefix}mdn Array.isArray()`,
+      `${prefix}mdn Array.isArray()`
     ],
-    usage: "<query>",
+    usage: "<query>"
   },
   args: [
     {
       id: "docs",
       prompt: {
         start: "Please give me a query for searching MDN",
-        retry: "Please try again.",
+        retry: "Please try again."
       },
       match: "rest",
-      type: (_, p) => p ? MDN.search(p) : null,
+      type: (_, p) => (p ? MDN.search(p) : null)
     },
     {
       id: "first",
       match: "flag",
-      flag: ["-f", "--first"],
-    },
-  ],
+      flag: ["-f", "--first"]
+    }
+  ]
 })
 export default class MDNCommand extends MandrocCommand {
   static makeMdnLink(slug: string) {
@@ -38,7 +38,7 @@ export default class MDNCommand extends MandrocCommand {
   }
 
   async exec(message: Message, { docs }: args) {
-    const match = docs[0].diff === 1
+    const match = docs[0].diff === 1;
 
     if (!match) {
       let str = "",
@@ -46,7 +46,9 @@ export default class MDNCommand extends MandrocCommand {
 
       for (const doc of docs) {
         const link = MDNCommand.makeMdnLink(doc.slug);
-        str += `\`#${`${++idx}`.padStart(2, "0")}\` **[${doc.title}](${link})**\n`;
+        str += `\`#${`${++idx}`.padStart(2, "0")}\` **[${
+          doc.title
+        }](${link})**\n`;
       }
 
       const embed = Embed.Primary()

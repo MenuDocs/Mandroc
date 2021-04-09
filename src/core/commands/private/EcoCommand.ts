@@ -3,7 +3,7 @@ import {
   Color,
   MandrocCommand,
   PermissionLevel,
-  Profile,
+  Profile
 } from "@lib";
 import { Message, MessageEmbed, User } from "discord.js";
 
@@ -15,9 +15,9 @@ import { Message, MessageEmbed, User } from "discord.js";
     examples: (prefix: string) => [
       `${prefix}eco @R1zeN add 60`,
       `${prefix}eco @duncte123#1245 remove 80`,
-      `${prefix}eco T3NED#0001 set 2`,
+      `${prefix}eco T3NED#0001 set 2`
     ],
-    usage: "<package>",
+    usage: "<package>"
   },
   args: [
     {
@@ -26,25 +26,24 @@ import { Message, MessageEmbed, User } from "discord.js";
       prompt: {
         start: "Please give me a user to transfer to.",
         retry:
-          "Please provide a user ... Example: `!eco @R1zeN#0001 set pocket 50`",
-      },
+          "Please provide a user ... Example: `!eco @R1zeN#0001 set pocket 50`"
+      }
     },
     {
       id: "action",
       type: "string",
       prompt: {
         start: "Please provide an action!",
-        retry:
-          "Please try again ... Example: ``!eco @R1zeN#0001 remove bank 50",
-      },
+        retry: "Please try again ... Example: ``!eco @R1zeN#0001 remove bank 50"
+      }
     },
     {
       id: "account",
       type: "string",
       prompt: {
         start: "Please provide an account to affect!",
-        retry: "Please try again ... Example: ``!eco @R1zeN#0001 add pocket 50",
-      },
+        retry: "Please try again ... Example: ``!eco @R1zeN#0001 add pocket 50"
+      }
     },
     {
       id: "amount",
@@ -52,11 +51,10 @@ import { Message, MessageEmbed, User } from "discord.js";
       match: "rest",
       prompt: {
         start: "Please provide an amount to transfer to that user!",
-        retry:
-          "Please try again ... Example: ``!eco @R1zeN#0001 remove bank 50",
-      },
-    },
-  ],
+        retry: "Please try again ... Example: ``!eco @R1zeN#0001 remove bank 50"
+      }
+    }
+  ]
 })
 export default class EcoCommand extends MandrocCommand {
   public async exec(
@@ -107,7 +105,6 @@ export default class EcoCommand extends MandrocCommand {
         await receiverProfile.save();
       }
     }
-
 
     if (action === "remove") {
       if (account === "pocket") {

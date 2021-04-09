@@ -4,7 +4,7 @@ import {
   Color,
   command,
   isPromise,
-  MandrocCommand,
+  MandrocCommand
 } from "@lib";
 import { Message, MessageEmbed } from "discord.js";
 import { inspect } from "util";
@@ -18,27 +18,27 @@ import { inspect } from "util";
       match: "rest",
       prompt: {
         start: "I need code to evaluate...",
-        retry: "Bruh... just give me some code... smh...",
-      },
+        retry: "Bruh... just give me some code... smh..."
+      }
     },
     {
       id: "silent",
       match: "flag",
-      flag: ["-s", "--silent"],
+      flag: ["-s", "--silent"]
     },
     {
       id: "depth",
       type: "number",
       match: "option",
       flag: ["-d", "--depth"],
-      default: 0,
+      default: 0
     },
     {
       id: "async",
       match: "flag",
-      flag: ["-a", "--async"],
-    },
-  ],
+      flag: ["-a", "--async"]
+    }
+  ]
 })
 export default class EvalCommand extends MandrocCommand {
   public async exec(message: Message, args: args) {
@@ -46,7 +46,7 @@ export default class EvalCommand extends MandrocCommand {
     if (args.async || code.includes("await")) {
       code = `(async () => {${code}})()`;
     }
-    message.member?.getProfile()
+    message.member?.getProfile();
 
     let res;
     try {
@@ -57,7 +57,7 @@ export default class EvalCommand extends MandrocCommand {
         .setColor(Color.Danger)
         .setDescription([
           "Ran into an error while evaluating...",
-          cb("js")`${e.stack}`,
+          cb("js")`${e.stack}`
         ]);
 
       return message.util?.send(embed);
@@ -67,7 +67,7 @@ export default class EvalCommand extends MandrocCommand {
       if (typeof res !== "string") {
         res = inspect(res, {
           depth: args.depth,
-          getters: true,
+          getters: true
         });
       }
 

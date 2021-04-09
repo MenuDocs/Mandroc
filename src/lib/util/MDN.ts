@@ -15,14 +15,14 @@ export namespace MDN {
 
     const res: Result = await fetch(
       `${BASE_URL}?q=${encodeURIComponent(query)}&highlight=false`
-    ).then((res) => res.json());
+    ).then(res => res.json());
 
     return res.documents
       .map(
-        (d) =>
+        d =>
           ({
             ...d,
-            diff: compareTwoStrings(query.toLowerCase(), d.title.toLowerCase()),
+            diff: compareTwoStrings(query.toLowerCase(), d.title.toLowerCase())
           } as DocumentWithDifference)
       )
       .sort((a, b) => b.diff - a.diff);

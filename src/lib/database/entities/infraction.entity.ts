@@ -27,7 +27,7 @@ export class Infraction extends BaseEntity {
 
   @Column({
     type: "string",
-    nullable: true,
+    nullable: true
   })
   messageId!: string | null;
 
@@ -36,19 +36,19 @@ export class Infraction extends BaseEntity {
 
   @Column({
     type: "timestamp",
-    default: Date.now(),
+    default: Date.now()
   })
   createdAt: number = Date.now();
 
   @Column({
     type: "enum",
-    enum: InfractionType,
+    enum: InfractionType
   })
   type!: InfractionType;
 
   @Column({
     type: "json",
-    default: {},
+    default: {}
   })
   meta: Dictionary = {};
 

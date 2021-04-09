@@ -1,6 +1,11 @@
 // @ts-expect-error
 import ArgumentRunner = require("discord-akairo/src/struct/commands/arguments/ArgumentRunner");
-import type { AkairoModule, Argument, ArgumentRunnerState, ContentParserResult } from "discord-akairo";
+import type {
+  AkairoModule,
+  Argument,
+  ArgumentRunnerState,
+  ContentParserResult
+} from "discord-akairo";
 import { AkairoError, AkairoHandler } from "discord-akairo";
 
 import { isClass } from "../Functions";
@@ -19,14 +24,14 @@ export enum ArgumentMatch {
   CONTENT = "content",
   TENTATIVE = "tentative",
   REST_CONTENT = "restContent",
-  NONE = "none",
+  NONE = "none"
 }
 
 ArgumentRunner.prototype.runOne = async function (
   message: Message,
   parsed: ContentParserResult,
   state: ArgumentRunnerState,
-  arg: Argument,
+  arg: Argument
 ) {
   const cases = {
     [ArgumentMatch.PHRASE]: this.runPhrase,
@@ -38,7 +43,7 @@ ArgumentRunner.prototype.runOne = async function (
     [ArgumentMatch.CONTENT]: this.runContent,
     [ArgumentMatch.TENTATIVE]: this.runTentative,
     [ArgumentMatch.REST_CONTENT]: this.runRestContent,
-    [ArgumentMatch.NONE]: this.runNone,
+    [ArgumentMatch.NONE]: this.runNone
   };
 
   const runFn = cases[arg.match];
@@ -54,11 +59,11 @@ ArgumentRunner.prototype.runTentative = async function (
   message: Message,
   parsed: ContentParserResult,
   state: ArgumentRunnerState,
-  arg: Argument,
+  arg: Argument
 ) {
   const phrase = parsed.phrases[state.phraseIndex]
-    ? (parsed.phrases[state.phraseIndex] as any).value
-    : "",
+      ? (parsed.phrases[state.phraseIndex] as any).value
+      : "",
     ret = await arg.process(message, phrase);
 
   if (!ret) {
@@ -70,7 +75,7 @@ ArgumentRunner.prototype.runTentative = async function (
 };
 
 AkairoHandler.prototype.findExport = function (
-  module: Dictionary,
+  module: Dictionary
 ): Class<AkairoModule> | null {
   if (module.__esModule) {
     const _default = Reflect.get(module, "default");
@@ -94,7 +99,7 @@ AkairoHandler.prototype.findExport = function (
 
 AkairoHandler.prototype.load = function (
   thing: string | typeof AkairoModule,
-  isReload: boolean,
+  isReload: boolean
 ): AkairoModule {
   let Module: Class<AkairoModule>;
   if (typeof thing === "function") {

@@ -30,7 +30,7 @@ export class UnbanTask implements ScheduledTask<UnbanMeta> {
       .setDescription([
         `**Moderator:** ${client.user}`,
         `**Offender:** ${user.tag} \`(${offenderId})\``,
-        `**Reason:** Temporary Action Expired.`,
+        `**Reason:** Temporary Action Expired.`
       ]);
 
     const channel = await client.moderation.logChannel();

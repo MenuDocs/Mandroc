@@ -2,7 +2,7 @@ import { promisified as p } from "phin";
 
 export namespace Trivia {
   const BASE_URL = "https://opentdb.com/api.php";
-  const CORRECT_TYPES: Type[] = [ "boolean", "multiple" ];
+  const CORRECT_TYPES: Type[] = ["boolean", "multiple"];
 
   /**
    * Get a multiple choice question.
@@ -10,12 +10,15 @@ export namespace Trivia {
    * @returns {Promise<Trivia.MultipleChoiceTrivia>}
    */
   export async function multipleChoice(): Promise<MultipleChoiceTrivia> {
-    const [ result ] = await getTrivia("multiple", 1);
+    const [result] = await getTrivia("multiple", 1);
 
     return {
-      possibleAnswers: [ result.correct_answer, ...result.incorrect_answers ].shuffle(),
+      possibleAnswers: [
+        result.correct_answer,
+        ...result.incorrect_answers
+      ].shuffle(),
       answer: result.correct_answer,
-      question: result.question,
+      question: result.question
     };
   }
 
@@ -25,11 +28,11 @@ export namespace Trivia {
    * @returns {Promise<Trivia.TrueFalseTrivia>}
    */
   export async function trueFalse(): Promise<TrueFalseTrivia> {
-    const [ result ] = await getTrivia("boolean", 1);
+    const [result] = await getTrivia("boolean", 1);
 
     return {
       answer: result.correct_answer,
-      question: result.question,
+      question: result.question
     };
   }
 
@@ -40,14 +43,17 @@ export namespace Trivia {
    * @param {number} amount
    * @returns {Promise<Trivia.RawResult<T>[]>}
    */
-  async function getTrivia<T extends Type>(type: T, amount: number): Promise<RawResult<T>[]> {
+  async function getTrivia<T extends Type>(
+    type: T,
+    amount: number
+  ): Promise<RawResult<T>[]> {
     if (!CORRECT_TYPES.includes(type)) {
       throw new TypeError(`Unknown Trivia Type: ${type}`);
     }
 
     const { body } = await p<RawResponse<T>>({
       url: `${BASE_URL}?amount=${amount}&type=${type}`,
-      parse: "json",
+      parse: "json"
     });
 
     return body.results;
@@ -61,7 +67,7 @@ export namespace Trivia {
   /* raw results */
   interface RawResponse<T extends Type> {
     response_code: number;
-    results: RawResult<T>[]
+    results: RawResult<T>[];
   }
 
   interface RawResult<T extends Type> {
@@ -69,8 +75,8 @@ export namespace Trivia {
     type: T;
     difficulty: Difficulty;
     question: string;
-    correct_answer: T extends "multiple" ? string : BooleanAnswers
-    incorrect_answers: T extends "multiple" ? string[] : [ BooleanAnswers ];
+    correct_answer: T extends "multiple" ? string : BooleanAnswers;
+    incorrect_answers: T extends "multiple" ? string[] : [BooleanAnswers];
   }
 
   /* good schuff */

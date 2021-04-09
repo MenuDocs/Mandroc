@@ -12,24 +12,24 @@ import { MessageEmbed } from "discord.js";
       match: "phrase",
       prompt: {
         start: "Please provide a valid action... `add|remove|list`",
-        retry: "I need a valid action!",
-      },
+        retry: "I need a valid action!"
+      }
     },
     {
       id: "user",
-      type: "member",
+      type: "member"
     },
     {
       id: "id",
       type: "number",
-      unordered: true,
+      unordered: true
     },
     {
       id: "note",
       match: "rest",
-      unordered: true,
-    },
-  ],
+      unordered: true
+    }
+  ]
 })
 export default class NotesCommand extends MandrocCommand {
   async exec(message: Message, { action, user, note, id }: args) {
@@ -43,7 +43,7 @@ export default class NotesCommand extends MandrocCommand {
         ? this.client.redis.client.hmget(notesKey, user!.id)
         : this.client.redis.client.hgetall(countKey);
     };
-    
+
     // @ts-ignore
     const list = await operation(!!user).then((res: any) => {
       if (user === null) {
@@ -52,7 +52,7 @@ export default class NotesCommand extends MandrocCommand {
           return keys.map((key, i) => {
             return {
               target: key,
-              count: values[i],
+              count: values[i]
             };
           }) as Array<NoteCount>;
         } else return [];
@@ -105,8 +105,8 @@ export default class NotesCommand extends MandrocCommand {
           issuer: message.author.id,
           target: user?.id!,
           message: note!,
-          date: Date.now(),
-        },
+          date: Date.now()
+        }
       ];
 
       await this.client.redis.client.hset(
@@ -154,7 +154,7 @@ export default class NotesCommand extends MandrocCommand {
       if (amount === 0) {
         await Promise.all([
           this.client.redis.client.hdel(notesKey, noteToDelete.target),
-          this.client.redis.client.hdel(countKey, noteToDelete.target),
+          this.client.redis.client.hdel(countKey, noteToDelete.target)
         ]);
       }
 

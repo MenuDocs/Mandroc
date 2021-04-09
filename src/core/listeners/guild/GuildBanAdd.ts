@@ -9,8 +9,8 @@ export class GuildBanAddListener extends Listener {
     const moderated = await Infraction.findOne({
       where: {
         offenderId: user.id,
-        type: InfractionType.BAN,
-      },
+        type: InfractionType.BAN
+      }
     });
 
     if (moderated) {
@@ -19,7 +19,7 @@ export class GuildBanAddListener extends Listener {
 
     const auditLogs = await guild.fetchAuditLogs({
       type: "MEMBER_BAN_ADD",
-      limit: 10,
+      limit: 10
     });
 
     const auditLog = auditLogs.entries.first();

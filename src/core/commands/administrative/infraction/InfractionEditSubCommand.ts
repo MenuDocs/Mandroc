@@ -6,7 +6,7 @@ import {
   Mandroc,
   MandrocCommand,
   Moderation,
-  ModLog,
+  ModLog
 } from "@lib";
 
 import type { Message } from "discord.js";
@@ -18,15 +18,15 @@ import type { ArgumentOptions } from "discord-akairo";
         type: "infraction",
         prompt: {
           start: "Please provide a valid infraction id.",
-          retry: "Cmon, it's not that hard to provide a valid infraction id.",
-        },
+          retry: "Cmon, it's not that hard to provide a valid infraction id."
+        }
       },
       method = yield {
         type: [["reason", "r"]],
         prompt: {
           start: "Please give me an edit method, can be `reason`.",
-          retry: "Please give me an edit method, can be `reason`.",
-        },
+          retry: "Please give me an edit method, can be `reason`."
+        }
       };
 
     let contents: any;
@@ -41,15 +41,15 @@ import type { ArgumentOptions } from "discord-akairo";
             }**`,
             retry: `Please provide the new reason for **Infraction #${
               (infraction! as Infraction).id
-            }**`,
-          },
+            }**`
+          }
         };
 
         break;
     }
 
     return { infraction, method, contents };
-  },
+  }
 })
 export class InfractionEditSubCommand extends MandrocCommand {
   async exec(msg: Message, { infraction, method, contents }: args) {
@@ -93,7 +93,7 @@ export class InfractionEditSubCommand extends MandrocCommand {
 
     infraction.meta.edits = [
       ...(infraction.meta.edits ?? []),
-      { id: msg.author.id, at: Date.now(), method, contents },
+      { id: msg.author.id, at: Date.now(), method, contents }
     ];
 
     await infraction.save();

@@ -4,11 +4,11 @@ import { Redis } from "../../../database";
 
 import type { Message } from "discord.js";
 
-const a =  "[a@]";
-const e =  "[e3]";
-const i =  "[1il!]";
+const a = "[a@]";
+const e = "[e3]";
+const i = "[1il!]";
 const iy = "[1iy!]";
-const o =  "[o0q]";
+const o = "[o0q]";
 
 export class AntiBadWords extends Module {
   readonly priority = 1;
@@ -22,7 +22,7 @@ export class AntiBadWords extends Module {
     const blacklisted = await Redis.get().client.lrange(
       "config.blacklisted-words",
       0,
-      -1,
+      -1
     );
 
     return blacklisted.length > 0
@@ -41,7 +41,7 @@ export class AntiBadWords extends Module {
       `d+${iy}+k+${e}+`,
       `c+${o}{2,}n+`,
       `r+${e}t+${a}+r+d+`,
-      `b+${e}+${a}+n+${e}+r+`,
+      `b+${e}+${a}+n+${e}+r+`
     ];
   }
 
@@ -65,7 +65,7 @@ export class AntiBadWords extends Module {
       await this.moderation.ban({
         reason: "Offensive AntiBadWords",
         moderator: "automod",
-        offender: message.member!,
+        offender: message.member!
       });
 
       return true;
@@ -86,13 +86,13 @@ export class AntiBadWords extends Module {
     if (regex && content.match(regex)) {
       const desc = [
         `Message by **${message.author.tag}** \`(${message.author.id})\` contained a blacklisted word.`,
-        code`${message.content}`,
+        code`${message.content}`
       ];
 
       await this.moderation.actions.queue({
         subject: message.member!,
         description: desc.join("\n"),
-        reason: "Sent a message containing a blacklisted word.",
+        reason: "Sent a message containing a blacklisted word."
       });
 
       return true;

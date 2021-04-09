@@ -30,7 +30,9 @@ export class AntiMassModeration extends Module {
 
     const embed = new MessageEmbed()
       .setColor(Color.Warning)
-      .setDescription("You've temporarily been denied from using staff commands, due to a recent over-use.");
+      .setDescription(
+        "You've temporarily been denied from using staff commands, due to a recent over-use."
+      );
 
     message.util?.send(embed);
     return true;
@@ -44,7 +46,7 @@ export class AntiMassModeration extends Module {
   static incrementCommandUsage(message: Message) {
     AntiMassModeration.BUCKETS.set(
       message.author.id,
-      (AntiMassModeration.BUCKETS.get(message.author.id) ?? 0) + 1,
+      (AntiMassModeration.BUCKETS.get(message.author.id) ?? 0) + 1
     );
   }
 }

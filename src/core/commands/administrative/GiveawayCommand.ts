@@ -6,24 +6,22 @@ import { Flag } from "discord-akairo";
   description: {
     content: "Manages giveaways within MenuDocs",
     usage: "<create|edit> ...",
-    examples: [
-      "giveaway create"
-    ]
-  },
+    examples: ["giveaway create"]
+  }
 })
 export class GiveawayCommand extends MandrocCommand {
   *args() {
     const method = yield {
       type: [
         ["giveaway-end", "end", "e"],
-        ["giveaway-create", "create", "c", "new", "n"],
+        ["giveaway-create", "create", "c", "new", "n"]
       ],
       otherwise: Embed.Primary([
         "Please provide a subcommand.",
         "",
         "**`end`** - ends a giveaway with the provided id.",
-        "**`create`** - creates a giveaway.",
-      ]),
+        "**`create`** - creates a giveaway."
+      ])
     };
 
     return Flag.continue(method);

@@ -23,7 +23,10 @@ export abstract class Resolver<T> extends AkairoModule {
    * @param message The message that was received.
    * @param phrase The phrase to resolve.
    */
-  abstract exec(message: Message, phrase: string | null | undefined): Promise<T | null | Flag> | (T | null | Flag);
+  abstract exec(
+    message: Message,
+    phrase: string | null | undefined
+  ): Promise<T | null | Flag> | (T | null | Flag);
 }
 
 export interface ResolverOptions extends AkairoModuleOptions {

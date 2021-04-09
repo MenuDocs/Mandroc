@@ -5,7 +5,7 @@ import type { Message } from "discord.js";
 export class InfractionResolver extends Resolver<Infraction> {
   constructor() {
     super("infraction", {
-      name: "infraction",
+      name: "infraction"
     });
   }
 

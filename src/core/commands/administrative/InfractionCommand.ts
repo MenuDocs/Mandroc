@@ -8,22 +8,22 @@ import { Flag } from "discord-akairo";
     usage: "[edit|info] ...args",
     examples: (prefix: string) => [
       `${prefix}infraction edit 4 reason "ur bad"`,
-      `${prefix}infraction view 4`,
-    ],
-  },
+      `${prefix}infraction view 4`
+    ]
+  }
 })
 export class InfractionCommand extends MandrocCommand {
   *args() {
     const method = yield {
       type: [
         ["infraction-edit", "edit", "e"],
-        ["infraction-view", "view", "info", "i", "v"],
+        ["infraction-view", "view", "info", "i", "v"]
       ],
       otherwise: Embed.Primary([
         "Please provide a subcommand.",
         "**`view`** - displays information on the provided infraction.",
-        "**`edit`** - allows editing of an infraction.",
-      ]),
+        "**`edit`** - allows editing of an infraction."
+      ])
     };
 
     return Flag.continue(method);

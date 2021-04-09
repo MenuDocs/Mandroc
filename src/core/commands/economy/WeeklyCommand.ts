@@ -8,8 +8,8 @@ import type { Message } from "discord.js";
   description: {
     content: "Pays a minor amount of credits, to help you get by ;)",
     examples: (prefix: string) => [`${prefix}weekly`],
-    usage: "",
-  },
+    usage: ""
+  }
 })
 export default class DailyCommand extends MandrocCommand {
   async exec(message: Message) {
@@ -19,12 +19,16 @@ export default class DailyCommand extends MandrocCommand {
     if (profile.lastWeekly) {
       const lastWeekly = profile.lastWeekly;
       if (lastWeekly < date + ms("1d")) {
-        const embed = Embed.Warning("You can only get a your weekly coins once a week!");
+        const embed = Embed.Warning(
+          "You can only get a your weekly coins once a week!"
+        );
         return message.util?.send(embed);
       }
     }
 
-    const embed = Embed.Warning("Your weekly **2000 ₪** has been added to your pocket.");
+    const embed = Embed.Warning(
+      "Your weekly **2000 ₪** has been added to your pocket."
+    );
     profile.pocket += 200;
     profile.lastWeekly = date;
 

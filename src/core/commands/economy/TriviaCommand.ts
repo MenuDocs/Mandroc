@@ -3,31 +3,37 @@ import { command, Embed, MandrocCommand, Trivia } from "@lib";
 import type { Message } from "discord.js";
 
 @command("trivia", {
-  aliases: [ "trivia", "quiz" ],
+  aliases: ["trivia", "quiz"],
   description: {
     content: "Robs money from a user.",
-    examples: (prefix: string) => [ `${prefix}trivia @R1zeN#0001` ],
-    usage: "<user>",
-  },
+    examples: (prefix: string) => [`${prefix}trivia @R1zeN#0001`],
+    usage: "<user>"
+  }
 })
 export default class TriviaCommand extends MandrocCommand {
   async exec(message: Message) {
     const trivia = await Trivia.multipleChoice();
 
     /* send message */
-    const answers = trivia.possibleAnswers
-      .map((ans, idx) => `\`#${`${idx + 1}`.padStart(2, "0")}\` ${ans}`);
+    const answers = trivia.possibleAnswers.map(
+      (ans, idx) => `\`#${`${idx + 1}`.padStart(2, "0")}\` ${ans}`
+    );
 
-    message.util?.send(Embed.Primary()
-      .setFooter("You have 10 seconds to answer this question.")
-      .setTitle("Multiple Choice")
-      .setDescription(this.client.turndown.turndown(trivia.question))
-      .addField("\u200e", answers.join("\n")));
+    message.util?.send(
+      Embed.Primary()
+        .setFooter("You have 10 seconds to answer this question.")
+        .setTitle("Multiple Choice")
+        .setDescription(this.client.turndown.turndown(trivia.question))
+        .addField("\u200e", answers.join("\n"))
+    );
 
     /* create message collector. */
-    const collector = message.channel.createMessageCollector(this.getFilter(message, trivia), {
-      time: 1e4 /* 10 seconds */,
-    });
+    const collector = message.channel.createMessageCollector(
+      this.getFilter(message, trivia),
+      {
+        time: 1e4 /* 10 seconds */
+      }
+    );
 
     // handle messages
     collector.on("collect", (message: Message) => {
@@ -52,23 +58,40 @@ export default class TriviaCommand extends MandrocCommand {
           profile.pocket += earned;
 
           await profile.save();
-          await message.util?.send(Embed.Primary(`Congrats! You earned **${earned} ₪**`));
+          await message.util?.send(
+            Embed.Primary(`Congrats! You earned **${earned} ₪**`)
+          );
           break;
 
         case "cancel":
-          message.util?.send(Embed.Primary(`Oh okay, I cancelled the trivia. You missed out on **${earned} ₪**`));
+          message.util?.send(
+            Embed.Primary(
+              `Oh okay, I cancelled the trivia. You missed out on **${earned} ₪**`
+            )
+          );
           break;
 
         case "time":
-          message.util?.send(Embed.Primary(`Oh no! You ran out of time. You missed out on **${earned} ₪**`));
+          message.util?.send(
+            Embed.Primary(
+              `Oh no! You ran out of time. You missed out on **${earned} ₪**`
+            )
+          );
           break;
       }
     });
   }
 
-  getFilter(message: Message, trivia: Trivia.MultipleChoiceTrivia): (m: Message) => boolean {
-    const regex = new RegExp(`^(cancel|[1-${trivia.possibleAnswers.length}])$`, "im");
+  getFilter(
+    message: Message,
+    trivia: Trivia.MultipleChoiceTrivia
+  ): (m: Message) => boolean {
+    const regex = new RegExp(
+      `^(cancel|[1-${trivia.possibleAnswers.length}])$`,
+      "im"
+    );
 
-    return (m: Message) => regex.test(m.content) && m.author.id === message.author.id;
+    return (m: Message) =>
+      regex.test(m.content) && m.author.id === message.author.id;
   }
 }

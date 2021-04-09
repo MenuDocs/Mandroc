@@ -7,18 +7,18 @@ import type { Message } from "discord.js";
       id: "tag",
       type: "tag",
       prompt: {
-        start: "I need a tag to retype.",
-      },
+        start: "I need a tag to retype."
+      }
     },
     {
       id: "type",
       type: ["embedded", "regular"],
       prompt: {
-        start: "I need a new type for that tag.",
-      },
-    },
+        start: "I need a new type for that tag."
+      }
+    }
   ],
-  permissionLevel: PermissionLevel.Helper,
+  permissionLevel: PermissionLevel.Helper
 })
 export default class TypeSubCommand extends MandrocCommand {
   public async exec(message: Message, { tag, type }: args) {

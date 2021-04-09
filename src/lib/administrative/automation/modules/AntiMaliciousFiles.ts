@@ -22,7 +22,7 @@ export class AntiMaliciousFiles extends Module {
     "webp",
     "mp3",
     "flac",
-    "wav",
+    "wav"
   ];
 
   async run(message: Message): Promise<boolean> {
@@ -37,7 +37,7 @@ export class AntiMaliciousFiles extends Module {
 
   private async _runAttachments(message: Message): Promise<boolean> {
     const malicious = message.attachments.filter(
-      (a) =>
+      a =>
         !AntiMaliciousFiles.ALLOWED_EXTENSIONS.includes(
           a.name?.split(".").pop()!
         )
@@ -47,7 +47,7 @@ export class AntiMaliciousFiles extends Module {
       message.delete().catch(captureException);
       await this.moderation.actions.queue({
         subject: message.member!,
-        description: buildString((b) => {
+        description: buildString(b => {
           b.appendLine(
             `Message by **${message.author.tag}** (${
               message.author.id
@@ -68,7 +68,7 @@ export class AntiMaliciousFiles extends Module {
             idx++;
           }
         }),
-        reason: "Sent a malicious link/message attachment.",
+        reason: "Sent a malicious link/message attachment."
       });
 
       return true;
@@ -85,14 +85,14 @@ export class AntiMaliciousFiles extends Module {
 
     if (AntiInvites.URL_REGEXP.test(message.content)) {
       const matches = [
-        ...message.content.matchAll(AntiInvites.URL_REGEXP),
+        ...message.content.matchAll(AntiInvites.URL_REGEXP)
       ].filter(([url]) => /\.\w+$/m.test(url) && !regex.test(url));
 
       if (matches.length) {
         message.delete().catch(captureException);
         await this.moderation.actions.queue({
           subject: message.member!,
-          description: buildString((b) => {
+          description: buildString(b => {
             b.appendLine(
               `Message by **${message.author.tag}** (${
                 message.author.id
@@ -107,7 +107,7 @@ export class AntiMaliciousFiles extends Module {
               b.appendLine(`\`${`${idx + 1}`.padStart(2, "0")}\` ${link}`);
             });
           }),
-          reason: "Sent a malicious link/message attachment.",
+          reason: "Sent a malicious link/message attachment."
         });
 
         return true;

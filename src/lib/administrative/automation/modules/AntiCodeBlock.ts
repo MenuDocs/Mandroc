@@ -21,7 +21,7 @@ export class AntiCodeBlock extends Module {
               `${message.author}, use a bin to prevent bulking the chat.`
             )
           )
-          .then((m) => m.delete({ timeout: 6000 }));
+          .then(m => m.delete({ timeout: 6000 }));
 
         return true;
       }

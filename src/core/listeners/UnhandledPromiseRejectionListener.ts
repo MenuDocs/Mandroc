@@ -4,11 +4,11 @@ import { captureException } from "@sentry/node";
 
 @listener("unhandled-rejection", {
   event: "unhandledRejection",
-  emitter: "process",
+  emitter: "process"
 })
 export class UnhandledPromiseRejectionListener extends Listener {
   async exec(prom: any) {
     this.client.log.error(prom);
-    captureException(prom)
+    captureException(prom);
   }
 }

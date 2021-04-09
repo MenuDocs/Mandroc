@@ -3,7 +3,13 @@ import { PendingAction } from "./PendingAction";
 import { Redis } from "../../database";
 import { IDs } from "../../util";
 
-import type { GuildMember, MessageReaction, PartialUser, TextChannel, User } from "discord.js";
+import type {
+  GuildMember,
+  MessageReaction,
+  PartialUser,
+  TextChannel,
+  User
+} from "discord.js";
 import type { Moderation } from "../Moderation";
 import type { Mandroc } from "../../Client";
 
@@ -73,7 +79,7 @@ export class ActionManager {
     const raw = {
       ...data,
       timestamp: Date.now(),
-      messageId: message.id,
+      messageId: message.id
     };
 
     this.pending.set(message.id, new PendingAction(this, raw));
@@ -84,7 +90,7 @@ export class ActionManager {
       `actions.${message.id}`,
       Redis.prepareObj({
         ...raw,
-        subject: raw.subject.id,
+        subject: raw.subject.id
       })
     );
   }

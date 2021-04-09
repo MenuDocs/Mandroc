@@ -37,7 +37,7 @@ export class UnmuteTask implements ScheduledTask<UnmuteMeta> {
           `**Offender**: ${
             member ? member : `unknown#0000`
           } \`(${offenderId})\``,
-          `**Reason**: Temporary Action Expired.`,
+          `**Reason**: Temporary Action Expired.`
         ]);
 
       const channel = await client.moderation.logChannel();

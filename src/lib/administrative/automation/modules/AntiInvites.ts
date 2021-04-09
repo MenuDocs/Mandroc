@@ -18,7 +18,7 @@ export class AntiInvites extends Module {
     "613425648685547541", // (Discord) Developers
     "81384788765712384", //  (Discord) API
     "197038439483310086", // (Discord) Testers
-    "169256939211980800", // (Discord) Town-hall
+    "169256939211980800" // (Discord) Town-hall
   ];
 
   /**
@@ -86,7 +86,7 @@ export class AntiInvites extends Module {
       offender: message.member!,
       duration: "7d",
       reason: "Sent a non-whitelisted invite.",
-      moderator: "automod",
+      moderator: "automod"
     });
 
     return true;

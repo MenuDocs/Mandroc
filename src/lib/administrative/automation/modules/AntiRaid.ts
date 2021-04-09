@@ -23,7 +23,8 @@ export class AntiRaid extends Module {
       if (AntiRaid.onGoingRaid) {
         if (
           new Date().getMinutes() -
-            ((<unknown>AntiRaid.lastJoin) as Date).getMinutes() < 5
+            ((<unknown>AntiRaid.lastJoin) as Date).getMinutes() <
+          5
         ) {
           return (AntiRaid.onGoingRaid = false);
         }
@@ -36,7 +37,13 @@ export class AntiRaid extends Module {
   async run(message: Message): Promise<boolean> {
     if (AntiRaid.onGoingRaid) {
       for await (const [, channel] of message.guild?.channels.cache.filter(
-        (chan) => chan.type === "text" && ["762898487201234999", "762898487372677138", "762898487527473154"].includes(chan.parentID!)
+        chan =>
+          chan.type === "text" &&
+          [
+            "762898487201234999",
+            "762898487372677138",
+            "762898487527473154"
+          ].includes(chan.parentID!)
       )!) {
         await channel.fetch(true);
 
@@ -44,8 +51,8 @@ export class AntiRaid extends Module {
           [
             {
               id: "762898486571827232",
-              deny: "SEND_MESSAGES",
-            },
+              deny: "SEND_MESSAGES"
+            }
           ],
           "AutoMod - OnGoingRaid"
         );
@@ -62,7 +69,7 @@ export class AntiRaid extends Module {
             [
               "Due to an ongoing raid, this server is in lockdown mode.",
               "If you're not a raider, fear not. You've just been kicked from the server.",
-              "Please rejoin later! Keep in mind this was done in order to prevent further raiding.",
+              "Please rejoin later! Keep in mind this was done in order to prevent further raiding."
             ].join("\n")
           )
         );

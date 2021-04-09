@@ -12,28 +12,24 @@ import type { Message } from "discord.js";
       type: "duration",
       prompt: {
         start: "Provide the duration of this giveaway.",
-        retry: "Provide a valid duration.",
-      },
+        retry: "Provide a valid duration."
+      }
     },
     {
       id: "prize",
       prompt: {
-        start: "Provide a prize lol.",
-      },
+        start: "Provide a prize lol."
+      }
     },
     {
       id: "winners",
       type: "number",
-      default: 1,
-    },
-  ],
+      default: 1
+    }
+  ]
 })
 export class GiveawayStartSubCommand extends MandrocCommand {
-  async exec(message: Message, {
-    duration,
-    winners,
-    prize,
-  }: args) {
+  async exec(message: Message, { duration, winners, prize }: args) {
     await Giveaway.create(message, duration, prize, winners);
   }
 }
@@ -42,4 +38,4 @@ type args = {
   duration: number;
   winners: number;
   prize: string;
-}
+};

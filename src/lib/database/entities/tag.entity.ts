@@ -3,7 +3,7 @@ import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn } from "typeorm";
 export const DEFAULT_TAG_PERMISSIONS: TagPermissions = {
   roles: [],
   staffOnly: false,
-  supportOnly: true,
+  supportOnly: true
 };
 
 @Entity("tags")

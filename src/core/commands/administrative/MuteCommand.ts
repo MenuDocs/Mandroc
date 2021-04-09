@@ -13,33 +13,35 @@ import { AntiMassModeration } from "../../../lib/administrative/automation/modul
       type: "member",
       prompt: {
         start: "I need a member to mute.",
-        retry: "I need a member to mute.",
-      },
+        retry: "I need a member to mute."
+      }
     },
     {
       id: "duration",
       match: "tentative",
-      type: "duration",
+      type: "duration"
     },
     {
       id: "reason",
       match: "rest",
       prompt: {
         start: "You need to provide a reason.",
-        retry: "You have to provide a reason for muting this member.",
-      },
-    },
-  ],
+        retry: "You have to provide a reason for muting this member."
+      }
+    }
+  ]
 })
 export class MuteCommand extends MandrocCommand {
   async exec(message: Message, { duration, member, reason }: args) {
     if (member.user.id === this.client.user?.id) {
-      const embed = Embed.Danger("No")
+      const embed = Embed.Danger("No");
       return message.util?.send(embed);
     }
 
     if (member.roles.cache.has(IDs.MUTED)) {
-      const embed = Embed.Warning("That member is already muted. Use *!unmute* before trying to mute them.");
+      const embed = Embed.Warning(
+        "That member is already muted. Use *!unmute* before trying to mute them."
+      );
       return message.util?.send(embed);
     }
 
@@ -47,7 +49,7 @@ export class MuteCommand extends MandrocCommand {
       offender: member,
       moderator: message.author,
       reason,
-      duration,
+      duration
     });
 
     if (message.deletable) {
@@ -60,7 +62,7 @@ export class MuteCommand extends MandrocCommand {
       );
 
     AntiMassModeration.incrementCommandUsage(message);
-    return message.channel.send(embed).then((m) => m.delete({ timeout: 6000 }));
+    return message.channel.send(embed).then(m => m.delete({ timeout: 6000 }));
   }
 }
 

@@ -14,29 +14,29 @@ import { AntiMassModeration } from "../../../lib/administrative/automation/modul
       type: "member",
       prompt: {
         start: "Please provide someone to ban.",
-        retry: "I need someone to ban.",
-      },
+        retry: "I need someone to ban."
+      }
     },
     {
       id: "delDays",
       type: "number",
       match: "option",
-      flag: ["-dd", "--del-days"],
+      flag: ["-dd", "--del-days"]
     },
     {
       id: "noDm",
       match: "flag",
-      flag: ["-ndm", "--no-dm"],
+      flag: ["-ndm", "--no-dm"]
     },
     {
       id: "reason",
       match: "rest",
       prompt: {
         start: "Please provide a reason for this ban.",
-        retry: "I need a reason for this ban.",
-      },
-    },
-  ],
+        retry: "I need a reason for this ban."
+      }
+    }
+  ]
 })
 export default class SoftBanCommand extends MandrocCommand {
   public async exec(message: Message, { target, delDays, reason }: args) {
@@ -55,7 +55,7 @@ export default class SoftBanCommand extends MandrocCommand {
       moderator: message.member!,
       offender: target,
       delDays,
-      reason,
+      reason
     });
 
     await message.guild?.members.unban(target);
@@ -65,7 +65,7 @@ export default class SoftBanCommand extends MandrocCommand {
     );
 
     AntiMassModeration.incrementCommandUsage(message);
-    return message.channel.send(embed).then((m) => m.delete({ timeout: 6000 }));
+    return message.channel.send(embed).then(m => m.delete({ timeout: 6000 }));
   }
 }
 

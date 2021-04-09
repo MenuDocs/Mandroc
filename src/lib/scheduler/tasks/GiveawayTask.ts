@@ -14,13 +14,15 @@ export class GiveawayTask implements ScheduledTask<GiveawayMeta> {
 
   name: string = "giveaway";
 
-  async execute(client: Mandroc, {
-    channelId,
-    messageId,
-    amount,
-    prize,
-  }: GiveawayMeta, _: any) {
-    const channel = await client.channels.fetch(channelId, false) as TextChannel,
+  async execute(
+    client: Mandroc,
+    { channelId, messageId, amount, prize }: GiveawayMeta,
+    _: any
+  ) {
+    const channel = (await client.channels.fetch(
+        channelId,
+        false
+      )) as TextChannel,
       message = await channel.messages.fetch(messageId, false);
 
     if (!message) {
@@ -30,7 +32,9 @@ export class GiveawayTask implements ScheduledTask<GiveawayMeta> {
     const reactions = message.reactions.cache.get(GiveawayTask.EMOJI),
       potentialWinners = (await reactions?.users?.fetch())?.filter(u => !u.bot);
 
-    const newEmbed = Embed.Primary(`Giveaway ended at **${moment().format("L LT")}**`)
+    const newEmbed = Embed.Primary(
+      `Giveaway ended at **${moment().format("L LT")}**`
+    )
       .setTimestamp(Date.now())
       .setTitle(`\`${prize}\``);
 
@@ -42,12 +46,22 @@ export class GiveawayTask implements ScheduledTask<GiveawayMeta> {
       return message.channel?.send(embed);
     }
 
-    const winners = potentialWinners.filter(u => u.id !== client.user!.id).randomAmount(+amount),
-      prefix = `${config.get("giveaways.mention-everyone")}` === "true" ? "@everyone, t" : "T";
+    const winners = potentialWinners
+        .filter(u => u.id !== client.user!.id)
+        .randomAmount(+amount),
+      prefix =
+        `${config.get("giveaways.mention-everyone")}` === "true"
+          ? "@everyone, t"
+          : "T";
 
-    newEmbed.setFooter(`${winners.size} winner${winners.size !== 1 ? "s" : ""}`);
-    await message.channel.send(`${prefix}ge **${prize}** winner${winners.size === 1 ? " is" : "s are"}... ${winners.array()
-      .format()}`);
+    newEmbed.setFooter(
+      `${winners.size} winner${winners.size !== 1 ? "s" : ""}`
+    );
+    await message.channel.send(
+      `${prefix}ge **${prize}** winner${
+        winners.size === 1 ? " is" : "s are"
+      }... ${winners.array().format()}`
+    );
   }
 }
 

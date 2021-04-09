@@ -15,11 +15,11 @@ export class MonitorHandler extends AkairoHandler {
   constructor(client: Mandroc, options: AkairoHandlerOptions = {}) {
     super(client, {
       classToHandle: Monitor,
-      ...options,
+      ...options
     });
 
-    this.client.on("message", async (message) => {
-      for (const [ id, monitor ] of this.modules) {
+    this.client.on("message", async message => {
+      for (const [id, monitor] of this.modules) {
         if (monitor.ignore.includes(message.type)) {
           continue;
         }
@@ -31,7 +31,7 @@ export class MonitorHandler extends AkairoHandler {
             category: "monitors",
             level: Severity.Error,
             message: "Monitor Encountered Error",
-            data: { monitor: id },
+            data: { monitor: id }
           });
 
           captureException(e);

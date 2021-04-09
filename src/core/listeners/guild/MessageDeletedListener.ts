@@ -27,7 +27,7 @@ export default class MessageDeletedListener extends Listener {
         )
         .setDescription([
           `**Author**: ${message.author.tag} \`(${message.author.id})\``,
-          `**Channel**: ${message.channel} \`(${message.channel.id})\``,
+          `**Channel**: ${message.channel} \`(${message.channel.id})\``
         ])
         .addField("\u200E", message.content);
 
@@ -45,8 +45,8 @@ export default class MessageDeletedListener extends Listener {
 
     message.channel.lastDeletedMessages.unshift({
       content: message.content,
-      attachments: message.attachments.map((a) => a.proxyURL),
-      author: message.author.id,
+      attachments: message.attachments.map(a => a.proxyURL),
+      author: message.author.id
     });
 
     if (message.channel.lastDeletedMessages.length > 5) {

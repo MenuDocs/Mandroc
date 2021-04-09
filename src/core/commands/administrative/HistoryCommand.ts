@@ -10,16 +10,16 @@ import moment from "moment";
       type: "user",
       prompt: {
         start: "Please provide a user to search.",
-        retry: "I need a user to search.",
-      },
-    },
-  ],
+        retry: "I need a user to search."
+      }
+    }
+  ]
 })
 export default class HistoryCommand extends MandrocCommand {
   public async exec(message: Message, { target }: args) {
     const infractions = await Infraction.find({
         where: { offenderId: target.id },
-        order: { createdAt: "DESC" },
+        order: { createdAt: "DESC" }
       }),
       embed = Embed.Primary().setAuthor(`Infraction History: ${target.tag}`);
 

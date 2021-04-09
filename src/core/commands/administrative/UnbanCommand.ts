@@ -5,7 +5,7 @@ import {
   InfractionType,
   MandrocCommand,
   Moderation,
-  PermissionLevel,
+  PermissionLevel
 } from "@lib";
 
 import type { Message } from "discord.js";
@@ -26,18 +26,18 @@ import type { Message } from "discord.js";
       },
       prompt: {
         start: "Please provide someone to unban.",
-        retry: "I need someone to unban",
-      },
+        retry: "I need someone to unban"
+      }
     },
     {
       id: "reason",
       match: "rest",
       prompt: {
         start: "Please provide a reason for unbanning this user.",
-        retry: "I need a reason for unbanning this user.",
-      },
-    },
-  ],
+        retry: "I need a reason for unbanning this user."
+      }
+    }
+  ]
 })
 export class UnbanCommand extends MandrocCommand {
   async exec(message: Message, { user, reason }: args) {
@@ -52,9 +52,9 @@ export class UnbanCommand extends MandrocCommand {
     const infraction = await Infraction.findOne({
       where: {
         type: InfractionType.BAN,
-        offenderId: user,
+        offenderId: user
       },
-      order: { id: "DESC" },
+      order: { id: "DESC" }
     });
 
     const origin = infraction
@@ -65,7 +65,7 @@ export class UnbanCommand extends MandrocCommand {
       {
         offender: ban!.user,
         reason: `${reason}${infraction ? ` (#${infraction.id})` : ""}`,
-        moderator: message.member!,
+        moderator: message.member!
       },
       message.guild!
     );

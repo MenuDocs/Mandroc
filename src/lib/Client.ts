@@ -1,6 +1,12 @@
 import { Guild, Intents, MessageEmbed, Util } from "discord.js";
 import { Logger } from "@ayanaware/logger";
-import { AkairoClient, CommandHandler, Flag, InhibitorHandler, ListenerHandler } from "discord-akairo";
+import {
+  AkairoClient,
+  CommandHandler,
+  Flag,
+  InhibitorHandler,
+  ListenerHandler
+} from "discord-akairo";
 import { join } from "path";
 import TurndownService from "turndown";
 import ms from "ms";
@@ -80,15 +86,15 @@ export class Mandroc extends AkairoClient {
         "191231307290771456",
         "203104843479515136",
         "424566306042544128",
-        "277211104390807552",
+        "277211104390807552"
       ],
-      partials: [ "MESSAGE", "REACTION", "CHANNEL", "GUILD_MEMBER", "USER" ],
+      partials: ["MESSAGE", "REACTION", "CHANNEL", "GUILD_MEMBER", "USER"],
       presence: {
         activity: {
           url: "https://twitch.tv/menudocs",
           name: "!help • menudocs.org",
-          type: "STREAMING",
-        },
+          type: "STREAMING"
+        }
       },
       fetchAllMembers: true,
       ws: {
@@ -99,8 +105,8 @@ export class Mandroc extends AkairoClient {
           .add("GUILD_BANS")
           .add("GUILD_MESSAGE_REACTIONS")
           .add("DIRECT_MESSAGES")
-          .add("GUILD_VOICE_STATES"),
-      },
+          .add("GUILD_VOICE_STATES")
+      }
     });
 
     this.log = Logger.get(Mandroc);
@@ -116,7 +122,7 @@ export class Mandroc extends AkairoClient {
     this.turndown = new TurndownService().addRule("hyperlink", {
       filter: "a",
       replacement: (text, node) =>
-        `[${text}](https://developer.mozilla.org${node.href})`,
+        `[${text}](https://developer.mozilla.org${node.href})`
     });
 
     this.commandHandler = new CommandHandler(this, {
@@ -153,27 +159,27 @@ export class Mandroc extends AkairoClient {
           ended: "The prompt has ended.",
           timeout: "Sorry, you've ran out of time.",
           retries: 3,
-          time: 15000,
-        },
-      },
+          time: 15000
+        }
+      }
     });
 
     this.resolverHandler = new ResolverHandler(this, {
-      directory: join(process.cwd(), "dist", "core", "resolvers"),
+      directory: join(process.cwd(), "dist", "core", "resolvers")
     });
 
     this.monitorHandler = new MonitorHandler(this, {
-      directory: join(process.cwd(), "dist", "core", "monitors"),
+      directory: join(process.cwd(), "dist", "core", "monitors")
     });
 
     this.listenerHandler = new ListenerHandler(this, {
       directory: join(process.cwd(), "dist", "core", "listeners"),
-      automateCategories: true,
+      automateCategories: true
     });
 
     this.inhibitorHandler = new InhibitorHandler(this, {
       directory: join(process.cwd(), "dist", "core", "inhibitors"),
-      automateCategories: true,
+      automateCategories: true
     });
 
     this.commandHandler.resolver.addType("tag", async (message, phrase) => {
@@ -186,8 +192,8 @@ export class Mandroc extends AkairoClient {
       phrase = Util.cleanContent(phrase.toLowerCase(), message);
 
       let tags = await Tag.find();
-      const [ tag ] = tags.filter(
-        (t) => t.name === phrase || t.aliases.includes(phrase),
+      const [tag] = tags.filter(
+        t => t.name === phrase || t.aliases.includes(phrase)
       );
 
       return tag || null;
@@ -213,17 +219,17 @@ export class Mandroc extends AkairoClient {
         }
 
         const phraseArr = phrase.split(",");
-        phraseArr.forEach((s) =>
-          Util.cleanContent(s.trim().toLowerCase(), message),
+        phraseArr.forEach(s =>
+          Util.cleanContent(s.trim().toLowerCase(), message)
         );
 
         let tags = await Tag.find();
-        const [ tag ] = tags.filter(
-          (t) => t.name === phrase || t.aliases.includes(phrase),
+        const [tag] = tags.filter(
+          t => t.name === phrase || t.aliases.includes(phrase)
         );
 
         return tag ? Flag.fail(tag.name) : phrase;
-      },
+      }
     );
   }
 
@@ -240,7 +246,7 @@ export class Mandroc extends AkairoClient {
       commands: this.commandHandler,
       listeners: this.listenerHandler,
       process,
-      ws: this.ws,
+      ws: this.ws
     });
 
     this.commandHandler

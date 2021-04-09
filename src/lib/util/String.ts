@@ -13,7 +13,7 @@ export function buildString(builder: (b: Builder) => void): string {
       }
 
       return this.append("\n");
-    },
+    }
   };
 
   builder(_b);

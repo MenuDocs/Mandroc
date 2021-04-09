@@ -13,6 +13,6 @@ export class Suggestions extends Monitor {
     }
 
     // React to the message.
-    await Promise.all(["✅", "❌", "🤷"].map((e) => message.react(e)));
+    await Promise.all(["✅", "❌", "🤷"].map(e => message.react(e)));
   }
 }
