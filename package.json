@@ -10,8 +10,7 @@
     "melike2d"
   ],
   "_moduleAliases": {
-    "@lib": "dist/lib",
-    "@util": "dist/lib/util"
+    "@lib": "dist/lib"
   },
   "scripts": {
     "build": "rm -rf dist && tsc --removeComments",
