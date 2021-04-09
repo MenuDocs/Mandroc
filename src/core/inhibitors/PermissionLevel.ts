@@ -8,7 +8,7 @@ export default class PermissionLevelInhibitor extends Inhibitor {
     super("permission-level", {
       category: "permissions",
       priority: 1,
-      reason: "permissionLevel",
+      reason: "permissionLevel"
     });
   }
 
@@ -18,6 +18,10 @@ export default class PermissionLevelInhibitor extends Inhibitor {
       !message.member ||
       message.member.permissionLevel === null
     ) {
+      return false;
+    }
+
+    if (process.env.NODE_ENV === "development" && this.client.isOwner(message.author.id)) {
       return false;
     }
 
