@@ -3,5 +3,10 @@
   "semi": true,
   "singleQuote": false,
   "bracketSpacing": true,
-  "useTabs": false
+  "useTabs": false,
+  "arrowParens": "avoid",
+  "endOfLine": "lf",
+  "trailingComma": "none",
+  "quoteProps": "as-needed",
+  "parser": "typescript"
 }
