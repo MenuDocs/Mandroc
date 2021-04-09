@@ -5,3 +5,4 @@ export * from "./Embed";
 export * from "./Functions";
 export * from "./MDN";
 export * from "./String";
+export * from "./Trivia";

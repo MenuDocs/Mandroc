@@ -1,5 +1,4 @@
-import { command, Embed, MandrocCommand } from "@lib";
-import fetch from "node-fetch";
+import { command, Embed, MandrocCommand, Trivia } from "@lib";
 
 import type { Message } from "discord.js";
 
@@ -13,80 +12,63 @@ import type { Message } from "discord.js";
 })
 export default class TriviaCommand extends MandrocCommand {
   async exec(message: Message) {
-    const { results } = await fetch(
-      "https://opentdb.com/api.php?amount=1&type=multiple",
-    ).then((r) => r.json());
+    const trivia = await Trivia.multipleChoice();
 
-    const { correct_answer, incorrect_answers, question } = results[0],
-      possibleAnswers = [ correct_answer, ...incorrect_answers ].shuffle(),
-      embed = Embed.Primary()
-        .setFooter("You have 10 seconds to answer this question.")
-        .setTitle("Multiple Choice")
-        .setDescription(this.client.turndown.turndown(question))
-        .addField(
-          "\u200E",
-          possibleAnswers
-            .map((o, i) => `\`${`${i + 1}`.padStart(2, "0")}\` ${o}`)
-            .join("\n"),
-        );
+    /* send message */
+    const answers = trivia.possibleAnswers
+      .map((ans, idx) => `\`#${`${idx + 1}`.padStart(2, "0")}\` ${ans}`);
 
-    message.util?.send(embed);
+    message.util?.send(Embed.Primary()
+      .setFooter("You have 10 seconds to answer this question.")
+      .setTitle("Multiple Choice")
+      .setDescription(this.client.turndown.turndown(trivia.question))
+      .addField("\u200e", answers.join("\n")));
 
-    const filter = (m: Message) =>
-      new RegExp(`^cancel|[1-${possibleAnswers.length}]$`, "im").test(
-        m.content,
-      ) &&
-      m.author.id === message.author.id &&
-      m.channel.id === message.channel.id;
-
-    const collector = message.channel.createMessageCollector(filter, {
-      time: 15000,
+    /* create message collector. */
+    const collector = message.channel.createMessageCollector(this.getFilter(message, trivia), {
+      time: 1e4 /* 10 seconds */,
     });
 
-    collector
-      .on("collect", (message: Message) => {
-        if (/^cancel$/im.test(message.content)) {
-          return collector.stop("cancelled");
-        }
+    // handle messages
+    collector.on("collect", (message: Message) => {
+      if (/^cancel$/im.test(message.content)) {
+        collector.stop("cancel");
+        return;
+      }
 
-        const [ _num ] = (new RegExp(`^[1-${possibleAnswers.length}]$`, "m").exec(
-          message.content,
-          )!),
-          num = +_num;
+      const answer = +message.content;
+      if (trivia.answer === trivia.possibleAnswers[answer - 1]) {
+        collector.stop("correct");
+        return;
+      }
+    });
 
-        if (num - 1 === possibleAnswers.indexOf(correct_answer)) {
-          return collector.stop("correct");
-        }
-      })
-      .on("end", async (_c, reason) => {
-        const earned = Math.floor(Math.random() * (35 - 15) + 15);
+    // handle stop
+    collector.on("end", async (_, reason) => {
+      const earned = Number.random(15, 45);
+      switch (reason) {
+        case "correct":
+          const profile = await message.member!.getProfile();
+          profile.pocket += earned;
 
-        switch (reason) {
-          case "correct":
-            const profile = await message.member!.getProfile();
+          await profile.save();
+          await message.util?.send(Embed.Primary(`Congrats! You earned **${earned} ₪**`));
+          break;
 
-            profile.pocket += earned;
-            await profile.save();
-            await message.util?.send(
-              Embed.Primary(`Congrats! You earned **${earned} ₪**`),
-            );
+        case "cancel":
+          message.util?.send(Embed.Primary(`Oh okay, I cancelled the trivia. You missed out on **${earned} ₪**`));
+          break;
 
-            break;
-          case "cancelled":
-            message.util?.send(
-              Embed.Primary(
-                `Oh okay, I cancelled the trivia. You missed out on **${earned} ₪**`,
-              ),
-            );
-            break;
-          case "time":
-            message.util?.send(
-              Embed.Primary(
-                `Oh no! You ran out of time. You missed out on **${earned} ₪**`,
-              ),
-            );
-            break;
-        }
-      });
+        case "time":
+          message.util?.send(Embed.Primary(`Oh no! You ran out of time. You missed out on **${earned} ₪**`));
+          break;
+      }
+    });
+  }
+
+  getFilter(message: Message, trivia: Trivia.MultipleChoiceTrivia): (m: Message) => boolean {
+    const regex = new RegExp(`^(cancel|[1-${trivia.possibleAnswers.length}])$`, "im");
+
+    return (m: Message) => regex.test(m.content) && m.author.id === message.author.id;
   }
 }
