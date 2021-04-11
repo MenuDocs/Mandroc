@@ -50,6 +50,7 @@ export default class ShopCommand extends MandrocCommand {
 }
 
 function makeShopListener(message: Message, descriptions: string[][]) {
+  console.log("method was run");
   const embed = message.embeds[0];
 
   const filter = (m: Message) =>
@@ -59,6 +60,7 @@ function makeShopListener(message: Message, descriptions: string[][]) {
     .awaitMessages(filter, { max: 1, time: 60000, errors: ["time"] })
     .then((collected) => {
       const reply = collected.array()[0];
+      console.log("content was registered");
 
       if (reply.content === "cancel") return message.edit("Closed store.");
       if (
