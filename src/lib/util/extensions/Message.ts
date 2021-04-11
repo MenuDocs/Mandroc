@@ -5,9 +5,9 @@ const emojis = ["✅", "❌"];
 
 class MandrocMessage extends Structures.get("Message") {
   public prompt(content: string, embedded = true): Promise<boolean> {
-    return new Promise(async (resolve) => {
+    return new Promise(async resolve => {
       const _content = embedded
-        ? new MessageEmbed().setColor(Color.PRIMARY).setDescription(content)
+        ? new MessageEmbed().setColor(Color.Primary).setDescription(content)
         : content;
 
       await this.util?.send(_content);
@@ -17,9 +17,9 @@ class MandrocMessage extends Structures.get("Message") {
         (r, u) => emojis.includes(r.emoji.name) && u.id === this.author.id,
         {
           max: 1,
-          time: 10000,
+          time: 10000
         }
-      ).on("end", async (r) => {
+      ).on("end", async r => {
         await this.reactions.removeAll();
         resolve(!!r.size && r.first()?.emoji.name !== "❌");
       });

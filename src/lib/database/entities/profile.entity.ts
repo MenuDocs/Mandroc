@@ -6,7 +6,7 @@ import {
   FindConditions,
   FindOneOptions,
   ObjectID,
-  ObjectIdColumn,
+  ObjectIdColumn
 } from "typeorm";
 import { Infraction, InfractionType } from "./infraction.entity";
 
@@ -33,7 +33,7 @@ export class Profile extends BaseEntity {
   @Column({ default: 0 })
   boosters: ProfileBoosters = {
     xp: 1,
-    coin: 1,
+    coin: 1
   };
 
   @Column("array")
@@ -84,14 +84,14 @@ export class Profile extends BaseEntity {
    * @returns The found/created document.
    */
   static findOneOrCreate(
-    options: FindOneOptions<Profile> & { create?: DeepPartial<Profile> },
+    options: FindOneOptions<Profile> & { create?: DeepPartial<Profile> }
   ): Promise<Profile> {
     return new Promise((res, rej) => {
       return this.findOne(options)
-        .then((p) =>
+        .then(p =>
           res(
-            p ?? (options.create ? this.create(options.create) : this.create()),
-          ),
+            p ?? (options.create ? this.create(options.create) : this.create())
+          )
         )
         .catch(rej);
     });
@@ -102,14 +102,14 @@ export class Profile extends BaseEntity {
    */
   async getInfractionCount(type?: InfractionType): Promise<number> {
     const where: FindConditions<Infraction> = {
-      offenderId: this.userId,
+      offenderId: this.userId
     };
 
     if (type) {
       where.type = type;
     }
 
-    return Infraction.findAndCount(where).then(([ , c ]) => c);
+    return Infraction.findAndCount(where).then(([, c]) => c);
   }
 }
 
@@ -129,7 +129,6 @@ export interface Item {
 }
 
 export type Tools = "Fishing Rod";
-
 
 export interface ProfileBoosters {
   coin: number;

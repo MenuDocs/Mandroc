@@ -6,22 +6,22 @@ import { Message, MessageEmbed, User } from "discord.js";
   description: {
     content: "Displays the avatar of a user",
     usage: "[user]",
-    examples: (prefix: string) => [`${prefix}avatar`, `${prefix}avatar @2D`],
+    examples: (prefix: string) => [`${prefix}avatar`, `${prefix}avatar @2D`]
   },
   args: [
     {
       id: "user",
       type: "user",
-      default: (m: Message) => m.author,
-    },
-  ],
+      default: (m: Message) => m.author
+    }
+  ]
 })
 export default class AvatarCommand extends MandrocCommand {
   public exec(message: Message, { user }: args) {
     const embed = new MessageEmbed()
       .setTitle(`Avatar for ${user.tag}`)
       .setURL(user.displayAvatarURL(imageUrlOptions))
-      .setColor(Color.PRIMARY)
+      .setColor(Color.Primary)
       .setImage(user.displayAvatarURL(imageUrlOptions));
 
     return message.util?.send(embed);

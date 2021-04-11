@@ -6,8 +6,8 @@ import moment from "moment";
   aliases: ["serverinfo", "si", "guildinfo", "gi"],
   description: {
     content: "Displays the server's info",
-    examples: (prefix: string) => [`${prefix}serverinfo`],
-  },
+    examples: (prefix: string) => [`${prefix}serverinfo`]
+  }
 })
 export default class ServerInfo extends MandrocCommand {
   public async exec(message: Message) {
@@ -17,7 +17,7 @@ export default class ServerInfo extends MandrocCommand {
     const roles = guild?.roles?.cache.sort((a, b) => b.position - a.position)!!;
 
     const embed = new MessageEmbed()
-      .setColor(Color.PRIMARY)
+      .setColor(Color.Primary)
       .setThumbnail(guild?.iconURL({ dynamic: true })!!)
       .addField("Server Info", [
         `**❯ Name:** ${guild?.name}`,
@@ -30,36 +30,36 @@ export default class ServerInfo extends MandrocCommand {
         `**❯ Boost Tier:** ${guild?.premiumTier || "None"}`,
         `**❯ Members:**`,
         `\u3000 **Total:** ${message.guild?.memberCount}`,
-        `\u3000 **Humans:** ${members?.filter((x) => !x.user.bot).size}`,
-        `\u3000 **Bots:** ${members?.filter((x) => x.user.bot).size}`,
+        `\u3000 **Humans:** ${members?.filter(x => !x.user.bot).size}`,
+        `\u3000 **Bots:** ${members?.filter(x => x.user.bot).size}`,
         `**❯ Emojis:**`,
         `\u3000 **Static:** ${
           emojis?.size > 10
-            ? [...emojis.map((x) => x).values()]
+            ? [...emojis.map(x => x).values()]
                 .filter((x, i) => (i < 10 && !x.animated ? x : ""))
                 .join(" ") + `& *${emojis.size - 10} more*`
             : emojis
-                ?.filter((x) => !x.animated)
-                .map((x) => x)
+                ?.filter(x => !x.animated)
+                .map(x => x)
                 .join(", ") || "None"
         }`,
         `\u3000 **Animated:** ${
           emojis?.size > 10
-            ? [...emojis.map((x) => x).values()]
+            ? [...emojis.map(x => x).values()]
                 .filter((x, i) => (i < 10 && x.animated ? x : ""))
                 .join(" ") + `& *${emojis.size - 10} more*`
             : emojis
-                ?.filter((x) => x.animated)
-                .map((x) => x)
+                ?.filter(x => x.animated)
+                .map(x => x)
                 .join(", ") || "None"
         }`,
         `**❯ Roles:** ${
           roles?.size > 10
-            ? [...roles.map((x) => x).values()]
+            ? [...roles.map(x => x).values()]
                 .filter((x, i) => (i < 10 ? x : ""))
                 .join(" ") + `& *${roles.size - 10} more*`
-            : roles?.map((x) => x).join(", ")
-        }`,
+            : roles?.map(x => x).join(", ")
+        }`
       ]);
 
     return message.util?.send(embed);

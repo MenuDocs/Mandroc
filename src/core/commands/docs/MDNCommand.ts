@@ -8,26 +8,26 @@ import { Message, MessageEmbed } from "discord.js";
       "Allows members to search the MDN web documentation.\nMake sure to be specific or the requested document wont be found.",
     examples: (prefix: string) => [
       `${prefix}js String.prototype.split()`,
-      `${prefix}mdn Array.isArray()`,
+      `${prefix}mdn Array.isArray()`
     ],
-    usage: "<query>",
+    usage: "<query>"
   },
   args: [
     {
       id: "docs",
       prompt: {
         start: "Please give me a query for searching MDN",
-        retry: "Please try again.",
+        retry: "Please try again."
       },
       match: "rest",
-      type: (_, p) => MDN.search(p),
+      type: (_, p) => (p ? MDN.search(p) : null)
     },
     {
       id: "first",
       match: "flag",
-      flag: ["-f", "--first"],
-    },
-  ],
+      flag: ["-f", "--first"]
+    }
+  ]
 })
 export default class MDNCommand extends MandrocCommand {
   static makeMdnLink(slug: string) {
@@ -37,16 +37,18 @@ export default class MDNCommand extends MandrocCommand {
     )}`;
   }
 
-  async exec(message: Message, { docs, first }: args) {
-    if (!first) {
+  async exec(message: Message, { docs }: args) {
+    const match = docs[0].diff === 1;
+
+    if (!match) {
       let str = "",
         idx = 0;
+
       for (const doc of docs) {
         const link = MDNCommand.makeMdnLink(doc.slug);
-        str += `\`${`${idx + 1}`.padStart(2, "0")}\` **[${
+        str += `\`#${`${++idx}`.padStart(2, "0")}\` **[${
           doc.title
         }](${link})**\n`;
-        idx++;
       }
 
       const embed = Embed.Primary()
@@ -58,10 +60,10 @@ export default class MDNCommand extends MandrocCommand {
 
     const doc = docs[0],
       embed = new MessageEmbed()
-        .setColor(Color.PRIMARY)
+        .setColor(Color.Primary)
         .setTitle(doc.title)
         .setURL(MDNCommand.makeMdnLink(doc.slug))
-        .setDescription(this.client.turndown.turndown(doc.excerpt));
+        .setDescription(this.client.turndown.turndown(doc.summary));
 
     return message.util?.send(embed);
   }

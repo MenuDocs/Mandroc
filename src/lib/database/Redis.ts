@@ -26,7 +26,7 @@ export class Redis {
 
     Redis._instance = this;
     Reflect.defineProperty(this, "scan", {
-      value: this.scan.bind(this),
+      value: this.scan.bind(this)
     });
   }
 

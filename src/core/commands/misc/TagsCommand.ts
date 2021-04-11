@@ -15,9 +15,9 @@ import { Flag } from "discord-akairo";
       "!tags alias ask question",
       "!tags rename ask lmao",
       "!tags type ask embedded",
-      "!tags remove ask",
-    ],
-  },
+      "!tags remove ask"
+    ]
+  }
 })
 export default class TagsCommand extends MandrocCommand {
   *args() {
@@ -34,8 +34,8 @@ export default class TagsCommand extends MandrocCommand {
         ["tag-alias", "alias", "aliases", "a"],
         ["tag-rename", "rename", "mv"],
         ["tag-type", "type", "t"],
-        ["tag-restrict", "restrict"],
-      ],
+        ["tag-restrict", "restrict"]
+      ]
     };
 
     return Flag.continue(method);

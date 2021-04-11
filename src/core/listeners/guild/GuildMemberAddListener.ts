@@ -6,7 +6,7 @@ import type { GuildMember, User } from "discord.js";
 
 @listener("guild-member-add", {
   event: "guildMemberAdd",
-  emitter: "client",
+  emitter: "client"
 })
 export default class GuildMemberAddListener extends Listener {
   async exec(member: GuildMember) {
@@ -15,7 +15,7 @@ export default class GuildMemberAddListener extends Listener {
     }
 
     if (AntiRaid.onGoingRaid) {
-      return await AntiRaid.raidKick([ member ]);
+      return await AntiRaid.raidKick([member]);
     }
 
     AntiRaid.recentJoins.push(member);
@@ -24,7 +24,7 @@ export default class GuildMemberAddListener extends Listener {
     const roles = await Redis.get().client.lrange(
       `member.${member.id}:roles`,
       0,
-      -1,
+      -1
     );
 
     if (roles.length) {
@@ -33,7 +33,7 @@ export default class GuildMemberAddListener extends Listener {
         await this.client.moderation.actions.queue({
           subject: member,
           reason: "Mute evasion",
-          description: `User *${member.user.tag}* \`(${member.id})\` has attempted to evade their mute punishment.`,
+          description: `User *${member.user.tag}* \`(${member.id})\` has attempted to evade their mute punishment.`
         });
 
         return;
@@ -49,7 +49,7 @@ export default class GuildMemberAddListener extends Listener {
     }
 
     await (projections as any).send(
-      Embed.Primary(this.joinMessage(member.user)),
+      Embed.Primary(this.joinMessage(member.user))
     );
   }
 
@@ -67,7 +67,7 @@ export default class GuildMemberAddListener extends Listener {
       `Everyone welcome **${user.tag}**!`,
       `Glad you're here, **${user.tag}**.`,
       `Good to see you, **${user.tag}**.`,
-      `Yay you made it, **${user.tag}**!`,
+      `Yay you made it, **${user.tag}**!`
     ];
 
     return messages[Math.floor(Math.random() * messages.length)];

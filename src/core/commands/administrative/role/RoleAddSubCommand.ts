@@ -5,7 +5,7 @@ import { GuildMemberRemoveListener } from "../../../listeners/guild/GuildMemberR
 @command("role-add", {
   description: {
     content: "Used for adding a role to someone",
-    usage: "<role> <member> [--persist]",
+    usage: "<role> <member> [--persist]"
   },
   channel: "guild",
   args: [
@@ -14,23 +14,23 @@ import { GuildMemberRemoveListener } from "../../../listeners/guild/GuildMemberR
       type: "role",
       prompt: {
         start: "You must provide a valid role to add.",
-        retry: "Provide a valid role.",
-      },
+        retry: "Provide a valid role."
+      }
     },
     {
       id: "member",
       type: "member",
       prompt: {
         start: "You must provide a valid guild member.",
-        retry: "Provide a valid guild member",
-      },
+        retry: "Provide a valid guild member"
+      }
     },
     {
       id: "persist",
       match: "flag",
-      flag: ["-p", "--persist"],
-    },
-  ],
+      flag: ["-p", "--persist"]
+    }
+  ]
 })
 export class RoleAddSubCommand extends MandrocCommand {
   async exec(message: Message, { member, role, persist }: args) {
@@ -46,7 +46,9 @@ export class RoleAddSubCommand extends MandrocCommand {
 
     await member.roles.add(role.id);
     if (persist) {
-      const persisted = await GuildMemberRemoveListener.getPersistentRoles(member.id);
+      const persisted = await GuildMemberRemoveListener.getPersistentRoles(
+        member.id
+      );
       if (!persisted.includes(role.id)) {
         await this.client.redis.client.lpush(
           `config.persistent-roles:${member.id}`,
@@ -57,7 +59,11 @@ export class RoleAddSubCommand extends MandrocCommand {
       }
     }
 
-    const embed = Embed.Primary(`Successfully added role ${role} to ${member}${persist ? ", the role will persist if and when they leave." : ""}`);
+    const embed = Embed.Primary(
+      `Successfully added role ${role} to ${member}${
+        persist ? ", the role will persist if and when they leave." : ""
+      }`
+    );
     return message.util?.send(embed);
   }
 }

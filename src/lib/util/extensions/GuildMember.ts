@@ -9,7 +9,7 @@ class GuildMember extends Structures.get("GuildMember") {
       }
     }
 
-    return this.roles.cache.has(IDs.UNVERIFIED) ? null : PermissionLevel.MEMBER;
+    return this.roles.cache.has(IDs.UNVERIFIED) ? null : PermissionLevel.Member;
   }
 
   // @ts-expect-error
@@ -49,7 +49,7 @@ class GuildMember extends Structures.get("GuildMember") {
   async getProfile(): Promise<Profile> {
     return Profile.findOneOrCreate({
       where: { userId: this.id },
-      create: { userId: this.id },
+      create: { userId: this.id }
     });
   }
 }

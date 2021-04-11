@@ -2,11 +2,11 @@ import { adminCommand, Embed, MandrocCommand, PermissionLevel } from "@lib";
 import type { Message } from "discord.js";
 
 @adminCommand("echo", {
-  permissionLevel: PermissionLevel.ADMIN,
+  permissionLevel: PermissionLevel.Admin,
   aliases: ["echo", "say", "repeat"],
   description: {
     content: "Makes the bot repeat after you",
-    examples: (prefix: string) => [`${prefix}echo -e R1zeN > 2D`],
+    examples: (prefix: string) => [`${prefix}echo -e R1zeN > 2D`]
   },
   args: [
     {
@@ -27,11 +27,13 @@ import type { Message } from "discord.js";
 export default class EchoCommand extends MandrocCommand {
   public async exec(message: Message, { embed, content }: args) {
     if (message.deletable) await message.delete();
-    return embed ? message.util?.send(Embed.Primary(content)) : message.util?.send(content);
+    return embed
+      ? message.util?.send(Embed.Primary(content))
+      : message.util?.send(content);
   }
 }
 
 type args = {
   embed: boolean;
   content: string;
-}
+};

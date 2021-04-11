@@ -12,35 +12,36 @@ import { MessageEmbed } from "discord.js";
       type: "string",
       prompt: {
         start: "Please provide a regex to blacklist.",
-        retry: "I need a regex to blacklist.",
-      },
-    },
-  ],
+        retry: "I need a regex to blacklist."
+      }
+    }
+  ]
 })
 export default class WatchCommand extends MandrocCommand {
   async exec(message: Message, { regex }: args) {
-    const embed = new MessageEmbed()
-      .setColor(Color.PRIMARY);
+    const embed = new MessageEmbed().setColor(Color.Primary);
 
     if (regex === "list") {
-      const list = await this.client.redis.client.lrange("config.blacklisted-words", 0, -1) ?? [];
+      const list =
+        (await this.client.redis.client.lrange(
+          "config.blacklisted-words",
+          0,
+          -1
+        )) ?? [];
 
       if (!list.length) {
-        embed
-          .setDescription("No saved blacklisted words");
+        embed.setDescription("No saved blacklisted words");
 
         return message.util?.send(embed);
       }
 
-      embed
-        .setDescription(list.map(x => `\`${x}\``).join(", "));
+      embed.setDescription(list.map(x => `\`${x}\``).join(", "));
 
       message.util?.send(embed);
     } else {
-      await this.client.redis.client.lpush("config.blacklisted-words", regex)
+      await this.client.redis.client.lpush("config.blacklisted-words", regex);
 
-      embed
-        .setDescription(`Added \`${regex}\` to the blacklist!`);
+      embed.setDescription(`Added \`${regex}\` to the blacklist!`);
 
       message.util?.send(embed);
     }

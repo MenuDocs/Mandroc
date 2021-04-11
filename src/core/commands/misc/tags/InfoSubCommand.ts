@@ -7,10 +7,10 @@ import type { Message } from "discord.js";
       id: "tag",
       type: "tag",
       prompt: {
-        start: "Please give me a tag that actually exists.",
-      },
-    },
-  ],
+        start: "Please give me a tag that actually exists."
+      }
+    }
+  ]
 })
 export default class InfoSubCommand extends MandrocCommand {
   public async exec(message: Message, { tag }: args) {
@@ -22,11 +22,9 @@ export default class InfoSubCommand extends MandrocCommand {
         `**Created At**: ${new Date(tag.createdAt).toLocaleString()}`,
         `**Uses**: ${tag.uses.toLocaleString()}`,
         `**Content Length**: ${tag.contents.length.toLocaleString()}`,
-        `**Aliases**: ${
-          tag.aliases.map((a) => `\`${a}\``).join(", ") || "none"
-        }`,
+        `**Aliases**: ${tag.aliases.map(a => `\`${a}\``).join(", ") || "none"}`,
         `**Embedded**: ${tag.embedded ? "yes" : "no"}`,
-        `**Category**: ${tag.category}`,
+        `**Category**: ${tag.category}`
       ]);
 
     return message.util?.send(embed);

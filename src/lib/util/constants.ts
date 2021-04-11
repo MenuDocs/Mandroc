@@ -25,52 +25,56 @@ export const IDs = {
     70: config.get<string>("ids.levels.70"),
     80: config.get<string>("ids.levels.80"),
     90: config.get<string>("ids.levels.90"),
-    100: config.get<string>("ids.levels.100"),
+    100: config.get<string>("ids.levels.100")
   } as Record<number, string>,
   PERMISSIONS: {
-    [PermissionLevel.MEMBER]: config.get<string>("ids.permissions.member"),
-    [PermissionLevel.DONATOR]: config.get<string>("ids.permissions.donor"),
-    [PermissionLevel.HELPER]: config.get<string>("ids.permissions.helper"),
-    [PermissionLevel.TRIAL_MOD]: config.get<string>("ids.permissions.trial-mod"),
-    [PermissionLevel.MOD]: config.get<string>("ids.permissions.mod"),
-    [PermissionLevel.ADMIN]: config.get<string>("ids.permissions.admin"),
-    [PermissionLevel.LOWER_MANAGEMENT]: config.get<string>("ids.permissions.lower-management"),
-    [PermissionLevel.MANAGEMENT]: config.get<string>("ids.permissions.management"),
+    [PermissionLevel.Member]: config.get<string>("ids.permissions.member"),
+    [PermissionLevel.Donor]: config.get<string>("ids.permissions.donor"),
+    [PermissionLevel.Helper]: config.get<string>("ids.permissions.helper"),
+    [PermissionLevel.TrialMod]: config.get<string>("ids.permissions.trial-mod"),
+    [PermissionLevel.Mod]: config.get<string>("ids.permissions.mod"),
+    [PermissionLevel.Admin]: config.get<string>("ids.permissions.admin"),
+    [PermissionLevel.LowerManagement]: config.get<string>(
+      "ids.permissions.lower-management"
+    ),
+    [PermissionLevel.Management]: config.get<string>(
+      "ids.permissions.management"
+    )
   } as Record<PermissionLevel, string>,
-  UNVERIFIED: config.get<string>("ids.roles.unverified"),
+  UNVERIFIED: config.get<string>("ids.roles.unverified")
 };
 
 export const imageUrlOptions = {
   dynamic: true,
   size: 4096,
-  format: "png",
+  format: "png"
 } as ImageURLOptions;
 
 export const bodyguardTiers: Record<BodyguardTier, BodyguardStats> = {
   rookie: {
     price: 1000,
-    safe: 0.31,
+    safe: 0.31
   },
   gold: {
     price: 5000,
-    safe: 0.62,
+    safe: 0.62
   },
   deluxe: {
     price: 10000,
-    safe: 0.73,
+    safe: 0.73
   },
   chad: {
     price: 20000,
-    safe: 0.9,
-  },
+    safe: 0.9
+  }
 };
 
 export enum Color {
-  PRIMARY = 0x5e72e4,
-  DANGER = 0xff4242,
-  SUCCESS = 0x5bf593,
-  WARNING = 0xff8d54,
-  INTERMEDIATE = 0xfffa66,
+  Primary = 0x5e72e4,
+  Danger = 0xff4242,
+  Success = 0x5bf593,
+  Warning = 0xff8d54,
+  Intermediate = 0xfffa66
 }
 export interface BodyguardStats {
   price: number;

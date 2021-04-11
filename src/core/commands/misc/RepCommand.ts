@@ -9,8 +9,8 @@ export default class RepCommand extends MandrocCommand {
       type: [
         ["rep-add", "add", "+"],
         ["rep-remove", "remove", "-"],
-        ["rep-view", "view", "v"],
-      ],
+        ["rep-view", "view", "v"]
+      ]
     };
 
     return Flag.continue(method);

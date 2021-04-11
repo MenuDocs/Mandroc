@@ -1,7 +1,7 @@
 import { command, Embed, MandrocCommand, PermissionLevel, Tag } from "@lib";
 import type { Message, Role } from "discord.js";
 
-@command("tag-restrict", { permissionLevel: PermissionLevel.TRIAL_MOD })
+@command("tag-restrict", { permissionLevel: PermissionLevel.TrialMod })
 export default class RestrictSubCommand extends MandrocCommand {
   public async exec(message: Message, { tag, method, roles }: args) {
     switch (method) {
@@ -19,9 +19,7 @@ export default class RestrictSubCommand extends MandrocCommand {
         }
 
         const adj = (c: Dictionary) => (c.removed ? "removed" : "added"),
-          embed = Embed.Primary(
-            changed.map((c) => `**<@&${c.id}>**: ${adj(c)}`)
-          );
+          embed = Embed.Primary(changed.map(c => `**<@&${c.id}>**: ${adj(c)}`));
 
         await message.util?.send(embed);
         break;
@@ -57,12 +55,12 @@ export default class RestrictSubCommand extends MandrocCommand {
     const tag = yield {
       type: "tag",
       prompt: {
-        start: "Please provide a tag to restrict.",
-      },
+        start: "Please provide a tag to restrict."
+      }
     };
 
     const method = yield {
-      type: ["staff", "support", "roles"],
+      type: ["staff", "support", "roles"]
     };
 
     let roles;
@@ -71,8 +69,8 @@ export default class RestrictSubCommand extends MandrocCommand {
         type: "role",
         match: "separate",
         prompt: {
-          start: "Please provide some roles to restrict the tag to.",
-        },
+          start: "Please provide some roles to restrict the tag to."
+        }
       };
     }
 

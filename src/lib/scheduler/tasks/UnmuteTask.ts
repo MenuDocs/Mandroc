@@ -26,7 +26,7 @@ export class UnmuteTask implements ScheduledTask<UnmuteMeta> {
       await infraction.save().catch(captureException);
 
       const embed = new MessageEmbed()
-        .setColor(Color.WARNING)
+        .setColor(Color.Warning)
         .setAuthor(
           `Moderation: Unmute (Case: ${_cid})`,
           member?.user.displayAvatarURL({ dynamic: true, format: "png" })
@@ -37,7 +37,7 @@ export class UnmuteTask implements ScheduledTask<UnmuteMeta> {
           `**Offender**: ${
             member ? member : `unknown#0000`
           } \`(${offenderId})\``,
-          `**Reason**: Temporary Action Expired.`,
+          `**Reason**: Temporary Action Expired.`
         ]);
 
       const channel = await client.moderation.logChannel();

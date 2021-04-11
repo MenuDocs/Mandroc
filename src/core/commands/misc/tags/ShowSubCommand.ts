@@ -3,7 +3,7 @@ import { render } from "mustache";
 
 import type { Message, TextChannel } from "discord.js";
 
-const SUPPORT_CATEGORIES = [ "762898487372677138", "762898487527473154" ];
+const SUPPORT_CATEGORIES = ["762898487372677138", "762898487527473154"];
 
 @command("tag-show", {
   args: [
@@ -12,11 +12,11 @@ const SUPPORT_CATEGORIES = [ "762898487372677138", "762898487527473154" ];
       match: "content",
       type: "lowercase",
       prompt: {
-        start: "Giv content pls.",
-      },
-    },
+        start: "Giv content pls."
+      }
+    }
   ],
-  channel: "guild",
+  channel: "guild"
 })
 export default class ShowSubCommand extends MandrocCommand {
   public async exec(message: Message, { name }: args) {
@@ -31,21 +31,21 @@ export default class ShowSubCommand extends MandrocCommand {
 
     if (
       tag.perms.roles.length &&
-      !tag.perms.roles.some((r) => message.member!.roles.cache.has(r))
+      !tag.perms.roles.some(r => message.member!.roles.cache.has(r))
     ) {
       return;
     }
 
     if (
       tag.perms.staffOnly &&
-      message.member!.permissionLevel! < PermissionLevel.MOD
+      message.member!.permissionLevel! < PermissionLevel.Mod
     ) {
       return;
     }
 
     if (
       tag.perms.supportOnly &&
-      message.member!.permissionLevel! < PermissionLevel.MOD
+      message.member!.permissionLevel! < PermissionLevel.Mod
     ) {
       if (
         !SUPPORT_CATEGORIES.includes((message.channel as TextChannel).parentID!)
@@ -61,12 +61,12 @@ export default class ShowSubCommand extends MandrocCommand {
         discrim: message.author.discriminator,
         avatar: message.author.avatarURL(),
         tag: message.author.tag,
-        nickname: message.member?.nickname,
+        nickname: message.member?.nickname
       },
 
       guild: {
-        memberCount: message.guild!.members.cache.size,
-      },
+        memberCount: message.guild!.members.cache.size
+      }
     };
 
     const contents = render(tag.contents, view);

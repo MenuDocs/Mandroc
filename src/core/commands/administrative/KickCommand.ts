@@ -12,18 +12,18 @@ import { AntiMassModeration } from "../../../lib/administrative/automation/modul
       type: "member",
       prompt: {
         start: "Please provide a user to kick.",
-        retry: "I need a user to kick.",
-      },
+        retry: "I need a user to kick."
+      }
     },
     {
       id: "reason",
       match: "rest",
       prompt: {
         start: "Please provide a reason for this kick.",
-        retry: "I need a reason for this kick.",
-      },
-    },
-  ],
+        retry: "I need a reason for this kick."
+      }
+    }
+  ]
 })
 export default class KickCommand extends MandrocCommand {
   async exec(message: Message, { target, reason }: args) {
@@ -37,7 +37,7 @@ export default class KickCommand extends MandrocCommand {
     await this.client.moderation.kick({
       moderator: message.member!,
       offender: target,
-      reason: reason,
+      reason: reason
     });
 
     const response = Embed.Success(

@@ -5,27 +5,27 @@ import { MessageEmbed } from "discord.js";
 const DEFAULT_COMMAND_DESCRIPTION = {
   content: "No description provided.",
   examples: () => [],
-  usage: "",
+  usage: ""
 };
 
 @command("help", {
-  aliases: [ "help", "halp", "commands" ],
+  aliases: ["help", "halp", "commands"],
   description: {
     content: "Shows all commands that the invoker are able to use.",
-    examples: (prefix: string) => [ `${prefix}help ban` ],
-    usage: "[command]",
+    examples: (prefix: string) => [`${prefix}help ban`],
+    usage: "[command]"
   },
   args: [
     {
       id: "command",
-      type: "commandAlias",
-    },
-  ],
+      type: "commandAlias"
+    }
+  ]
 })
 export default class HelpCommand extends MandrocCommand {
   public exec(message: Message, { command }: args): any {
     const embed = new MessageEmbed()
-      .setColor(Color.PRIMARY)
+      .setColor(Color.Primary)
       .setAuthor(message.author.tag, message.author.displayAvatarURL())
       .setTimestamp();
 
@@ -34,7 +34,7 @@ export default class HelpCommand extends MandrocCommand {
         .setThumbnail(this.client.user?.displayAvatarURL() as string)
         .setDescription([
           "Mandroc is designed and maintained for use in the Official MenuDocs Discord.",
-          "(**required** - <>, **optional** - ())",
+          "(**required** - <>, **optional** - ())"
         ]);
 
       const categories = this.handler.categories.filter(c => {
@@ -44,7 +44,9 @@ export default class HelpCommand extends MandrocCommand {
               return true;
             }
 
-            return message.member.permissionLevel ? message.member.permissionLevel >= PermissionLevel.TRIAL_MOD : false;
+            return message.member.permissionLevel
+              ? message.member.permissionLevel >= PermissionLevel.TrialMod
+              : false;
           case "private":
             return this.client.isOwner(message.author);
           default:
@@ -52,15 +54,15 @@ export default class HelpCommand extends MandrocCommand {
         }
       });
 
-      for (const [ id, category ] of categories) {
+      for (const [id, category] of categories) {
         const mapped = category
-          .filter((c) => c.aliases.length > 0)
-          .map((c) => `\`${c.aliases[0]}\``);
+          .filter(c => c.aliases.length > 0)
+          .map(c => `\`${c.aliases[0]}\``);
 
         if (mapped.length) {
           embed.addField(
             `❯ ${id.capitalize()} (${mapped.length})`,
-            mapped.join(", "),
+            mapped.join(", ")
           );
         }
       }
@@ -76,11 +78,13 @@ export default class HelpCommand extends MandrocCommand {
       .addField("❯ General Information", [
         `**Category**: ${command.category.id.capitalize()}`,
         `**Aliases**: ${command.aliases.slice(1).join(", ") || "None"}`,
-        `**Accessible By**: ${PermissionLevel[command.permissionLevel].split("_").map((x: string) => x.capitalize(true))
+        `**Accessible By**: ${PermissionLevel[command.permissionLevel]
+          .split("_")
+          .map((x: string) => x.capitalize(true))
           .join(" ")}`,
         `**Usage**: \`${prefix}${command.aliases[0]}${
           description.usage ? ` ${description.usage}` : ""
-        }\``,
+        }\``
       ]);
 
     if (description.examples) {
@@ -92,7 +96,7 @@ export default class HelpCommand extends MandrocCommand {
       if (examples.length) {
         embed.addField(
           "❯ Examples",
-          examples.map((e) => `\`${e}\``),
+          examples.map(e => `\`${e}\``)
         );
       }
     }

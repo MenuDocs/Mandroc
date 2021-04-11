@@ -12,16 +12,16 @@ import type { User } from "discord.js";
       type: "user",
       prompt: {
         start: "Please provide a user to unblock.",
-        retry: "I need a user to unblock.",
-      },
-    },
-  ],
+        retry: "I need a user to unblock."
+      }
+    }
+  ]
 })
 export default class BlockCommand extends MandrocCommand {
   async exec(message: Message, { target }: args) {
     const targetProfile = await Profile.findOneOrCreate({
       where: { _id: target.id },
-      create: { _id: target.id },
+      create: { _id: target.id }
     });
 
     if (targetProfile.blocked)

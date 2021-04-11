@@ -5,7 +5,7 @@ import type { MessageReaction, PartialUser, User } from "discord.js";
 
 @listener("message-reaction-remove", {
   event: "messageReactionRemove",
-  emitter: "client",
+  emitter: "client"
 })
 export class MessageReactionRemoveListener extends Listener {
   async exec(reaction: MessageReaction, user: User | PartialUser) {
@@ -26,8 +26,8 @@ export class MessageReactionRemoveListener extends Listener {
       reactionRole = await ReactionRole.findOne({
         where: {
           messageId: id,
-          emoji: reaction.emoji.id ?? reaction.emoji.name,
-        },
+          emoji: reaction.emoji.id ?? reaction.emoji.name
+        }
       });
 
     if (!reactionRole) {

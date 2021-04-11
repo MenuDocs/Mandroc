@@ -7,10 +7,10 @@ import type { Message } from "discord.js";
       id: "tag",
       type: "tag",
       prompt: {
-        start: "I need a tag.",
-      },
-    },
-  ],
+        start: "I need a tag."
+      }
+    }
+  ]
 })
 export default class SourceSubCommand extends MandrocCommand {
   public async exec(message: Message, { tag }: args) {

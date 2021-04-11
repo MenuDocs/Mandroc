@@ -1,7 +1,7 @@
 import { Module } from "../Module";
+import { Embed } from "../../../util";
 
 import type { Message } from "discord.js";
-import { Embed } from "@lib";
 
 export class AntiCodeBlock extends Module {
   readonly priority = 1;
@@ -21,7 +21,7 @@ export class AntiCodeBlock extends Module {
               `${message.author}, use a bin to prevent bulking the chat.`
             )
           )
-          .then((m) => m.delete({ timeout: 6000 }));
+          .then(m => m.delete({ timeout: 6000 }));
 
         return true;
       }

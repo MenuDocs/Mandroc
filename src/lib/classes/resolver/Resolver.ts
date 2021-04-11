@@ -1,4 +1,5 @@
 import { AkairoModule, AkairoModuleOptions, Flag } from "discord-akairo";
+
 import type { Message } from "discord.js";
 
 export abstract class Resolver<T> extends AkairoModule {

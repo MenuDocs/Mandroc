@@ -32,10 +32,13 @@ class Config {
       return;
     }
 
-    fs.access(file, fs.constants.F_OK, (err) => {
+    fs.access(file, fs.constants.F_OK, err => {
       if (err) {
-        log.error(new FileSystemError(`Cannot read contents of "${path.basename(file)}"`)
-          .setCause(err));
+        log.error(
+          new FileSystemError(
+            `Cannot read contents of "${path.basename(file)}"`
+          ).setCause(err)
+        );
 
         return process.exit(1);
       }
@@ -46,8 +49,13 @@ class Config {
     try {
       this._data = JSON.parse(data);
     } catch (e) {
-      log.error(new ParseError(`Error occurred while parsing the contents of "${path.basename(file)}"`)
-        .setCause(e));
+      log.error(
+        new ParseError(
+          `Error occurred while parsing the contents of "${path.basename(
+            file
+          )}"`
+        ).setCause(e)
+      );
 
       process.exit(1);
     }
@@ -64,7 +72,9 @@ class Config {
       return this.getEnv(path, defaultValue);
     }
 
-    return (dotprop.get(this._data, path) ?? this.getEnv(path) ?? defaultValue) as T;
+    return (dotprop.get(this._data, path) ??
+      this.getEnv(path) ??
+      defaultValue) as T;
   }
 
   /**

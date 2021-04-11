@@ -12,20 +12,18 @@ import { MessageEmbed } from "discord.js";
       type: "string",
       prompt: {
         start: "Please provide a regex to un-blacklist.",
-        retry: "I need a regex to un-blacklist.",
-      },
-    },
-  ],
+        retry: "I need a regex to un-blacklist."
+      }
+    }
+  ]
 })
 export default class UnWatchCommand extends MandrocCommand {
   async exec(message: Message, { regex }: args) {
-    const embed = new MessageEmbed()
-      .setColor(Color.PRIMARY);
+    const embed = new MessageEmbed().setColor(Color.Primary);
 
     await this.client.redis.client.lrem("config.blacklisted-words", 0, regex);
 
-    embed
-      .setDescription(`Un-blacklisted \`${regex}\` if it existed`);
+    embed.setDescription(`Un-blacklisted \`${regex}\` if it existed`);
 
     message.util?.send(embed);
   }

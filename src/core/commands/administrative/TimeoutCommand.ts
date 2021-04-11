@@ -12,23 +12,23 @@ import type { GuildMember, Message } from "discord.js";
       type: "member",
       prompt: {
         start: "I need a member to timeout.",
-        retry: "I need a member to timeout.",
-      },
+        retry: "I need a member to timeout."
+      }
     },
     {
       id: "duration",
       match: "tentative",
-      type: "duration",
+      type: "duration"
     },
     {
       id: "reason",
       match: "rest",
       prompt: {
         start: "You need to provide a reason.",
-        retry: "You have to provide a reason for timing out this member.",
-      },
-    },
-  ],
+        retry: "You have to provide a reason for timing out this member."
+      }
+    }
+  ]
 })
 export class TimeoutCommand extends MandrocCommand {
   async exec(message: Message, { duration, member, reason }: args) {
@@ -41,16 +41,20 @@ export class TimeoutCommand extends MandrocCommand {
       offender: member,
       moderator: message.author,
       reason,
-      duration,
+      duration
     });
 
     if (message.deletable) {
       message.delete().catch(captureException);
     }
 
-    const embed = Embed.Primary(`Successfully timed out **${member}** for ${ms(duration, { long: true })} with reason \`${reason}\``);
+    const embed = Embed.Primary(
+      `Successfully timed out **${member}** for ${ms(duration, {
+        long: true
+      })} with reason \`${reason}\``
+    );
 
-    return message.channel.send(embed).then((m) => m.delete({ timeout: 6000 }));
+    return message.channel.send(embed).then(m => m.delete({ timeout: 6000 }));
   }
 }
 

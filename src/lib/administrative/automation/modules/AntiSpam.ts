@@ -17,11 +17,11 @@ export class AntiSpam extends Module {
     const modlog = await Infraction.findOne({
       where: {
         offenderId: user,
-        type: InfractionType.UNMUTE,
+        type: InfractionType.UNMUTE
       },
       order: {
-        id: "DESC",
-      },
+        id: "DESC"
+      }
     });
 
     return modlog?.createdAt ?? null;
@@ -29,7 +29,7 @@ export class AntiSpam extends Module {
 
   async run(message: Message): Promise<boolean> {
     const pl = message.member!.permissionLevel;
-    if (pl && pl >= PermissionLevel.MOD) {
+    if (pl && pl >= PermissionLevel.Mod) {
       return false;
     }
 
@@ -52,7 +52,7 @@ export class AntiSpam extends Module {
           offender: message.member!,
           moderator: "automod",
           duration: "7d",
-          reason: `(Excessive) Spamming in ${message.channel}`,
+          reason: `(Excessive) Spamming in ${message.channel}`
         });
 
         return true;
@@ -65,7 +65,7 @@ export class AntiSpam extends Module {
             offender: message.member!,
             moderator: "automod",
             duration: "1h",
-            reason: `Spamming in ${message.channel}`,
+            reason: `Spamming in ${message.channel}`
           });
 
           return true;
@@ -77,7 +77,7 @@ export class AntiSpam extends Module {
         await this.moderation.warn({
           offender: message.member!,
           moderator: "automod",
-          reason: `Spamming in ${message.channel}`,
+          reason: `Spamming in ${message.channel}`
         });
 
         return true;
@@ -90,7 +90,7 @@ export class AntiSpam extends Module {
 
   private cleanUp(): void {
     const now = Date.now();
-    for (const [ k, v ] of this.buckets) {
+    for (const [k, v] of this.buckets) {
       if (now - v[v.length - 1] >= 5000) {
         this.buckets.delete(k);
       }

@@ -6,13 +6,11 @@ Reflect.defineProperty(Collection.prototype, "randomAmount", {
 
     const taken = new Collection();
     for (let i = 0; i < amount; i++) {
-      const randomKey = this
-        .filter((_, k) => !taken.has(k))
-        .randomKey();
+      const randomKey = this.filter((_, k) => !taken.has(k)).randomKey();
 
       taken.set(randomKey, this.get(randomKey));
     }
 
     return taken;
-  },
+  }
 });
