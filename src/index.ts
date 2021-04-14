@@ -10,11 +10,11 @@ init({
   tracesSampleRate: 1.0,
   maxBreadcrumbs: 30,
   environment: process.env.NODE_ENV,
-  release: require("../package.json").version,
+  release: require("../package.json").version
 });
 
 const main = Logger.get("main");
-(() => new Mandroc().launch())().catch((e) => {
+(() => new Mandroc().launch())().catch(e => {
   main.error(e);
   captureException(e);
 });

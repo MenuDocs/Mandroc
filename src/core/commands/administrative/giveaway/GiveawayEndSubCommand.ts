@@ -7,14 +7,14 @@ import type { Message } from "discord.js";
       id: "id",
       prompt: {
         start: "Provide the ID of the giveaway to end.",
-        retry: "Provide a valid giveaway id",
-      },
-    },
-  ],
+        retry: "Provide a valid giveaway id"
+      }
+    }
+  ]
 })
 export class GiveawayEndSubCommand extends MandrocCommand {
   async exec(message: Message, { id }: args) {
-    if (!await Giveaway.exists(id)) {
+    if (!(await Giveaway.exists(id))) {
       const embed = Embed.Primary("No giveaway found with this ID.");
       return message.util?.send(embed);
     }
@@ -25,4 +25,4 @@ export class GiveawayEndSubCommand extends MandrocCommand {
 
 type args = {
   id: string;
-}
+};

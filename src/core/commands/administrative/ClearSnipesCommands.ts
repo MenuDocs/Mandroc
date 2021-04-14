@@ -7,9 +7,9 @@ import type { Message, TextChannel } from "discord.js";
     {
       id: "channel",
       default: (m: Message) => m.channel,
-      type: "textChannel",
-    },
-  ],
+      type: "textChannel"
+    }
+  ]
 })
 export class ClearSnipesCommand extends MandrocCommand {
   async exec(message: Message, { channel }: args) {

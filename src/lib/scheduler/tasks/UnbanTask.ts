@@ -24,13 +24,13 @@ export class UnbanTask implements ScheduledTask<UnbanMeta> {
     await guild.members.unban(offenderId);
 
     const embed = new MessageEmbed()
-      .setColor(Color.DANGER)
+      .setColor(Color.Danger)
       .setAuthor(`Moderation: Unban (Case: ${_cid})`, user.displayAvatarURL())
       .setTimestamp(Date.now())
       .setDescription([
         `**Moderator:** ${client.user}`,
         `**Offender:** ${user.tag} \`(${offenderId})\``,
-        `**Reason:** Temporary Action Expired.`,
+        `**Reason:** Temporary Action Expired.`
       ]);
 
     const channel = await client.moderation.logChannel();

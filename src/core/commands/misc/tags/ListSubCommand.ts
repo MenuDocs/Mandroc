@@ -6,7 +6,7 @@ import type { Message } from "discord.js";
 export default class ListSubCommand extends MandrocCommand {
   public async exec(message: Message) {
     const tags = await Tag.find(),
-      categories = new Set([...tags.map((tag) => tag.category)]),
+      categories = new Set([...tags.map(tag => tag.category)]),
       embed = Embed.Primary();
 
     if (!tags.length) {
@@ -24,8 +24,8 @@ export default class ListSubCommand extends MandrocCommand {
       );
 
     for (const category of categories) {
-      const categorized = tags.filter((tag) => tag.category === category),
-        formatted = categorized.map((tag) => `\`${tag.name}\``).join(", ");
+      const categorized = tags.filter(tag => tag.category === category),
+        formatted = categorized.map(tag => `\`${tag.name}\``).join(", ");
 
       embed.addField(
         `❯ ${category.capitalize()} (${categorized.length})`,

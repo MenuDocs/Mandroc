@@ -3,11 +3,11 @@ import { command, Embed, MandrocCommand } from "@lib";
 import type { Message } from "discord.js";
 
 @command("gamble", {
-  aliases: [ "gamble" ],
+  aliases: ["gamble"],
   description: {
     content: "Guess a number between `x` and `y`.",
-    examples: (prefix: string) => [ `${prefix}gamble 500` ],
-    usage: "!gamble <amount>",
+    examples: (prefix: string) => [`${prefix}gamble 500`],
+    usage: "!gamble <amount>"
   },
   args: [
     {
@@ -15,27 +15,27 @@ import type { Message } from "discord.js";
       match: "rest",
       prompt: {
         start: "Please give me an amount to gamble.",
-        retry: "Please try again... Example: `!gamble 100`",
-      },
-    },
-  ],
+        retry: "Please try again... Example: `!gamble 100`"
+      }
+    }
+  ]
 })
-export default class NumberGuesserCommand extends MandrocCommand {
+export default class GambleCommand extends MandrocCommand {
   public async exec(message: Message, { amount }: args) {
     const profile = await message.member!.getProfile();
     if (amount <= 0) {
       return message.channel.send(
-        Embed.Warning("You must provide a valid number!"),
+        Embed.Warning("You must provide a valid number!")
       );
     }
 
     if (amount > profile.pocket) {
       return message.channel.send(
-        Embed.Warning("You may not gamble more than you have in your pocket!"),
+        Embed.Warning("You may not gamble more than you have in your pocket!")
       );
     }
 
-    const chances = [ false, false, false, true ];
+    const chances = [false, false, false, true];
     if (message.member?.permissionLevel !== 1) {
       chances.push(true);
     }

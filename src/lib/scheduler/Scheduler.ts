@@ -36,7 +36,12 @@ export class Scheduler {
 
     this.client = client;
     this.tasks = new Collection();
-    for (const task of [ new UnbanTask(), new UnmuteTask(), new BoostersTask(), new GiveawayTask() ]) {
+    for (const task of [
+      new UnbanTask(),
+      new UnmuteTask(),
+      new BoostersTask(),
+      new GiveawayTask()
+    ]) {
       this.tasks.set(task.name, task);
     }
 
@@ -66,19 +71,19 @@ export class Scheduler {
    * @param key The redis key to parse.
    */
   static parse(
-    key: string,
+    key: string
   ): { meta: boolean; id: string; task: string } | null {
     const regex = /^tasks(-meta)?:(\w+)\.(.*)$/im;
     if (!regex.test(key)) {
       return null;
     }
 
-    const [ , meta, task, id ] = regex.exec(key)!;
+    const [, meta, task, id] = regex.exec(key)!;
 
     return {
       meta: !!meta,
       task,
-      id,
+      id
     };
   }
 
@@ -100,7 +105,7 @@ export class Scheduler {
     task: K,
     runAt: number,
     id: string = Scheduler.generateRandomId(),
-    meta: M = {} as M,
+    meta: M = {} as M
   ): Promise<string> {
     if (!this.tasks.has(task)) {
       throw new TypeError(`The task "${task}" doesn't exist.`);
@@ -118,7 +123,7 @@ export class Scheduler {
 
     await Scheduler.redis.client.hset(TASK(task, id), {
       metaKey: metaKey ?? "",
-      runAt,
+      runAt
     });
 
     return id;
@@ -145,7 +150,9 @@ export class Scheduler {
       .get(Scheduler.parse(key)!.task)
       ?.execute(this.client, meta, data);
 
-    await Scheduler.redis.client.del(...(data.metaKey ? [ data.metaKey, key ] : [ key ]));
+    await Scheduler.redis.client.del(
+      ...(data.metaKey ? [data.metaKey, key] : [key])
+    );
   }
 
   /**
@@ -154,7 +161,9 @@ export class Scheduler {
    * @param key The redis key.
    */
   async _checkKey(key: string) {
-    const data: ScheduledTaskInfo = (await Scheduler.redis.client.hgetall(key)) as any;
+    const data: ScheduledTaskInfo = (await Scheduler.redis.client.hgetall(
+      key
+    )) as any;
     if (+data.runAt <= Date.now()) {
       await this._runKey(key, data);
     }
@@ -175,5 +184,5 @@ type MetaMap = {
   giveaway: GiveawayMeta;
   unban: UnbanMeta;
   unmute: UnmuteMeta;
-  boosters: BoostersMeta
-}
+  boosters: BoostersMeta;
+};

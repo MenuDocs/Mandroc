@@ -5,7 +5,7 @@ import type { GuildMember } from "discord.js";
 
 @listener("guild-member-remove", {
   emitter: "client",
-  event: "guildMemberRemove",
+  event: "guildMemberRemove"
 })
 export class GuildMemberRemoveListener extends Listener {
   static PERSISTENT_ROLES = [IDs.MUTED, ...Object.values(IDs.LEVELS)];
@@ -36,7 +36,7 @@ export class GuildMemberRemoveListener extends Listener {
 
     const roles = (
       await GuildMemberRemoveListener.getPersistentRoles(member.id)
-    ).filter((id) => member.roles.cache.has(id));
+    ).filter(id => member.roles.cache.has(id));
 
     if (roles.length) {
       await Redis.get().client.lpush(`member.${member.id}:roles`, ...roles);

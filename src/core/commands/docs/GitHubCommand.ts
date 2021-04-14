@@ -9,9 +9,9 @@ import { Message, MessageEmbed } from "discord.js";
     examples: (prefix: string) => [
       `${prefix}github MeLike2D`,
       `${prefix}gh torvalds`,
-      `${prefix}gh JonasSchiott`,
+      `${prefix}gh JonasSchiott`
     ],
-    usage: "<username>",
+    usage: "<username>"
   },
   args: [
     {
@@ -19,28 +19,28 @@ import { Message, MessageEmbed } from "discord.js";
       match: "rest",
       prompt: {
         start: "Please give me username to query GitHub with.",
-        retry: "Please try again... Example: `gh MenuDocs`",
-      },
-    },
-  ],
+        retry: "Please try again... Example: `gh MenuDocs`"
+      }
+    }
+  ]
 })
 export default class GitHubCommand extends MandrocCommand {
   public async exec(message: Message, { username }: args) {
     const res = await fetch(
       `https://api.github.com/users/${username}`
-    ).then((r) => r.json());
+    ).then(r => r.json());
 
     if (res.message) {
       return message.util?.send(
         new MessageEmbed()
           .setDescription(`Sorry, I couldn't find anything for \`${username}\``)
-          .setColor(Color.WARNING)
+          .setColor(Color.Warning)
       );
     }
 
     return message.util?.send(
       new MessageEmbed()
-        .setColor(Color.PRIMARY)
+        .setColor(Color.Primary)
         .setDescription(["**Description**", res.bio])
         .setThumbnail(res.avatar_url)
         .setURL(res.html_url)
@@ -50,7 +50,7 @@ export default class GitHubCommand extends MandrocCommand {
             `**❯ Real name:** ${res.name || "None"}`,
             `**❯ Location:** ${res.location || "None"}`,
             `**❯ GitHub ID:** ${res.id}`,
-            `**❯ Website:** ${res.blog || "None"}`,
+            `**❯ Website:** ${res.blog || "None"}`
           ],
           true
         )
@@ -58,7 +58,7 @@ export default class GitHubCommand extends MandrocCommand {
           "Social stats",
           [
             `**❯ Followers:** ${res.followers}`,
-            `**❯ Following:** ${res.following}`,
+            `**❯ Following:** ${res.following}`
           ],
           true
         )

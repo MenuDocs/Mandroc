@@ -5,19 +5,19 @@ import { Message, MessageEmbed } from "discord.js";
   aliases: ["shop", "store", "buy"],
   description: {
     content: "Opens the shop.",
-    examples: (prefix: string) => [`${prefix}shop`],
-  },
+    examples: (prefix: string) => [`${prefix}shop`]
+  }
 })
 export default class ShopCommand extends MandrocCommand {
   public async exec(message: Message) {
     const embed = new MessageEmbed()
       .setTitle("Shop")
-      .setColor(Color.PRIMARY)
+      .setColor(Color.Primary)
       .setDescription([
         "*Type any of the following numbers to view the category ...*",
         "**1. Bodyguards**",
         "**2. Boosters**",
-        "**3. Other**",
+        "**3. Other**"
       ])
       .setFooter("Cancel at any time to writing `cancel` in the chat");
 
@@ -29,7 +29,7 @@ export default class ShopCommand extends MandrocCommand {
         "*Type any of the following numbers to view the category ...*",
         "**1. Bodyguards**",
         "**2. Boosters**",
-        "**3. Other**",
+        "**3. Other**"
       ],
       // Categories
       ["Rookie", "Gold", "Deluxe", "Chad"],
@@ -40,9 +40,9 @@ export default class ShopCommand extends MandrocCommand {
         "**3. x2.5**",
         "x1.5",
         "x2",
-        "x2.5",
+        "x2.5"
       ],
-      ["Change Nickname"],
+      ["Change Nickname"]
     ];
 
     makeShopListener(toEdit, embedDescs);
@@ -50,6 +50,7 @@ export default class ShopCommand extends MandrocCommand {
 }
 
 function makeShopListener(message: Message, descriptions: string[][]) {
+  console.log("method was run");
   const embed = message.embeds[0];
 
   const filter = (m: Message) =>
@@ -57,8 +58,9 @@ function makeShopListener(message: Message, descriptions: string[][]) {
 
   message.channel
     .awaitMessages(filter, { max: 1, time: 60000, errors: ["time"] })
-    .then((collected) => {
+    .then(collected => {
       const reply = collected.array()[0];
+      console.log("content was registered");
 
       if (reply.content === "cancel") return message.edit("Closed store.");
       if (
@@ -68,7 +70,7 @@ function makeShopListener(message: Message, descriptions: string[][]) {
         makeShopListener(message, descriptions);
         return message.channel
           .send("You cant go any further back - do `cancel` to close the shop!")
-          .then((msg) => msg.delete({ timeout: 3000 }));
+          .then(msg => msg.delete({ timeout: 3000 }));
       }
 
       // Default embed
@@ -91,5 +93,5 @@ function makeShopListener(message: Message, descriptions: string[][]) {
 
       message.edit(embed.setTitle("Shop").setDescription(descriptions[0]));
     })
-    .catch((_) => message.channel.send("You took too long."));
+    .catch(_ => message.channel.send("You took too long."));
 }

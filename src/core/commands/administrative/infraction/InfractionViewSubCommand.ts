@@ -4,7 +4,7 @@ import {
   Infraction,
   MandrocCommand,
   Moderation,
-  ModLog,
+  ModLog
 } from "@lib";
 
 import type { Message } from "discord.js";
@@ -18,10 +18,10 @@ import ms from "ms";
       type: "infraction",
       prompt: {
         start: "Please provide a valid infraction id.",
-        retry: "Please provide a valid infraction id.",
-      },
-    },
-  ],
+        retry: "Please provide a valid infraction id."
+      }
+    }
+  ]
 })
 export class InfractionViewSubCommand extends MandrocCommand {
   async exec(message: Message, { infraction }: args) {
@@ -38,7 +38,7 @@ export class InfractionViewSubCommand extends MandrocCommand {
           infraction.meta.duration
             ? `**Duration:** ${ms(infraction.meta.duration, { long: true })}`
             : false,
-          `**Reason:** ${await ModLog.parseReason(infraction.reason)}`,
+          `**Reason:** ${await ModLog.parseReason(infraction.reason)}`
         ].filter(Boolean)
       );
 

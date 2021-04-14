@@ -4,7 +4,7 @@ import {
   Embed,
   MandrocCommand,
   PermissionLevel,
-  Tag,
+  Tag
 } from "@lib";
 import type { Message } from "discord.js";
 
@@ -14,44 +14,44 @@ import type { Message } from "discord.js";
     {
       id: "name",
       prompt: {
-        start: "Please give me the name of the tag.",
-      },
+        start: "Please give me the name of the tag."
+      }
     },
     {
       id: "contents",
       match: "rest",
       prompt: {
-        start: "I need some content so the tag can even show up. smh noob",
-      },
+        start: "I need some content so the tag can even show up. smh noob"
+      }
     },
     {
       id: "type",
       type: ["embedded", "regular"],
       match: "option",
       flag: ["-t", "--type"],
-      default: "embedded",
+      default: "embedded"
     },
     {
       id: "category",
       flag: ["-c", "--category", "--cat"],
       match: "option",
-      default: "general",
+      default: "general"
     },
     {
       id: "staffOnly",
-      flag: ["--staffOnly"],
+      flag: ["--staffOnly"]
     },
     {
       id: "roles",
       flag: ["-r", "--roles"],
-      match: "option",
+      match: "option"
     },
     {
       id: "supportOnly",
-      flag: ["--supportOnly"],
-    },
+      flag: ["--supportOnly"]
+    }
   ],
-  permissionLevel: PermissionLevel.HELPER,
+  permissionLevel: PermissionLevel.Helper
 })
 export default class AddSubCommand extends MandrocCommand {
   public async exec(
@@ -76,7 +76,7 @@ export default class AddSubCommand extends MandrocCommand {
     const perms = DEFAULT_TAG_PERMISSIONS;
     if (
       message.member!.permissionLevel &&
-      message.member!.permissionLevel >= PermissionLevel.MOD
+      message.member!.permissionLevel >= PermissionLevel.Mod
     ) {
       if (roles) {
         perms.roles = roles.split(/[ ,]+/g);
@@ -92,7 +92,7 @@ export default class AddSubCommand extends MandrocCommand {
       contents,
       embedded: type === "embedded",
       category,
-      perms,
+      perms
     }).save();
 
     return message.util?.send(Embed.Primary(`I created the tag **${name}**`));

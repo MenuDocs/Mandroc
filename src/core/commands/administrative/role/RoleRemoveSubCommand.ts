@@ -4,7 +4,7 @@ import type { GuildMember, Message, Role } from "discord.js";
 @command("role-remove", {
   description: {
     content: "Used for remonig a role from someone",
-    usage: "<role> <member>",
+    usage: "<role> <member>"
   },
   args: [
     {
@@ -12,18 +12,18 @@ import type { GuildMember, Message, Role } from "discord.js";
       type: "role",
       prompt: {
         start: "You must provide a valid role to remove.",
-        retry: "Provide a valid role.",
-      },
+        retry: "Provide a valid role."
+      }
     },
     {
       id: "member",
       type: "member",
       prompt: {
         start: "You must provide a valid guild member.",
-        retry: "Provide a valid guild member",
-      },
-    },
-  ],
+        retry: "Provide a valid guild member"
+      }
+    }
+  ]
 })
 export class RoleAddSubCommand extends MandrocCommand {
   async exec(message: Message, { member, role }: args) {

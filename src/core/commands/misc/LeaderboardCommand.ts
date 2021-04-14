@@ -2,15 +2,18 @@ import { command, Embed, MandrocCommand, paginate, Profile } from "@lib";
 import type { Message } from "discord.js";
 
 @command("leaderboard", {
-  aliases: [ "leaderboard", "top" ],
+  aliases: ["leaderboard", "top"],
   description: {
     content: "Displays bot info",
-    examples: (prefix: string) => [ `${prefix}leaderboard` ],
+    examples: (prefix: string) => [`${prefix}leaderboard`]
   },
   args: [
     {
       id: "type",
-      type: [ [ "xp", "exp" ], [ "level", "lvl" ] ],
+      type: [
+        ["xp", "exp"],
+        ["level", "lvl"]
+      ],
       default: "xp"
     },
     {
@@ -18,17 +21,17 @@ import type { Message } from "discord.js";
       type: "number",
       default: 1,
       match: "option",
-      flag: [ "--page", "-p", "--select" ]
-    },
-  ],
+      flag: ["--page", "-p", "--select"]
+    }
+  ]
 })
 export class LeaderboardCommand extends MandrocCommand {
   public async exec(message: Message, { page: _current, type }: args) {
     const profiles = await Profile.find({
-      order: { [type]: "DESC" },
+      order: { [type]: "DESC" }
     });
 
-    const { max, page, current, } = paginate(profiles, 10, _current);
+    const { max, page, current } = paginate(profiles, 10, _current);
 
     let idx = (current - 1) * 10,
       desc = "";
@@ -36,8 +39,10 @@ export class LeaderboardCommand extends MandrocCommand {
     for (const profile of page) {
       const user = await this.client.users.fetch(profile.userId);
 
-      desc += `\`#${`${++idx}`.padStart(2, "0")}\` *${user.tag}*\n`
-      desc += `\u3000**${type.capitalize()}:** ${profile[type].toLocaleString()}\n\n`
+      desc += `\`#${`${++idx}`.padStart(2, "0")}\` *${user.tag}*\n`;
+      desc += `\u3000**${type.capitalize()}:** ${profile[
+        type
+      ].toLocaleString()}\n\n`;
     }
 
     const embed = Embed.Primary(desc);

@@ -6,20 +6,21 @@ import {
   InfractionType,
   Mandroc,
   ModLog,
-  Scheduler,
+  Scheduler
 } from "@lib";
 import ms from "ms";
+import { captureException } from "@sentry/node";
+
 import { AutoMod } from "./automation/AutoMod";
+import { ActionManager } from "./queue/ActionManager";
 
 import type {
   Guild,
   GuildMember,
   Message,
   TextChannel,
-  User,
+  User
 } from "discord.js";
-import { ActionManager } from "./queue/ActionManager";
-import { captureException } from "@sentry/node";
 
 const DEFAULT_DM_VALUE = true;
 
@@ -86,7 +87,6 @@ export class Moderation {
   ) {
     if (dm) {
       const _duration = duration ? ms(duration, { long: true }) : null;
-
       const embed = Embed.Danger(
         `You've been muted in **MenuDocs** ${
           _duration ? `for **${_duration}**` : "permanently"
@@ -228,19 +228,14 @@ export class Moderation {
   ) {
     if (dm) {
       const _duration = duration ? ms(duration, { long: true }) : null;
-      const embed = Embed.Danger(
-        `You've been banned from **MenuDocs** ${
-          _duration ? `for **${_duration}**` : "permanently"
-        }.\n${code`${reason}`}`
-      );
+      const desc = `You've been banned from **MenuDocs** ${
+        _duration ? `for **${_duration}**` : "permanently"
+      }.\n${code`${reason}`}`;
 
-      await this.tryDm(member.user, embed);
+      await this.tryDm(member.user, Embed.Danger(desc));
     }
 
-    await member.ban({
-      days: 7,
-      reason,
-    });
+    await member.ban({ days: 7, reason });
   }
 
   /**
@@ -260,7 +255,12 @@ export class Moderation {
       await modLog.schedule();
     }
 
-    await this.softBanMember(data.offender, data.reason, data.delDays = 7, dm);
+    await this.softBanMember(
+      data.offender,
+      data.reason,
+      (data.delDays = 7),
+      dm
+    );
     return modLog.finish();
   }
 
@@ -271,17 +271,11 @@ export class Moderation {
     dm = DEFAULT_DM_VALUE
   ) {
     if (dm) {
-      const embed = Embed.Danger(
-        `You've been soft-banned from **MenuDocs**`
-      );
-
+      const embed = Embed.Danger(`You've been soft-banned from **MenuDocs**`);
       await this.tryDm(member.user, embed);
     }
 
-    await member.ban({
-      days: delDays,
-      reason,
-    });
+    await member.ban({ days: delDays, reason });
   }
 
   /**
@@ -323,7 +317,12 @@ export class Moderation {
       await modlog.schedule();
     }
 
-    await this.timeoutMember(data.offender, data.reason, modlog.duration?.ms, dm);
+    await this.timeoutMember(
+      data.offender,
+      data.reason,
+      modlog.duration?.ms,
+      dm
+    );
     return await modlog.finish();
   }
 

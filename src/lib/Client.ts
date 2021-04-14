@@ -1,6 +1,12 @@
 import { Guild, Intents, MessageEmbed, Util } from "discord.js";
 import { Logger } from "@ayanaware/logger";
-import { AkairoClient, CommandHandler, Flag, InhibitorHandler, ListenerHandler } from "discord-akairo";
+import {
+  AkairoClient,
+  CommandHandler,
+  Flag,
+  InhibitorHandler,
+  ListenerHandler
+} from "discord-akairo";
 import { join } from "path";
 import TurndownService from "turndown";
 import ms from "ms";
@@ -8,14 +14,11 @@ import ms from "ms";
 import { ResolverHandler } from "./classes/resolver/ResolverHandler";
 import { MonitorHandler } from "./classes/monitor/MonitorHandler";
 
-import { Tag } from "./database/entities/tag.entity";
-import { Database } from "./database/Database";
-import { Redis } from "./database/Redis";
+import { Database, Redis, Tag } from "./database";
 import { Scheduler } from "./scheduler/Scheduler";
 import { MandrocCommand } from "./classes/Command";
 import { Moderation } from "./administrative/Moderation";
-import { Color, IDs } from "./util/constants";
-import { config } from "./util/Config";
+import { Color, config, IDs } from "./util";
 
 export class Mandroc extends AkairoClient {
   /**
@@ -83,15 +86,15 @@ export class Mandroc extends AkairoClient {
         "191231307290771456",
         "203104843479515136",
         "424566306042544128",
-        "277211104390807552",
+        "277211104390807552"
       ],
-      partials: [ "MESSAGE", "REACTION", "CHANNEL", "GUILD_MEMBER", "USER" ],
+      partials: ["MESSAGE", "REACTION", "CHANNEL", "GUILD_MEMBER", "USER"],
       presence: {
         activity: {
           url: "https://twitch.tv/menudocs",
           name: "!help • menudocs.org",
-          type: "STREAMING",
-        },
+          type: "STREAMING"
+        }
       },
       fetchAllMembers: true,
       ws: {
@@ -102,8 +105,8 @@ export class Mandroc extends AkairoClient {
           .add("GUILD_BANS")
           .add("GUILD_MESSAGE_REACTIONS")
           .add("DIRECT_MESSAGES")
-          .add("GUILD_VOICE_STATES"),
-      },
+          .add("GUILD_VOICE_STATES")
+      }
     });
 
     this.log = Logger.get(Mandroc);
@@ -119,7 +122,7 @@ export class Mandroc extends AkairoClient {
     this.turndown = new TurndownService().addRule("hyperlink", {
       filter: "a",
       replacement: (text, node) =>
-        `[${text}](https://developer.mozilla.org${node.href})`,
+        `[${text}](https://developer.mozilla.org${node.href})`
     });
 
     this.commandHandler = new CommandHandler(this, {
@@ -135,48 +138,48 @@ export class Mandroc extends AkairoClient {
         prompt: {
           modifyStart: (_, p) =>
             new MessageEmbed()
-              .setColor(Color.WARNING)
+              .setColor(Color.Warning)
               .setFooter("To cancel the prompt, send 'cancel'")
               .setDescription(p),
           modifyEnded: (_, p) =>
             new MessageEmbed()
-              .setColor(Color.WARNING)
+              .setColor(Color.Warning)
               .setFooter("To cancel the prompt, send 'cancel'")
               .setDescription(p),
           modifyCancel: (_, p) =>
-            new MessageEmbed().setColor(Color.PRIMARY).setDescription(p),
+            new MessageEmbed().setColor(Color.Primary).setDescription(p),
           modifyRetry: (_, p) =>
             new MessageEmbed()
-              .setColor(Color.WARNING)
+              .setColor(Color.Warning)
               .setFooter("To cancel the prompt, send 'cancel'")
               .setDescription(p),
           modifyTimeout: (_, p) =>
-            new MessageEmbed().setColor(Color.PRIMARY).setDescription(p),
+            new MessageEmbed().setColor(Color.Primary).setDescription(p),
           cancel: "Okay, I cancelled the prompt.",
           ended: "The prompt has ended.",
           timeout: "Sorry, you've ran out of time.",
           retries: 3,
-          time: 15000,
-        },
-      },
+          time: 15000
+        }
+      }
     });
 
     this.resolverHandler = new ResolverHandler(this, {
-      directory: join(process.cwd(), "dist", "core", "resolvers"),
+      directory: join(process.cwd(), "dist", "core", "resolvers")
     });
 
     this.monitorHandler = new MonitorHandler(this, {
-      directory: join(process.cwd(), "dist", "core", "monitors"),
+      directory: join(process.cwd(), "dist", "core", "monitors")
     });
 
     this.listenerHandler = new ListenerHandler(this, {
       directory: join(process.cwd(), "dist", "core", "listeners"),
-      automateCategories: true,
+      automateCategories: true
     });
 
     this.inhibitorHandler = new InhibitorHandler(this, {
       directory: join(process.cwd(), "dist", "core", "inhibitors"),
-      automateCategories: true,
+      automateCategories: true
     });
 
     this.commandHandler.resolver.addType("tag", async (message, phrase) => {
@@ -189,8 +192,8 @@ export class Mandroc extends AkairoClient {
       phrase = Util.cleanContent(phrase.toLowerCase(), message);
 
       let tags = await Tag.find();
-      const [ tag ] = tags.filter(
-        (t) => t.name === phrase || t.aliases.includes(phrase),
+      const [tag] = tags.filter(
+        t => t.name === phrase || t.aliases.includes(phrase)
       );
 
       return tag || null;
@@ -216,17 +219,17 @@ export class Mandroc extends AkairoClient {
         }
 
         const phraseArr = phrase.split(",");
-        phraseArr.forEach((s) =>
-          Util.cleanContent(s.trim().toLowerCase(), message),
+        phraseArr.forEach(s =>
+          Util.cleanContent(s.trim().toLowerCase(), message)
         );
 
         let tags = await Tag.find();
-        const [ tag ] = tags.filter(
-          (t) => t.name === phrase || t.aliases.includes(phrase),
+        const [tag] = tags.filter(
+          t => t.name === phrase || t.aliases.includes(phrase)
         );
 
         return tag ? Flag.fail(tag.name) : phrase;
-      },
+      }
     );
   }
 
@@ -243,7 +246,7 @@ export class Mandroc extends AkairoClient {
       commands: this.commandHandler,
       listeners: this.listenerHandler,
       process,
-      ws: this.ws,
+      ws: this.ws
     });
 
     this.commandHandler

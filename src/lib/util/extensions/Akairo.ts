@@ -4,11 +4,11 @@ import type {
   AkairoModule,
   Argument,
   ArgumentRunnerState,
-  ContentParserResult,
+  ContentParserResult
 } from "discord-akairo";
 import { AkairoError, AkairoHandler } from "discord-akairo";
 
-import { isClass } from "@lib";
+import { isClass } from "../Functions";
 import { extname } from "path";
 
 import type { Message } from "discord.js";
@@ -24,7 +24,7 @@ export enum ArgumentMatch {
   CONTENT = "content",
   TENTATIVE = "tentative",
   REST_CONTENT = "restContent",
-  NONE = "none",
+  NONE = "none"
 }
 
 ArgumentRunner.prototype.runOne = async function (
@@ -43,7 +43,7 @@ ArgumentRunner.prototype.runOne = async function (
     [ArgumentMatch.CONTENT]: this.runContent,
     [ArgumentMatch.TENTATIVE]: this.runTentative,
     [ArgumentMatch.REST_CONTENT]: this.runRestContent,
-    [ArgumentMatch.NONE]: this.runNone,
+    [ArgumentMatch.NONE]: this.runNone
   };
 
   const runFn = cases[arg.match];

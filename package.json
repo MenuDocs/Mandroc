@@ -33,6 +33,7 @@
     "moment": "^2.29.1",
     "mongodb": "^3.6.5",
     "mustache": "^4.2.0",
+    "phin": "^3.5.1",
     "reflect-metadata": "^0.1.13",
     "string-similarity": "^4.0.3",
     "turndown": "^7.0.0",

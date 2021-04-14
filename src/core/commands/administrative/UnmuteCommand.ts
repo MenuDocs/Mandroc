@@ -5,7 +5,7 @@ import {
   Infraction,
   InfractionType,
   MandrocCommand,
-  Moderation,
+  Moderation
 } from "@lib";
 import { captureException } from "@sentry/node";
 
@@ -19,18 +19,18 @@ import type { GuildMember, Message } from "discord.js";
       type: "member",
       prompt: {
         start: "I need someone to unmute.",
-        retry: "I need someone to unmute.",
-      },
+        retry: "I need someone to unmute."
+      }
     },
     {
       id: "reason",
       match: "rest",
       prompt: {
         start: "Please provide a reason for un-muting this member.",
-        retry: "Please provide a reason for un-muting this member.",
-      },
-    },
-  ],
+        retry: "Please provide a reason for un-muting this member."
+      }
+    }
+  ]
 })
 export class UnmuteCommand extends MandrocCommand {
   async exec(message: Message, { member, reason }: args) {
@@ -42,9 +42,9 @@ export class UnmuteCommand extends MandrocCommand {
     const infraction = await Infraction.findOne({
       where: {
         offenderId: member.id,
-        type: InfractionType.MUTE,
+        type: InfractionType.MUTE
       },
-      order: { id: "DESC" },
+      order: { id: "DESC" }
     });
 
     if (message.deletable) {
@@ -54,7 +54,7 @@ export class UnmuteCommand extends MandrocCommand {
     await this.moderation.unmute({
       offender: member,
       moderator: message.author,
-      reason,
+      reason
     });
 
     const origin = infraction
@@ -63,7 +63,7 @@ export class UnmuteCommand extends MandrocCommand {
 
     return message.channel
       .send(Embed.Primary(`Unmuted **${member}**, their mute origin ${origin}`))
-      .then((m) => m.delete({ timeout: 5000 }));
+      .then(m => m.delete({ timeout: 5000 }));
   }
 }
 

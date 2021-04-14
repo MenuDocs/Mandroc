@@ -11,9 +11,9 @@ import type { Message } from "discord.js";
     {
       id: "amount",
       type: Argument.range("number", 1, 6),
-      default: 5,
-    },
-  ],
+      default: 5
+    }
+  ]
 })
 export default class SnipeCommand extends MandrocCommand {
   public async exec(message: Message, { amount }: args) {

@@ -4,7 +4,7 @@ import type { Message } from "discord.js";
 
 @listener("message-invalid-listener", {
   event: "messageInvalid",
-  emitter: "commands",
+  emitter: "commands"
 })
 export default class MessageInvalidListener extends Listener {
   public async exec(message: Message) {

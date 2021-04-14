@@ -1,6 +1,9 @@
 import { GuildMember, MessageEmbed, User } from "discord.js";
 
-import { Infraction, InfractionType } from "../database/entities/infraction.entity";
+import {
+  Infraction,
+  InfractionType
+} from "../database/entities/infraction.entity";
 import { Color, imageUrlOptions } from "../util/constants";
 
 import ms from "ms";
@@ -13,7 +16,7 @@ import { Moderation } from "./Moderation";
 export class ModLog {
   static TEMPORARY: InfractionType[] = [
     InfractionType.MUTE,
-    InfractionType.BAN,
+    InfractionType.BAN
   ];
 
   /**
@@ -101,7 +104,7 @@ export class ModLog {
       offenderId: this.offender.id,
       moderatorId: this.moderator.id ?? "AutoMod",
       reason: this.reason,
-      meta,
+      meta
     });
   }
 
@@ -130,7 +133,7 @@ export class ModLog {
   static async parseReason(reason: string): Promise<string> {
     for (const [text, id] of reason.matchAll(/#(\d+)/gi)) {
       const infraction = await Infraction.findOne({
-        where: { id: +id },
+        where: { id: +id }
       });
 
       const link = infraction
@@ -151,17 +154,17 @@ export class ModLog {
     switch (this.type) {
       case InfractionType.KICK:
       case InfractionType.WARN:
-        color = Color.WARNING;
+        color = Color.Warning;
         break;
       case InfractionType.MUTE:
       case InfractionType.TIMEOUT:
       case InfractionType.UNMUTE:
-        color = Color.INTERMEDIATE;
+        color = Color.Intermediate;
         break;
       case InfractionType.BAN:
       case InfractionType.SOFTBAN:
       case InfractionType.UNBAN:
-        color = Color.DANGER;
+        color = Color.Danger;
         break;
     }
 
@@ -177,7 +180,7 @@ export class ModLog {
             `**Moderator:** ${this.moderator.section}`,
             `**Offender:** ${this.offender.section}`,
             this.duration?.section,
-            `**Reason:** ${await ModLog.parseReason(this.reason)}`,
+            `**Reason:** ${await ModLog.parseReason(this.reason)}`
           ].filter(Boolean)
         );
 
@@ -208,7 +211,7 @@ export class ModLog {
         this.offender.id,
         {
           offenderId: this.offender.id,
-          caseId: this.#caseId!!,
+          caseId: this.#caseId!!
         }
       );
     }
@@ -234,7 +237,7 @@ export class ModLog {
 
     this.duration = {
       ms: ms_,
-      section: `**Duration:** ${ms(ms_, { long: true })}`,
+      section: `**Duration:** ${ms(ms_, { long: true })}`
     };
 
     return this;
@@ -250,7 +253,7 @@ export class ModLog {
         this.moderator = {
           section: "AutoMod™️",
           id: null,
-          tag: null,
+          tag: null
         };
 
         break;
@@ -259,7 +262,7 @@ export class ModLog {
         this.moderator = {
           section: `${user.tag} \`(${user.id})\``,
           id: user.id ?? null,
-          tag: user.tag ?? null,
+          tag: user.tag ?? null
         };
 
         break;
@@ -287,7 +290,7 @@ export class ModLog {
     this.offender = {
       section: `${user.tag} \`(${user.id})\``,
       id: user.id,
-      tag: user.tag,
+      tag: user.tag
     };
 
     return this;
@@ -336,7 +339,7 @@ export class ModLog {
     infraction.messageId = await this.post();
 
     // (3) Save the infraction
-    await infraction.save().catch((e) => captureException(e));
+    await infraction.save().catch(e => captureException(e));
 
     return infraction;
   }

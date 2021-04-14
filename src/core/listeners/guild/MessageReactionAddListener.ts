@@ -5,7 +5,7 @@ import type { MessageReaction, PartialUser, User } from "discord.js";
 
 @listener("message-reaction-add", {
   event: "messageReactionAdd",
-  emitter: "client",
+  emitter: "client"
 })
 export default class MessageReactionAddListener extends Listener {
   async exec(reaction: MessageReaction, user: User | PartialUser) {
@@ -38,8 +38,8 @@ export default class MessageReactionAddListener extends Listener {
         const reactionRole = await ReactionRole.findOne({
           where: {
             messageId: id,
-            emoji: reaction.emoji.id ?? reaction.emoji.name,
-          },
+            emoji: reaction.emoji.id ?? reaction.emoji.name
+          }
         });
 
         if (!reactionRole) {

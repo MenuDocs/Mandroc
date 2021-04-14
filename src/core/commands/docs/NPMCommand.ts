@@ -9,9 +9,9 @@ import { Message, MessageEmbed } from "discord.js";
     examples: (prefix: string) => [
       `${prefix}npm react`,
       `${prefix}npm eslint`,
-      `${prefix}npm discord.js`,
+      `${prefix}npm discord.js`
     ],
-    usage: "<package>",
+    usage: "<package>"
   },
   args: [
     {
@@ -19,14 +19,14 @@ import { Message, MessageEmbed } from "discord.js";
       match: "rest",
       prompt: {
         start: "Please give me package name to query NPM with.",
-        retry: "Please try again... Example: `npm discord.js`",
-      },
-    },
-  ],
+        retry: "Please try again... Example: `npm discord.js`"
+      }
+    }
+  ]
 })
 export default class GitHubCommand extends MandrocCommand {
   public async exec(message: Message, { pkg }: args) {
-    const res = await fetch(`https://registry.npmjs.org/${pkg}`).then((r) =>
+    const res = await fetch(`https://registry.npmjs.org/${pkg}`).then(r =>
       r.json()
     );
 
@@ -34,14 +34,14 @@ export default class GitHubCommand extends MandrocCommand {
       return message.util?.send(
         new MessageEmbed()
           .setDescription(`Sorry, I couldn't find anything for \`${pkg}\``)
-          .setColor(Color.WARNING)
+          .setColor(Color.Warning)
       );
     }
 
     const version = res.versions[res["dist-tags"].latest];
 
     const embed = new MessageEmbed()
-      .setColor(Color.PRIMARY)
+      .setColor(Color.Primary)
       .setThumbnail(
         "https://static.npmjs.com/338e4905a2684ca96e08c7780fc68412.png"
       )
@@ -59,7 +59,7 @@ export default class GitHubCommand extends MandrocCommand {
           .map((usr: { name: string }) => usr.name)
           .join(", ")}`,
         `**❯ Latest Version:** ${version.version || "None"}`,
-        `**❯ Keywords:** ${res.keywords ? res.keywords.join(", ") : "None"}`,
+        `**❯ Keywords:** ${res.keywords ? res.keywords.join(", ") : "None"}`
       ]);
 
     if (res.description) {

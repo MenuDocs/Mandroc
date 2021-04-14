@@ -1,7 +1,7 @@
 import { Logger } from "@ayanaware/logger";
 import { createConnection, Connection } from "typeorm";
 
-import { config } from "../util/Config";
+import { config } from "../util";
 
 /* entities */
 import { Tag } from "./entities/tag.entity";
@@ -35,7 +35,7 @@ export class Database {
           host: config.get("redis-host"),
           port: config.get("redis-port")
         }
-      },
+      }
     });
 
     this.log.info("Connected to MongoDB");

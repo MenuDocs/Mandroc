@@ -7,22 +7,22 @@ import type { Message } from "discord.js";
       id: "tag",
       type: "tag",
       prompt: {
-        start: "I need a tag.",
-      },
+        start: "I need a tag."
+      }
     },
     {
       id: "alias",
       type: "lowercase",
       prompt: {
-        start: "I need an alias to add/remove.",
-      },
-    },
+        start: "I need an alias to add/remove."
+      }
+    }
   ],
-  permissionLevel: PermissionLevel.HELPER,
+  permissionLevel: PermissionLevel.Helper
 })
 export default class AliasSubCommand extends MandrocCommand {
   public async exec(message: Message, { tag, alias }: args) {
-    const i = tag.aliases.findIndex((a) => a.toLowerCase() === alias);
+    const i = tag.aliases.findIndex(a => a.toLowerCase() === alias);
     if (i !== -1) {
       tag.aliases.splice(i, 1);
       message.util?.send(

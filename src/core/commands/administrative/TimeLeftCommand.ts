@@ -1,27 +1,34 @@
-import { command, Embed, MandrocCommand, PermissionLevel, ScheduledTaskInfo, Scheduler } from "@lib";
+import {
+  command,
+  Embed,
+  MandrocCommand,
+  PermissionLevel,
+  ScheduledTaskInfo,
+  Scheduler
+} from "@lib";
 
 import type { GuildMember, Message } from "discord.js";
 
 @command("timeleft", {
-  aliases: [ "time-left", "tl" ],
+  aliases: ["time-left", "tl"],
   description: {
     content: "Returns the time left on an infraction.",
     examples: (prefix: string) => [
       `${prefix}timeleft`,
-      `${prefix}timeleft @T3NED#0001`,
+      `${prefix}timeleft @T3NED#0001`
     ],
-    usage: "[member]",
+    usage: "[member]"
   },
   args: [
     {
       id: "member",
-      type: "member",
-    },
-  ],
+      type: "member"
+    }
+  ]
 })
 export default class TimeLeftCommand extends MandrocCommand {
   async exec(message: Message, { member }: args) {
-    const mod = message.member?.above(PermissionLevel.TRIAL_MOD);
+    const mod = message.member?.above(PermissionLevel.TrialMod);
     if (mod && !member) {
       const embed = Embed.Warning("I don't think you know how this works...");
       return message.util?.send(embed);
@@ -31,20 +38,24 @@ export default class TimeLeftCommand extends MandrocCommand {
   }
 
   private async respond(message: Message, id: string) {
-    const [ key ] = await this.client.redis.scan(`tasks:*.${id}`);
+    const [key] = await this.client.redis.scan(`tasks:*.${id}`);
     if (!key) {
       const embed = Embed.Warning("Please provide a punished user.");
       return message.util?.send(embed);
     }
-    const data = await this.client.redis.client.hgetall(key) as unknown as ScheduledTaskInfo,
+    const data = ((await this.client.redis.client.hgetall(
+        key
+      )) as unknown) as ScheduledTaskInfo,
       { task } = Scheduler.parse(key)!;
 
-    if (!data || ![ "unban", "unmute" ].includes(task)) {
+    if (!data || !["unban", "unmute"].includes(task)) {
       const embed = Embed.Warning("No on-going bans on mutes.");
       return message.util?.send(embed);
     }
 
-    const embed = Embed.Primary(`<@${id}> \`(${id})\` has **${+data.runAt}** remaining for their **${task}**.`);
+    const embed = Embed.Primary(
+      `<@${id}> \`(${id})\` has **${+data.runAt}** remaining for their **${task}**.`
+    );
     return message.util?.send(embed);
   }
 }

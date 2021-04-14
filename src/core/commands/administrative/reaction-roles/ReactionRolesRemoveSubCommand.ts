@@ -6,7 +6,7 @@ import type { Emoji, Message, TextChannel } from "discord.js";
   description: {
     content:
       "Removes a reaction role or all reaction roles from the provided message.",
-    usage: "<channel> <message> <emoji> [role]",
+    usage: "<channel> <message> <emoji> [role]"
   },
   args: [
     {
@@ -15,22 +15,22 @@ import type { Emoji, Message, TextChannel } from "discord.js";
       prompt: {
         start:
           "You must provide a valid text channel so the provided message id can be fetched.",
-        retry: "Provide a valid text channel.",
-      },
+        retry: "Provide a valid text channel."
+      }
     },
     {
       id: "messageId",
       type: "string",
       prompt: {
         start: "You must provide a valid message id.",
-        retry: "Provide a valid message id",
-      },
+        retry: "Provide a valid message id"
+      }
     },
     {
       id: "emoji",
-      type: "emoji",
-    },
-  ],
+      type: "emoji"
+    }
+  ]
 })
 export class ReactionRolesRemoveSubCommand extends MandrocCommand {
   async exec(message: Message, { channel, messageId, emoji }: args) {
@@ -60,8 +60,8 @@ export class ReactionRolesRemoveSubCommand extends MandrocCommand {
     const exists = await ReactionRole.findOne({
       where: {
         messageId,
-        emoji: emoji.id ?? emoji.name,
-      },
+        emoji: emoji.id ?? emoji.name
+      }
     });
 
     if (!exists) {

@@ -1,9 +1,9 @@
 import { MessageEmbed } from "discord.js";
-import { Color } from "@lib";
+import { Color } from "./constants";
 
 export class Embed {
   public static Primary(content?: string | string[]): MessageEmbed {
-    const embed = new MessageEmbed().setColor(Color.PRIMARY);
+    const embed = new MessageEmbed().setColor(Color.Primary);
 
     if (content) embed.setDescription(content);
 
@@ -11,7 +11,7 @@ export class Embed {
   }
 
   public static Danger(content?: string): MessageEmbed {
-    const embed = new MessageEmbed().setColor(Color.DANGER);
+    const embed = new MessageEmbed().setColor(Color.Danger);
 
     if (content) embed.setDescription(content);
 
@@ -19,7 +19,7 @@ export class Embed {
   }
 
   public static Warning(content?: string): MessageEmbed {
-    const embed = new MessageEmbed().setColor(Color.WARNING);
+    const embed = new MessageEmbed().setColor(Color.Warning);
 
     if (content) embed.setDescription(content);
 
@@ -27,7 +27,7 @@ export class Embed {
   }
 
   public static Success(content?: string): MessageEmbed {
-    const embed = new MessageEmbed().setColor(Color.SUCCESS);
+    const embed = new MessageEmbed().setColor(Color.Success);
 
     if (content) embed.setDescription(content);
 

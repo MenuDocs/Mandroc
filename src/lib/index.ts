@@ -9,10 +9,8 @@ import type TurndownService from "turndown";
 import type { Class } from "type-fest";
 
 import type { Moderation } from "./administrative/Moderation";
-import type { Database } from "./database/Database";
+import type { Database, Profile, Redis } from "./database";
 import type { PermissionLevel } from "./classes/Command";
-import type { Redis } from "./database/Redis";
-import type { Profile } from "./database/entities/profile.entity";
 
 export * from "./administrative/Moderation";
 export * from "./administrative/ModLog";
@@ -26,19 +24,8 @@ export * from "./classes/GiveawayHelper";
 export * from "./scheduler/tasks/ScheduledTask";
 export * from "./scheduler/Scheduler";
 
-export * from "./database/entities/profile.entity";
-export * from "./database/entities/infraction.entity";
-export * from "./database/entities/tag.entity";
-export * from "./database/entities/reaction-role.entity";
-export * from "./database/Redis";
-
-export * from "./util/String";
-export * from "./util/Config";
-export * from "./util/constants";
-export * from "./util/DotNotation";
-export * from "./util/Functions";
-export * from "./util/Embed";
-export * from "./util/MDN";
+export * from "./database";
+export * from "./util";
 
 export * from "./Client";
 
@@ -55,7 +42,7 @@ declare module "discord.js" {
 
   type ReactionCollectorFilter = (
     reaction: MessageReaction,
-    user: User,
+    user: User
   ) => boolean;
 
   interface GuildMember {
@@ -88,7 +75,7 @@ declare module "discord.js" {
   interface Message {
     createReactionCollector(
       filter: ReactionCollectorFilter,
-      options?: ReactionCollectorOptions,
+      options?: ReactionCollectorOptions
     ): ReactionCollector;
 
     prompt(question: string, embeddable?: boolean): Promise<boolean>;

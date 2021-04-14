@@ -7,11 +7,11 @@ import type { Message } from "discord.js";
       id: "tag",
       type: "tag",
       prompt: {
-        start: "I need a tag to delete.",
-      },
-    },
+        start: "I need a tag to delete."
+      }
+    }
   ],
-  permissionLevel: PermissionLevel.HELPER,
+  permissionLevel: PermissionLevel.Helper
 })
 export default class RemoveSubCommand extends MandrocCommand {
   public async exec(message: Message, { tag }: args) {
