@@ -1,4 +1,4 @@
-import { command, Embed, Item, ItemTier, MandrocCommand } from "@lib";
+import { command, Embed, Item, ToolTier, MandrocCommand } from "@lib";
 import ms from "ms";
 
 import type { Message } from "discord.js";
@@ -25,7 +25,7 @@ export default class FishCommand extends MandrocCommand {
     }
   ];
 
-  private itemTiers: ItemTier[] = ["basic", "common", "rare", "exotic"];
+  private itemTiers: ToolTier[] = ["basic", "common", "rare", "exotic"];
   private chances: number[][] = [
     [0, 40],
     [41, 71],

@@ -1,86 +1,74 @@
-import {
-  BaseEntity,
-  Column,
-  DeepPartial,
-  Entity,
-  FindConditions,
-  FindOneOptions,
-  ObjectID,
-  ObjectIdColumn
-} from "typeorm";
+import { BaseEntity, Column, DeepPartial, Entity, FindConditions, FindOneOptions } from "typeorm";
 import { Infraction, InfractionType } from "./infraction.entity";
+import { Item, ItemModifier, ItemType } from "./item.entity";
 
 @Entity("profiles")
 export class Profile extends BaseEntity {
-  @ObjectIdColumn()
-  _id!: ObjectID;
-
-  @Column()
+  @Column({ type: "string" })
   userId!: string;
 
-  @Column({ default: 0 })
+  @Column({ type: "number", default: 0 })
   pocket: number = 0;
 
-  @Column({ default: 0 })
+  @Column({ type: "number", default: 0 })
   bank: number = 0;
 
-  @Column({ default: 0 })
+  @Column({ type: "number", default: 0 })
   xp: number = 0;
 
-  @Column({ default: 1 })
+  @Column({ type: "number", default: 1 })
   level: number = 1;
 
-  @Column({ default: 0 })
-  boosters: ProfileBoosters = {
-    xp: 1,
-    coin: 1
-  };
+  @Column({ type: "json", default: { xp: null, coin: null } })
+  boosters: ProfileBoosters = { xp: null, coin: null };
 
-  @Column("array")
+  @Column({ type: "array" })
   badges: string[] = [];
 
-  @Column("string", { nullable: true })
+  @Column({ type: "string", nullable: true })
   bodyguard?: BodyguardTier;
 
-  @Column("array")
+  @Column({ type: "array" })
   repBy: string[] = [];
 
-  @Column({ nullable: true })
+  @Column({ type: "long", nullable: true })
   lastRobbed: number | null = null;
 
-  @Column({ nullable: true })
+  @Column({ type: "long", nullable: true })
   lastDaily: number | null = null;
 
-  @Column({ nullable: true })
+  @Column({ type: "long", nullable: true })
   lastWeekly: number | null = null;
 
-  @Column({ nullable: true })
+  @Column({ type: "long", nullable: true })
   lastWorked: number | null = null;
 
-  @Column({ nullable: true })
+  @Column({ type: "long", nullable: true })
   lastChopped: number | null = null;
 
-  @Column({ nullable: true })
+  @Column({ type: "long", nullable: true })
   lastMined: number | null = null;
 
-  @Column({ nullable: true })
+  @Column({ type: "long", nullable: true })
   lastFished: number | null = null;
 
-  @Column({ nullable: true })
+  @Column({ type: "long", nullable: true })
   lastShoveled: number | null = null;
 
-  @Column("array", { default: [] })
-  inventory: Array<Tool> = [];
+  @Column({ type: "array", default: [] })
+  inventory: InventoryItem[] = [];
 
-  @Column("boolean", { default: false })
+  @Column({ type: "boolean", default: false })
   blocked?: boolean = false;
 
-  @Column("array", { default: [] })
+  @Column({ type: "array", default: [] })
   notes?: { note: string; issuer: string }[] = [];
 
   /**
    * Attempts to find a document using the provided options, if nothing is found it will create a new document using the provided data.
+   *
    * @param options The options to use when finding or creating a new document.
+   *
    * @returns The found/created document.
    */
   static findOneOrCreate(
@@ -88,11 +76,7 @@ export class Profile extends BaseEntity {
   ): Promise<Profile> {
     return new Promise((res, rej) => {
       return this.findOne(options)
-        .then(p =>
-          res(
-            p ?? (options.create ? this.create(options.create) : this.create())
-          )
-        )
+        .then(p => res(p ?? (options.create ? this.create(options.create) : this.create())))
         .catch(rej);
     });
   }
@@ -111,26 +95,75 @@ export class Profile extends BaseEntity {
 
     return Infraction.findAndCount(where).then(([, c]) => c);
   }
+
+  /**
+   * The boosters this user has redeemed.
+   */
+  async getBoosters(): Promise<Record<BoosterType, number>> {
+    return {
+      xp: await this.getBooster("xp"),
+      coin: await this.getBooster("coin")
+    }
+  }
+
+  /**
+   * Gets the booster for the provided type
+   *
+   * @param type Booster type
+   */
+  async getBooster(type: BoosterType): Promise<number> {
+    const item = await this.findBooster(type);
+    if (!item) {
+      this.boosters[type] = null;
+      this.save().catch(e => void e);
+      return 1;
+    }
+
+    return item.getModifierMetadata<ItemModifier.Booster>().amount;
+  }
+
+  /**
+   * Finds a booster {@link Item}, using the ID of an inventory item.
+   *
+   * @param id Inventory item id.
+   */
+  private async findBooster(id: string): Promise<Item<ItemType.Redeemable> | null> {
+    const itemId = this.inventory.find(i => i.id === id)?.item;
+    if (!itemId) {
+      return null;
+    }
+
+    const booster = await Item.findItem<ItemType.Redeemable>({
+      id: itemId,
+      type: ItemType.Redeemable,
+      modifier: ItemModifier.Booster
+    })
+
+    return booster ?? null;
+  }
 }
+
+export type BoosterType = "xp" | "coin";
 
 export type BodyguardTier = "rookie" | "gold" | "deluxe" | "chad";
 
-export type ItemTier = "basic" | "common" | "rare" | "exotic";
+export type ToolType = "shovel" | "pickaxe" | "axe";
 
-export interface Tool {
-  name: string;
-  durability: number;
+export interface InventoryItem {
+  /**
+   * ID of the item
+   */
+  item: string;
+
+  /**
+   * Unique ID for this item, can be used to e.g. identify which booster does what
+   */
+  id: string;
+
+  /**
+   * The metadata of this item.
+   */
+  metadata?: any;
 }
 
-export interface Item {
-  name: string;
-  price: number;
-  tier: ItemTier;
-}
-
-export type Tools = "Fishing Rod";
-
-export interface ProfileBoosters {
-  coin: number;
-  xp: number;
-}
+export type ProfileBoosters = Record<BoosterType, string | null>;

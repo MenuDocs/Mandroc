@@ -8,6 +8,8 @@ import { Tag } from "./entities/tag.entity";
 import { Infraction } from "./entities/infraction.entity";
 import { Profile } from "./entities/profile.entity";
 import { ReactionRole } from "./entities/reaction-role.entity";
+import { ShopItem } from "./entities/shop-item.entity";
+import { Item } from "./entities/item.entity";
 
 export class Database {
   public readonly log = Logger.get(Database);
@@ -24,7 +26,7 @@ export class Database {
     this.connection = await createConnection({
       type: "mongodb",
       url: config.get<string>("database-uri"),
-      entities: [Profile, Infraction, Tag, ReactionRole],
+      entities: [Profile, Infraction, Tag, ReactionRole, ShopItem, Item],
       synchronize: true,
       useUnifiedTopology: true,
       cache: {

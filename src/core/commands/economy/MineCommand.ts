@@ -1,4 +1,4 @@
-import { Color, command, Embed, Item, ItemTier, MandrocCommand } from "@lib";
+import { Color, command, Embed, MandrocCommand } from "@lib";
 import { Message, MessageEmbed } from "discord.js";
 import ms from "ms";
 
@@ -11,7 +11,7 @@ import ms from "ms";
   }
 })
 export default class MineCommand extends MandrocCommand {
-  private items: Array<Item> = [
+  private items: Array<MinedResource> = [
     {
       name: "Diamond",
       price: 400,
@@ -39,7 +39,7 @@ export default class MineCommand extends MandrocCommand {
     }
   ];
 
-  private itemTiers: ItemTier[] = ["basic", "common", "rare", "exotic"];
+  private itemTiers: Tier[] = ["basic", "common", "rare", "exotic"];
   private chances: number[][] = [
     [0, 40],
     [41, 71],
@@ -91,4 +91,12 @@ export default class MineCommand extends MandrocCommand {
 
     await profile.save();
   }
+}
+
+type Tier = "basic" | "common" | "rare" | "exotic";
+
+interface MinedResource {
+  name: string;
+  price: number;
+  tier: Tier;
 }
