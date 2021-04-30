@@ -62,9 +62,10 @@ export default class EcoCommand extends MandrocCommand {
     { receiver, action, account, amount }: args
   ) {
     const actionRegex = /(set|remove|add)/gm;
-    const receiverProfile =
-      (await Profile.findOne({ _id: receiver.id })) ??
-      (await Profile.create({ _id: receiver.id }));
+    const receiverProfile = await Profile.findOneOrCreate({
+      where: { userId: receiver.id },
+      create: { userId: receiver.id }
+    });
     const accountRegex = /(pocket|bank)/gm;
 
     const embed = new MessageEmbed();

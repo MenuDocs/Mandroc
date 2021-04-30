@@ -2,7 +2,7 @@ import { adminCommand, Embed, MandrocCommand, ReactionRole } from "@lib";
 
 import type { Emoji, Message, Role, TextChannel } from "discord.js";
 
-export const emojiRegex = /(?:<:\w+:(\d+)>)|(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g;
+export const emojiRegex = /<a?::>/g;
 
 @adminCommand("rr-add", {
   description: {

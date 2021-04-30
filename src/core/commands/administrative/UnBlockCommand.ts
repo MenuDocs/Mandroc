@@ -20,8 +20,8 @@ import type { User } from "discord.js";
 export default class BlockCommand extends MandrocCommand {
   async exec(message: Message, { target }: args) {
     const targetProfile = await Profile.findOneOrCreate({
-      where: { _id: target.id },
-      create: { _id: target.id }
+      where: { userId: target.id },
+      create: { userId: target.id }
     });
 
     if (targetProfile.blocked)

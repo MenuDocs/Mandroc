@@ -20,16 +20,16 @@ import type { User } from "discord.js";
 export default class BlockCommand extends MandrocCommand {
   async exec(message: Message, { target }: args) {
     const targetProfile = await Profile.findOneOrCreate({
-      where: { _id: target.id },
-      create: { _id: target.id }
+      where: { userId: target.id },
+      create: { userId: target.id }
     });
 
-    if (targetProfile.blocked)
+    if (targetProfile.blocked) {
       return message.channel.send("This user is already blocked.");
+    }
 
     targetProfile.blocked = true;
-
-    message.channel.send(`**${target.tag}** was blocked!`);
+    message.util?.send(`**${target.tag}** was blocked!`);
   }
 }
 
