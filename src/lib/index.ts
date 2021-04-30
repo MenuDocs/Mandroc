@@ -7,9 +7,10 @@ import type { Logger } from "@ayanaware/logger";
 import type { CommandHandler } from "discord-akairo";
 import type TurndownService from "turndown";
 import type { Class } from "type-fest";
+import type { InventoryItem, Profile, Item } from "@prisma/client";
 
 import type { Moderation } from "./administrative/Moderation";
-import type { Database, Profile, Redis } from "./database";
+import type { Redis } from "./database";
 import type { PermissionLevel } from "./classes/Command";
 
 export * from "./administrative/Moderation";
@@ -35,7 +36,6 @@ declare module "discord.js" {
     canMDN: boolean;
     turndown: TurndownService;
     moderation: Moderation;
-    database: Database;
     commandHandler: CommandHandler;
     redis: Redis;
   }
@@ -51,6 +51,8 @@ declare module "discord.js" {
     above(target: GuildMember | PermissionLevel): boolean;
 
     getProfile(): Promise<Profile>;
+
+    getProfileWithInventoryItems(): Promise<Profile & { inventory: (InventoryItem & { item: Item })[] }>;
   }
 
   interface DeletedMessage {

@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity, FindConditions, ObjectLiteral } from "typeorm";
 
-import type { BoosterType, ToolType } from "@lib";
+// import type { BoosterType, ToolType } from "@lib";
 
 export enum ItemModifier {
   /**
@@ -44,32 +44,38 @@ export class Item<T extends ItemType = ItemType.Unknown> extends BaseEntity {
    * @Example
    * `change_nickname`
    */
-  @Column({ type: "text" }) id!: string;
+  @Column({ type: "text" })
+  id!: string;
 
   /**
    * The name of this item
    */
-  @Column({ type:"text" }) name!: string
+  @Column({ type:"text" })
+  name!: string;
 
   /**
    * The type of this item
    */
-  @Column({ type: "enum", enum: ItemType }) type!: T;
+  @Column({ type: "enum", enum: ItemType })
+  type!: T;
 
   /**
    * A modifier of this item. these are for items that have a special purpose, such as boosting the amount of coins a user gets
    */
-  @Column({ type: "enum", enum: ItemModifier, nullable: true }) modifier?: ItemModifier;
+  @Column({ type: "enum", enum: ItemModifier, nullable: true })
+  modifier?: ItemModifier;
 
   /**
-   * The metadata for {@see modifier}, must be JSON
+   * The metadata for {@link modifier}, must be JSON
    */
-  @Column({ type: "json", nullable: true, name: "modifier_metadata" }) modifierMetadata?: any;
+  @Column({ type: "json", nullable: true, name: "modifier_metadata" })
+  modifierMetadata?: any;
 
   /**
    * The metadata of this item. The type of data stored varies on what type of item this is.
    */
-  @Column({ type: "json" }) metadata?: ItemMetadata[T];
+  @Column({ type: "json" })
+  metadata?: ItemMetadata[T];
 
   /**
    * Convenience method to find items cleaner.
@@ -80,7 +86,6 @@ export class Item<T extends ItemType = ItemType.Unknown> extends BaseEntity {
     return await this.findOne({ where }) as Item<T> | undefined
   }
 
-  //  TODO: fix your fucking comments (@melike2d)
   /**
    * Returns the {@link modifierMetadata} typed to it's respective data.
    * @returns {ModifierData[M]}
@@ -90,7 +95,7 @@ export class Item<T extends ItemType = ItemType.Unknown> extends BaseEntity {
   }
 }
 
-interface ModifierData {
+export interface ModifierData {
   [ItemModifier.Bodyguard]: { rob_chance: number; }
   [ItemModifier.Booster]: {
     amount: number;
@@ -98,7 +103,7 @@ interface ModifierData {
   }
 }
 
-type ItemMetadata = {
+export type ItemMetadata = {
   [ItemType.Redeemable]: {
     redeemed: boolean;
   }

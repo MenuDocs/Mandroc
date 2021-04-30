@@ -3,6 +3,8 @@ import ms from "ms";
 
 import type { Message } from "discord.js";
 
+// TODO: fix fish command
+
 @command("fish", {
   aliases: ["fish"],
   description: {

@@ -1,12 +1,12 @@
-import { command, Embed, MandrocCommand, Trivia } from "@lib";
+import { command, Database, Embed, MandrocCommand, Trivia } from "@lib";
 
 import type { Message } from "discord.js";
 
 @command("trivia", {
-  aliases: ["trivia", "quiz"],
+  aliases: [ "trivia", "quiz" ],
   description: {
     content: "Robs money from a user.",
-    examples: (prefix: string) => [`${prefix}trivia @R1zeN#0001`],
+    examples: (prefix: string) => [ `${prefix}trivia @R1zeN#0001` ],
     usage: "<user>"
   }
 })
@@ -54,13 +54,22 @@ export default class TriviaCommand extends MandrocCommand {
       const earned = Number.random(15, 45);
       switch (reason) {
         case "correct":
-          const profile = await message.member!.getProfile();
-          profile.pocket += earned;
+          await message.util?.send(Embed.Primary(`Congrats! You earned **${earned} ₪**`));
 
-          await profile.save();
-          await message.util?.send(
-            Embed.Primary(`Congrats! You earned **${earned} ₪**`)
-          );
+          /* add earned amount to the author's pocket */
+          await Database.PRISMA.profile.upsert({
+            where: { id: message.author.id },
+            create: {
+              id: message.author.id,
+              pocket: earned
+            },
+            update: {
+              pocket: {
+                increment: earned
+              }
+            }
+          });
+
           break;
 
         case "cancel":

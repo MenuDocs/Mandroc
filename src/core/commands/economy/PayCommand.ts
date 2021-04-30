@@ -1,9 +1,9 @@
-import { command, Embed, MandrocCommand } from "@lib";
+import { command, Database, Embed, MandrocCommand } from "@lib";
 
 import type { GuildMember, Message } from "discord.js";
 
 @command("pay", {
-  aliases: ["pay"],
+  aliases: [ "pay" ],
   channel: "guild",
   description: {
     content: "Pays money to a user.",
@@ -35,23 +35,41 @@ import type { GuildMember, Message } from "discord.js";
   ]
 })
 export default class PayCommand extends MandrocCommand {
-  async exec(message: Message, { receiver, amount }: args) {
+  async exec(message: Message, {
+    receiver,
+    amount
+  }: args) {
     const payer = await message.member!.getProfile();
     if (payer.pocket < amount) {
-      const embed = Embed.Warning(
-        "You don't have enough money in your pocket."
-      );
+      const embed = Embed.Warning("You don't have enough money in your pocket.");
       return message.util?.send(embed);
     }
 
-    const receiverProfile = await receiver.getProfile();
-    receiverProfile.pocket += amount;
-    payer.pocket -= amount;
+    /* send transaction message. */
+    await message.util?.send(Embed.Primary(`Successfully payed **${amount} ₪** to ${receiver}`));
 
-    await message.util?.send(
-      Embed.Primary(`Successfully payed **${amount} ₪** to ${receiver}`)
-    );
-    await Promise.all([receiverProfile, payer].map(p => p.save()));
+    /* update both receiver and sender profiles. */
+    await Database.PRISMA.profile.update({
+      where: { id: payer.id },
+      data: {
+        pocket: {
+          decrement: amount
+        }
+      }
+    });
+
+    await Database.PRISMA.profile.upsert({
+      where: { id: receiver.id },
+      create: {
+        id: receiver.id,
+        pocket: amount
+      },
+      update: {
+        pocket: {
+          increment: amount
+        }
+      }
+    });
   }
 }
 

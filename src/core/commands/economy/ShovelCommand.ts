@@ -1,6 +1,8 @@
 import { command, Embed, Item, ToolTier, MandrocCommand } from "@lib";
 import type { Message } from "discord.js";
 
+// TODO: fix shovel command
+
 @command("shovel", {
   aliases: ["shovel"],
   description: {
@@ -46,6 +48,7 @@ export default class ShovelCommand extends MandrocCommand {
         "You must possess a shovel in order to run this command."
       );
     }
+
 
     profile.inventory.find(x => x.name === "Shovel")!.durability -= 1;
 

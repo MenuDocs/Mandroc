@@ -1,6 +1,6 @@
 import IORedis from "ioredis";
 import { Logger } from "@ayanaware/logger";
-import { config } from "../util/Config";
+import { config } from "../util";
 
 export class Redis {
   /**
@@ -64,10 +64,6 @@ export class Redis {
     }
 
     return +infractions;
-  }
-
-  async incrementInfractions(): Promise<number> {
-    return this.client.incr("admin:infractions");
   }
 
   /**

@@ -2,6 +2,8 @@ import { Color, command, Embed, MandrocCommand } from "@lib";
 import { Message, MessageEmbed } from "discord.js";
 import ms from "ms";
 
+// TODO: fix mine command
+
 @command("mine", {
   aliases: ["mine"],
   description: {

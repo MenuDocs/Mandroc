@@ -1,4 +1,4 @@
-import { command, Embed, MandrocCommand, paginate, Profile } from "@lib";
+import { command, Database, Embed, MandrocCommand, paginate } from "@lib";
 import type { Message } from "discord.js";
 
 @command("leaderboard", {
@@ -27,9 +27,11 @@ import type { Message } from "discord.js";
 })
 export class LeaderboardCommand extends MandrocCommand {
   public async exec(message: Message, { page: _current, type }: args) {
-    const profiles = await Profile.find({
-      order: { [type]: "DESC" }
-    });
+    const profiles = await Database.PRISMA.profile.findMany({
+      orderBy: {
+        [type]: "asc"
+      }
+    })
 
     const { max, page, current } = paginate(profiles, 10, _current);
 
@@ -37,12 +39,10 @@ export class LeaderboardCommand extends MandrocCommand {
       desc = "";
 
     for (const profile of page) {
-      const user = await this.client.users.fetch(profile.userId);
+      const user = await this.client.users.fetch(profile.id);
 
       desc += `\`#${`${++idx}`.padStart(2, "0")}\` *${user.tag}*\n`;
-      desc += `\u3000**${type.capitalize()}:** ${profile[
-        type
-      ].toLocaleString()}\n\n`;
+      desc += `\u3000**${type.capitalize()}:** ${profile[type].toLocaleString()}\n\n`;
     }
 
     const embed = Embed.Primary(desc);

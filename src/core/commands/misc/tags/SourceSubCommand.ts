@@ -1,4 +1,6 @@
-import { code, command, Embed, MandrocCommand, Tag } from "@lib";
+import { code, command, Embed, MandrocCommand } from "@lib";
+
+import type { Tag } from "@prisma/client";
 import type { Message } from "discord.js";
 
 @command("tag-source", {

@@ -1,45 +1,59 @@
+import { PrismaClient } from "@prisma/client";
 import { Logger } from "@ayanaware/logger";
-import { createConnection, Connection } from "typeorm";
 
-import { config } from "../util";
-
-/* entities */
-import { Tag } from "./entities/tag.entity";
-import { Infraction } from "./entities/infraction.entity";
-import { Profile } from "./entities/profile.entity";
-import { ReactionRole } from "./entities/reaction-role.entity";
-import { ShopItem } from "./entities/shop-item.entity";
-import { Item } from "./entities/item.entity";
-
-export class Database {
-  public readonly log = Logger.get(Database);
+export abstract class Database {
+  /**
+   * The logger instance.
+   * @private
+   */
+  private static LOGGER = Logger.get(Database);
 
   /**
-   * The database connection.
+   * The current prisma client
    */
-  public connection!: Connection;
+  static PRISMA: PrismaClient;
 
   /**
-   * Starts the database.
+   * Connects to the database.
    */
-  public async launch() {
-    this.connection = await createConnection({
-      type: "mongodb",
-      url: config.get<string>("database-uri"),
-      entities: [Profile, Infraction, Tag, ReactionRole, ShopItem, Item],
-      synchronize: true,
-      useUnifiedTopology: true,
-      cache: {
-        type: "ioredis",
-        duration: 30000,
-        alwaysEnabled: true,
-        options: {
-          host: config.get("redis-host"),
-          port: config.get("redis-port")
+  static connect() {
+    const prisma = new PrismaClient({
+      log: [
+        {
+          emit: "event",
+          level: "info"
+        },
+        {
+          emit: "event",
+          level: "error"
         }
-      }
+      ]
     });
 
-    this.log.info("Connected to MongoDB");
+    prisma.$on("info", ({ message }) => this.LOGGER.debug(message));
+    prisma.$on("error", ({ message }) => this.LOGGER.error(message));
+
+    Database.PRISMA = prisma;
+  }
+
+  /**
+   * Find or creates a profile with the provided id.
+   *
+   * @param id User id.
+   */
+  static async findProfile(id: string): Promise<any> {
+    return await Database.PRISMA.profile.upsert({
+      where: { id },
+      create: { id },
+      update: {}
+    });
+  }
+
+  /**
+   *
+   * @returns {Promise<number>}
+   */
+  static async nextInfractionId(): Promise<number> {
+    return (await this.PRISMA.infraction.count()) + 1;
   }
 }

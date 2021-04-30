@@ -1,8 +1,8 @@
-import { adminCommand, Embed, MandrocCommand, ReactionRole } from "@lib";
+import { adminCommand, Database, Embed, MandrocCommand } from "@lib";
 
 import type { Emoji, Message, Role, TextChannel } from "discord.js";
 
-export const emojiRegex = /<a?::>/g;
+export const emojiRegex = /<a?:[\w\d-_]+:(\d+)>/g;
 
 @adminCommand("rr-add", {
   description: {
@@ -30,13 +30,17 @@ export const emojiRegex = /<a?::>/g;
     {
       id: "emoji",
       match: "content",
-      type: async (message, content) =>
-        content
-          ? message.guild?.emojis.cache.get(content) ??
-            emojiRegex.exec(content)?.[1]
-          : null,
+      type: async (message, content) => {
+        const matches = emojiRegex.exec(content);
+        if (!matches) {
+          return null;
+        }
+
+        const emoteId = matches[1];
+        return message.guild!.emojis.cache.get(emoteId);
+      },
       prompt: {
-        start: "You must provide a valid emoji, whether it's custom or not.",
+        start: "You must provide a valid emoji, must be a guild emote.",
         retry: "Provide a valid emoji."
       }
     },
@@ -51,14 +55,20 @@ export const emojiRegex = /<a?::>/g;
     {
       id: "instantRemove",
       match: "flag",
-      flag: ["-ir", "--instant-remove"]
+      flag: [ "-ir", "--instant-remove" ]
     }
   ]
 })
 export class ReactionRolesAddSubCommand extends MandrocCommand {
   async exec(
     message: Message,
-    { channel, messageId, emoji, role, instantRemove }: args
+    {
+      channel,
+      messageId,
+      emoji,
+      role,
+      instantRemove
+    }: args
   ) {
     const e = typeof emoji === "string" ? emoji : emoji.identifier;
 
@@ -72,11 +82,12 @@ export class ReactionRolesAddSubCommand extends MandrocCommand {
       return message.util?.send(embed);
     }
 
-    const exists = await ReactionRole.findOne({
+    const exists = await Database.PRISMA.reactionRole.findFirst({
       where: {
         messageId,
-        emoji: e
-      }
+        emojiId: e
+      },
+      select: {}
     });
 
     if (exists) {
@@ -86,17 +97,17 @@ export class ReactionRolesAddSubCommand extends MandrocCommand {
       return message.util?.send(embed);
     }
 
-    await ReactionRole.create({
-      messageId,
-      emoji: e,
-      removeReaction: instantRemove,
-      roleId: role.id
-    }).save();
+    await Database.PRISMA.reactionRole.create({
+      data: {
+        messageId,
+        emojiId: e,
+        removeReaction: instantRemove,
+        roleId: role.id
+      }
+    });
 
     await msg.react(e);
-    const embed = Embed.Primary(
-      `Created a reaction role for ${role} with the emoji ${emoji} in ${channel}.`
-    );
+    const embed = Embed.Primary(`Created a reaction role for ${role} with the emoji ${emoji} in ${channel}.`);
     return message.util?.send(embed);
   }
 }

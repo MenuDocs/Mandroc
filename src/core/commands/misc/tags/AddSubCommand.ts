@@ -1,11 +1,4 @@
-import {
-  command,
-  DEFAULT_TAG_PERMISSIONS,
-  Embed,
-  MandrocCommand,
-  PermissionLevel,
-  Tag
-} from "@lib";
+import { command, Database, Embed, MandrocCommand, PermissionLevel } from "@lib";
 import type { Message } from "discord.js";
 
 @command("tag-add", {
@@ -26,29 +19,29 @@ import type { Message } from "discord.js";
     },
     {
       id: "type",
-      type: ["embedded", "regular"],
+      type: [ "embedded", "regular" ],
       match: "option",
-      flag: ["-t", "--type"],
+      flag: [ "-t", "--type" ],
       default: "embedded"
     },
     {
       id: "category",
-      flag: ["-c", "--category", "--cat"],
+      flag: [ "-c", "--category", "--cat" ],
       match: "option",
       default: "general"
     },
     {
       id: "staffOnly",
-      flag: ["--staffOnly"]
+      flag: [ "--staffOnly" ]
     },
     {
       id: "roles",
-      flag: ["-r", "--roles"],
+      flag: [ "-r", "--roles" ],
       match: "option"
     },
     {
       id: "supportOnly",
-      flag: ["--supportOnly"]
+      flag: [ "--supportOnly" ]
     }
   ],
   permissionLevel: PermissionLevel.Helper
@@ -56,7 +49,15 @@ import type { Message } from "discord.js";
 export default class AddSubCommand extends MandrocCommand {
   public async exec(
     message: Message,
-    { name, contents, type, category, roles, staffOnly, supportOnly }: args
+    {
+      name,
+      contents,
+      type,
+      category,
+      roles,
+      staffOnly,
+      supportOnly
+    }: args
   ) {
     if (this.handler.findCommand(name)) {
       return message.util?.send(
@@ -66,34 +67,23 @@ export default class AddSubCommand extends MandrocCommand {
       );
     }
 
-    const existing = await Tag.findOne({ where: { name } });
-    if (existing) {
-      return message.util?.send(
-        Embed.Primary(`The tag, **${name}**, already exists.`)
-      );
+    const exists = await Database.PRISMA.tag.count({ where: { name } }) > 0;
+    if (exists) {
+      return message.util?.send(Embed.Primary(`The tag, **${name}**, already exists.`));
     }
 
-    const perms = DEFAULT_TAG_PERMISSIONS;
-    if (
-      message.member!.permissionLevel &&
-      message.member!.permissionLevel >= PermissionLevel.Mod
-    ) {
-      if (roles) {
-        perms.roles = roles.split(/[ ,]+/g);
-      } else {
-        perms.supportOnly = supportOnly ?? true;
-        perms.staffOnly = staffOnly ?? false;
+    await Database.PRISMA.tag.create({
+      data: {
+        name: name,
+        contents: contents,
+        authorId: message.author.id,
+        embedded: type === "embedded",
+        category: category,
+        staffOnly: staffOnly ?? false,
+        supportOnly: supportOnly ?? true,
+        allowedRoles: roles.split(/[\s,]+/g) || []
       }
-    }
-
-    await Tag.create({
-      name,
-      authorId: message.author.id,
-      contents,
-      embedded: type === "embedded",
-      category,
-      perms
-    }).save();
+    });
 
     return message.util?.send(Embed.Primary(`I created the tag **${name}**`));
   }

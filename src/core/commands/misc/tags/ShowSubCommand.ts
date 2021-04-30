@@ -1,19 +1,14 @@
-import { command, Embed, MandrocCommand, PermissionLevel, Tag } from "@lib";
+import { command, config, Database, Embed, MandrocCommand, PermissionLevel } from "@lib";
 import { render } from "mustache";
 
 import type { Message, TextChannel } from "discord.js";
-
-const SUPPORT_CATEGORIES = ["762898487372677138", "762898487527473154"];
 
 @command("tag-show", {
   args: [
     {
       id: "name",
       match: "content",
-      type: "lowercase",
-      prompt: {
-        start: "Giv content pls."
-      }
+      type: "lowercase"
     }
   ],
   channel: "guild"
@@ -24,32 +19,34 @@ export default class ShowSubCommand extends MandrocCommand {
       return;
     }
 
-    const tag: Tag = await this.handler.resolver.type("tag")(message, name);
+    const tag = await Database.PRISMA.tag.findFirst({
+      where: {
+        name,
+        OR: {
+          name: { contains: name },
+          aliases: { has: name }
+        }
+      }
+    });
+
     if (!tag) {
       return;
     }
 
-    if (
-      tag.perms.roles.length &&
-      !tag.perms.roles.some(r => message.member!.roles.cache.has(r))
-    ) {
+    /* check for disallowed roles. */
+    if (tag.allowedRoles.length && !tag.allowedRoles.some(r => message.member!.roles.cache.has(r))) {
       return;
     }
 
-    if (
-      tag.perms.staffOnly &&
-      message.member!.permissionLevel! < PermissionLevel.Mod
-    ) {
+    /* check for staff only */
+    if (tag.staffOnly && message.member!.permissionLevel! < PermissionLevel.Mod) {
       return;
     }
 
-    if (
-      tag.perms.supportOnly &&
-      message.member!.permissionLevel! < PermissionLevel.Mod
-    ) {
-      if (
-        !SUPPORT_CATEGORIES.includes((message.channel as TextChannel).parentID!)
-      ) {
+    /* check for support only */
+    if (tag.supportOnly && message.member!.permissionLevel! < PermissionLevel.Helper) {
+      const supportChannels = config.get<string>("ids.channels.support").split(",");
+      if (!supportChannels.includes((message.channel as TextChannel).parentID!)) {
         return;
       }
     }
@@ -71,9 +68,14 @@ export default class ShowSubCommand extends MandrocCommand {
 
     const contents = render(tag.contents, view);
     message.util?.send(tag.embedded ? Embed.Primary(contents) : contents);
-    tag.uses++;
 
-    return tag.save();
+    /* update row */
+    await Database.PRISMA.tag.update({
+      where: { id: tag.id },
+      data: {
+        uses: { increment: 1 }
+      }
+    });
   }
 }
 

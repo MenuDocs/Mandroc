@@ -1,9 +1,10 @@
 import { Structures } from "discord.js";
-import { IDs, PermissionLevel, Profile } from "@lib";
+import { Database, IDs, PermissionLevel } from "@lib";
+import type { Profile } from "@prisma/client";
 
 class GuildMember extends Structures.get("GuildMember") {
   get permissionLevel(): PermissionLevel | null {
-    for (const [level, role] of Object.entries(IDs.PERMISSIONS).reverse()) {
+    for (const [ level, role ] of Object.entries(IDs.PERMISSIONS).reverse()) {
       if (this.roles.cache.has(role)) {
         return level as any;
       }
@@ -47,9 +48,25 @@ class GuildMember extends Structures.get("GuildMember") {
    * Returns the profile for this guild member.
    */
   async getProfile(): Promise<Profile> {
-    return Profile.findOneOrCreate({
-      where: { userId: this.id },
-      create: { userId: this.id }
+    return Database.PRISMA.profile.upsert({
+      create: { id: this.id },
+      where: { id: this.id },
+      update: {}
+    });
+  }
+
+  async getProfileWithInventoryItems() {
+    return await Database.PRISMA.profile.upsert({
+      create: { id: this.id },
+      where: { id: this.id },
+      update: {},
+      include: {
+        inventory: {
+          include: {
+            item: true
+          }
+        }
+      }
     });
   }
 }

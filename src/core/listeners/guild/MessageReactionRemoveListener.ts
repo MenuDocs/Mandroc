@@ -1,4 +1,4 @@
-import { listener, ReactionRole } from "@lib";
+import { Database, listener } from "@lib";
 import { Listener } from "discord-akairo";
 
 import type { MessageReaction, PartialUser, User } from "discord.js";
@@ -23,10 +23,10 @@ export class MessageReactionRemoveListener extends Listener {
     }
 
     const member = await guild.members.fetch(user.id),
-      reactionRole = await ReactionRole.findOne({
+      reactionRole = await Database.PRISMA.reactionRole.findFirst({
         where: {
           messageId: id,
-          emoji: reaction.emoji.id ?? reaction.emoji.name
+          emojiId: reaction.emoji.id ?? reaction.emoji.name
         }
       });
 

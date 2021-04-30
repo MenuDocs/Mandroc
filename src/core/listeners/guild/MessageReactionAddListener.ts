@@ -1,4 +1,4 @@
-import { IDs, listener, ReactionRole } from "@lib";
+import { Database, IDs, listener } from "@lib";
 import { Listener } from "discord-akairo";
 
 import type { MessageReaction, PartialUser, User } from "discord.js";
@@ -35,10 +35,10 @@ export default class MessageReactionAddListener extends Listener {
 
         break;
       default:
-        const reactionRole = await ReactionRole.findOne({
+        const reactionRole = await Database.PRISMA.reactionRole.findFirst({
           where: {
             messageId: id,
-            emoji: reaction.emoji.id ?? reaction.emoji.name
+            emojiId: reaction.emoji.id ?? reaction.emoji.name
           }
         });
 

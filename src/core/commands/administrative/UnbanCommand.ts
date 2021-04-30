@@ -1,24 +1,17 @@
-import {
-  command,
-  Embed,
-  Infraction,
-  InfractionType,
-  MandrocCommand,
-  Moderation,
-  PermissionLevel
-} from "@lib";
+import { command, Database, Embed, MandrocCommand, Moderation, PermissionLevel } from "@lib";
+import { InfractionType, Prisma } from "@prisma/client";
 
 import type { Message } from "discord.js";
 
 @command("unban", {
-  aliases: ["unban"],
+  aliases: [ "unban" ],
   permissionLevel: PermissionLevel.Admin,
   args: [
     {
       id: "user",
       type: (_, p) => {
         if (/<@!?(\d+)>/.test(p)) {
-          const [, id] = /<@!?(\d+)>/.exec(p)!;
+          const [ , id ] = /<@!?(\d+)>/.exec(p)!;
           return id;
         }
 
@@ -40,7 +33,26 @@ import type { Message } from "discord.js";
   ]
 })
 export class UnbanCommand extends MandrocCommand {
-  async exec(message: Message, { user, reason }: args) {
+  static getOrigin(user: string, type: InfractionType): Prisma.Prisma__InfractionClient<{ id: number; messageId: string | null; } | null> {
+    return Database.PRISMA.infraction.findFirst({
+      where: {
+        type: type,
+        offenderId: user
+      },
+      select: {
+        id: true,
+        messageId: true
+      },
+      orderBy: {
+        id: "desc"
+      }
+    });
+  }
+
+  async exec(message: Message, {
+    user,
+    reason
+  }: args) {
     let ban;
     try {
       ban = await message.guild?.fetchBan(user);
@@ -49,16 +61,9 @@ export class UnbanCommand extends MandrocCommand {
       return message.util?.send(embed);
     }
 
-    const infraction = await Infraction.findOne({
-      where: {
-        type: InfractionType.BAN,
-        offenderId: user
-      },
-      order: { id: "DESC" }
-    });
-
+    const infraction = await UnbanCommand.getOrigin(user, InfractionType.Ban)
     const origin = infraction
-      ? `was **[Case ${infraction.id}](${Moderation.lcurl}/${infraction.messageId})**`
+      ? `was **[Case ${infraction.id}](${Moderation.lcUrl}/${infraction.messageId})**`
       : "is unknown";
 
     await this.client.moderation.unban(
@@ -70,9 +75,7 @@ export class UnbanCommand extends MandrocCommand {
       message.guild!
     );
 
-    const embed = Embed.Primary(
-      `Unbanned \`${user}\`, their ban origin ${origin}.`
-    );
+    const embed = Embed.Primary(`Unbanned \`${user}\`, their ban origin ${origin}.`);
     return message.util?.send(embed);
   }
 }

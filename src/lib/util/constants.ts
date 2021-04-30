@@ -1,8 +1,8 @@
 import { PermissionLevel } from "../classes/Command";
+import { config } from "./Config";
+import { BodyguardTier } from "@prisma/client";
 
 import type { ImageURLOptions } from "discord.js";
-import type { BodyguardTier } from "../database/entities/profile.entity";
-import { config } from "./Config";
 
 export const IDs = {
   GUILD: config.get<string>("ids.guild"),
@@ -51,19 +51,19 @@ export const imageUrlOptions = {
 } as ImageURLOptions;
 
 export const bodyguardTiers: Record<BodyguardTier, BodyguardStats> = {
-  rookie: {
+  [BodyguardTier.Rookie]: {
     price: 1000,
     safe: 0.31
   },
-  gold: {
+  [BodyguardTier.Gold]: {
     price: 5000,
     safe: 0.62
   },
-  deluxe: {
+  [BodyguardTier.Deluxe]: {
     price: 10000,
     safe: 0.73
   },
-  chad: {
+  [BodyguardTier.Chad]: {
     price: 20000,
     safe: 0.9
   }

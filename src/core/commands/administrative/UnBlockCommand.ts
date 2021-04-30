@@ -1,4 +1,4 @@
-import { adminCommand, MandrocCommand, Profile } from "@lib";
+import { adminCommand, Database, MandrocCommand } from "@lib";
 
 import type { Message } from "discord.js";
 import type { User } from "discord.js";
@@ -19,13 +19,16 @@ import type { User } from "discord.js";
 })
 export default class BlockCommand extends MandrocCommand {
   async exec(message: Message, { target }: args) {
-    const targetProfile = await Profile.findOneOrCreate({
-      where: { userId: target.id },
-      create: { userId: target.id }
+    const targetProfile = await Database.PRISMA.profile.upsert({
+      where: { id: target.id },
+      create: { id: target.id },
+      update: {},
+      select: { blocked: true }
     });
 
-    if (targetProfile.blocked)
-      return message.channel.send("This user isn't  blocked.");
+
+    if (!targetProfile.blocked)
+      return message.util?.send("This user isn't  blocked.");
 
     targetProfile.blocked = false;
 

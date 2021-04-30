@@ -1,32 +1,44 @@
-import { command, Embed, MandrocCommand } from "@lib";
+import { command, Database, Embed, MandrocCommand } from "@lib";
 import type { Message } from "discord.js";
 
 @command("inventory", {
-  aliases: ["inventory", "tools", "inv"],
+  aliases: [ "inventory", "tools", "inv" ],
   description: {
     content: "Displays your inventory.",
-    examples: (prefix: string) => [`${prefix}inventory`],
+    examples: (prefix: string) => [ `${prefix}inventory` ],
     usage: "!inventory"
   }
 })
 export default class FishCommand extends MandrocCommand {
   public async exec(message: Message) {
-    const profile = await message.member?.getProfile()!;
-    if (!profile.inventory.length) {
-      return message.util?.send("You do not possess any tools!");
+    /* get all inventory items. */
+    const inventory = await Database.PRISMA.inventoryItem.findMany({
+      where: { profileId: message.author.id },
+      include: {
+        item: true
+      }
+    });
+
+    /* check for an empty inventory. */
+    if (!inventory.length) {
+      return message.util?.send(Embed.Primary("Oh, you have no items in your inventory!"));
     }
 
-    let desc = profile.inventory.map(
-      tool => `${tool.name}\n\u3000 **Durability:** ${tool.durability}`
-    );
+    const embed = Embed.Primary()
+      .setTitle(`**${message.author.username}**'s Inventory`);
 
-    const embed = Embed.Primary(desc)
-      .setTitle("Your tools")
-      .setFooter(
-        message.author.tag,
-        message.author.displayAvatarURL({ size: 2048, dynamic: true })
+    /* map out categories. */
+    const types = new Set(inventory.map(i => i.item.type));
+    for (const type in types) {
+      const items = inventory.filter(i => i.item.type === type);
+      embed.addField(
+        `❯ ${type.capitalize()}`,
+        items
+          .map(i => `\`[${i.id}]\` **${i.item.name}**`)
+          .join("\n")
       );
+    }
 
-    return message.util?.send(embed);
+    message.util?.send(embed);
   }
 }

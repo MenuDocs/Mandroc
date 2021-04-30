@@ -1,4 +1,6 @@
-import { command, Embed, MandrocCommand, PermissionLevel, Tag } from "@lib";
+import { command, Database, Embed, MandrocCommand, PermissionLevel } from "@lib";
+
+import type { Tag } from "@prisma/client";
 import type { Message } from "discord.js";
 
 @command("tag-remove", {
@@ -15,10 +17,11 @@ import type { Message } from "discord.js";
 })
 export default class RemoveSubCommand extends MandrocCommand {
   public async exec(message: Message, { tag }: args) {
-    await tag.remove();
-    return message.util?.send(
-      Embed.Primary(`Deleted the tag **${tag.name}** successfully.`)
-    );
+    await Database.PRISMA.tag.delete({
+      where: { id: tag.id }
+    });
+
+    return message.util?.send(Embed.Primary(`Deleted the tag **${tag.name}** successfully.`));
   }
 }
 

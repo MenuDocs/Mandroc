@@ -1,11 +1,11 @@
 import {
   command,
-  Embed,
-  Infraction,
+  Embed, InfractionMeta,
   MandrocCommand,
   Moderation,
   ModLog
 } from "@lib";
+import type { Infraction } from "@prisma/client";
 
 import type { Message } from "discord.js";
 import moment from "moment";
@@ -26,7 +26,8 @@ import ms from "ms";
 export class InfractionViewSubCommand extends MandrocCommand {
   async exec(message: Message, { infraction }: args) {
     const offender = await this.client.users.fetch(infraction.offenderId, true),
-      moderator = await this.client.users.fetch(infraction.moderatorId, true);
+      moderator = await this.client.users.fetch(infraction.moderatorId, true),
+      meta = infraction.meta as InfractionMeta
 
     const embed = Embed.Primary()
       .setTitle(`${infraction.type.capitalize()} (Case ${infraction.id})`)
@@ -35,17 +36,17 @@ export class InfractionViewSubCommand extends MandrocCommand {
           `**Created At:** ${moment(infraction.createdAt).format("L LT")}`,
           `**Moderator:** ${moderator.tag} \`(${moderator.id})\``,
           `**Offender:** ${offender.tag} \`(${offender.id})\``,
-          infraction.meta.duration
-            ? `**Duration:** ${ms(infraction.meta.duration, { long: true })}`
+          meta.duration
+            ? `**Duration:** ${ms(meta.duration, { long: true })}`
             : false,
           `**Reason:** ${await ModLog.parseReason(infraction.reason)}`
         ].filter(Boolean)
       );
 
-    if (infraction.meta.edits) {
+    if (meta.edits) {
       embed.addField(
         "❯ Edits",
-        infraction.meta.edits
+        meta.edits
           .map(
             (e: Dictionary) =>
               `<@${e.id}> edited the \`${e.method}\` at **${moment(e.at).format(
@@ -57,7 +58,7 @@ export class InfractionViewSubCommand extends MandrocCommand {
     }
 
     if (infraction.messageId) {
-      embed.setURL(`${Moderation.lcurl}/${infraction.messageId}`);
+      embed.setURL(`${Moderation.lcUrl}/${infraction.messageId}`);
     }
 
     await message.util?.send(embed);

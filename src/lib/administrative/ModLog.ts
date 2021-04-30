@@ -1,22 +1,19 @@
+import ms from "ms";
+import { Infraction, InfractionType, Prisma } from "@prisma/client";
 import { GuildMember, MessageEmbed, User } from "discord.js";
 
-import {
-  Infraction,
-  InfractionType
-} from "../database/entities/infraction.entity";
-import { Color, imageUrlOptions } from "../util/constants";
+import { Color, imageUrlOptions } from "../util";
+import { Moderation } from "./Moderation";
+import { Database } from "../database/Database";
 
-import ms from "ms";
 import { Scheduler } from "../scheduler/Scheduler";
 
 import type { Mandroc } from "../Client";
-import { captureException } from "@sentry/node";
-import { Moderation } from "./Moderation";
 
 export class ModLog {
   static TEMPORARY: InfractionType[] = [
-    InfractionType.MUTE,
-    InfractionType.BAN
+    InfractionType.Mute,
+    InfractionType.Ban
   ];
 
   /**
@@ -50,7 +47,7 @@ export class ModLog {
   causedAutomated?: number;
 
   /**
-   * The infraction id.
+   * The current case id.
    * @private
    */
   #caseId?: number;
@@ -76,7 +73,7 @@ export class ModLog {
       this.reason &&
       this.moderator.section &&
       this.offender.section &&
-      this.#caseId &&
+      typeof this.#caseId !== "undefined" &&
       this.type
     );
   }
@@ -84,7 +81,7 @@ export class ModLog {
   /**
    * The infraction.
    */
-  get infraction() {
+  get infraction(): Prisma.XOR<Prisma.InfractionCreateInput, Prisma.InfractionUncheckedCreateInput> {
     const meta: Dictionary = {};
     if (this.duration) {
       meta.duration = this.duration.ms;
@@ -98,32 +95,32 @@ export class ModLog {
       meta.causedAutomated = this.causedAutomated;
     }
 
-    return Infraction.create({
+    return {
       id: this.#caseId,
       type: this.type,
       offenderId: this.offender.id,
       moderatorId: this.moderator.id ?? "AutoMod",
       reason: this.reason,
       meta
-    });
+    };
   }
 
   static async fromInfraction(
     client: Mandroc,
     infraction: Infraction
   ): Promise<ModLog> {
-    const modlog = new ModLog(client)
+    const modLog = new ModLog(client)
       .setType(infraction.type)
       .setOffender(await client.users.fetch(infraction.offenderId))
       .setModerator(await client.users.fetch(infraction.moderatorId))
       .setReason(infraction.reason);
 
-    modlog.#caseId = infraction.id;
-    if (infraction.meta.duration) {
-      modlog.setDuration(infraction.meta.duration);
+    const meta = infraction.meta as InfractionMeta;
+    if (meta.duration) {
+      modLog.setDuration(meta.duration);
     }
 
-    return modlog;
+    return modLog;
   }
 
   /**
@@ -131,13 +128,13 @@ export class ModLog {
    * @param reason The reason.
    */
   static async parseReason(reason: string): Promise<string> {
-    for (const [text, id] of reason.matchAll(/#(\d+)/gi)) {
-      const infraction = await Infraction.findOne({
+    for (const [ text, id ] of reason.matchAll(/#(\d+)/gi)) {
+      const infraction = await Database.PRISMA.infraction.findFirst({
         where: { id: +id }
       });
 
       const link = infraction
-        ? `[#${id}](${Moderation.lcurl}/${infraction.messageId})`
+        ? `[#${id}](${Moderation.lcUrl}/${infraction.messageId})`
         : text;
 
       reason = reason.replace(text, link);
@@ -152,18 +149,18 @@ export class ModLog {
   async getEmbed() {
     let color;
     switch (this.type) {
-      case InfractionType.KICK:
-      case InfractionType.WARN:
+      case InfractionType.Kick:
+      case InfractionType.Warn:
         color = Color.Warning;
         break;
-      case InfractionType.MUTE:
-      case InfractionType.TIMEOUT:
-      case InfractionType.UNMUTE:
+      case InfractionType.Mute:
+      case InfractionType.Timeout:
+      case InfractionType.UnMute:
         color = Color.Intermediate;
         break;
-      case InfractionType.BAN:
-      case InfractionType.SOFTBAN:
-      case InfractionType.UNBAN:
+      case InfractionType.Ban:
+      case InfractionType.SoftBan:
+      case InfractionType.UnBan:
         color = Color.Danger;
         break;
     }
@@ -206,7 +203,7 @@ export class ModLog {
       ModLog.TEMPORARY.includes(this.type)
     ) {
       await Scheduler.get().schedule(
-        this.type === InfractionType.MUTE ? "unmute" : "unban",
+        this.type === InfractionType.Mute ? "unmute" : "unban",
         startDate + this.duration.ms,
         this.offender.id,
         {
@@ -222,7 +219,7 @@ export class ModLog {
    */
   async assignCaseId(): Promise<number> {
     if (!this.#caseId) {
-      this.#caseId = await Infraction.nextId();
+      this.#caseId = await Database.nextInfractionId();
     }
 
     return this.#caseId;
@@ -339,9 +336,7 @@ export class ModLog {
     infraction.messageId = await this.post();
 
     // (3) Save the infraction
-    await infraction.save().catch(e => captureException(e));
-
-    return infraction;
+    return await Database.PRISMA.infraction.create({ data: infraction });
   }
 }
 
@@ -360,4 +355,16 @@ interface Moderator {
 interface Duration {
   ms: number;
   section: string;
+}
+
+export interface InfractionEdit {
+  id: string;
+  method: "reason";
+  contents: string;
+  at: number;
+}
+
+export interface InfractionMeta {
+  duration?: number;
+  edits?: InfractionEdit[];
 }

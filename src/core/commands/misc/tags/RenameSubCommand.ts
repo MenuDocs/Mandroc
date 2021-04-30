@@ -1,4 +1,6 @@
-import { command, Embed, MandrocCommand, PermissionLevel, Tag } from "@lib";
+import { command, Database, Embed, MandrocCommand, PermissionLevel } from "@lib";
+
+import type { Tag } from "@prisma/client";
 import type { Message } from "discord.js";
 
 @command("tag-rename", {
@@ -19,27 +21,36 @@ import type { Message } from "discord.js";
   ],
   permissionLevel: PermissionLevel.Helper
 })
-export default class RemoveSubCommand extends MandrocCommand {
-  public async exec(message: Message, { tag, name }: args) {
+export default class RenameTagSubCommand extends MandrocCommand {
+  public async exec(message: Message, {
+    tag,
+    name
+  }: args) {
+    /* check for redundant rename */
     if (tag.name.toLowerCase() === name.toLowerCase()) {
-      return message.util?.send(
-        Embed.Primary(`That tag is already named \`${name}\``)
-      );
+      const embed = Embed.Primary(`That tag is already named \`${name}\``);
+      return message.util?.send(embed);
     }
 
+    /* check for conflicting aliases. */
     if (tag.aliases.some(a => a.toLowerCase() === name.toLowerCase())) {
-      return message.util?.send(
-        Embed.Primary(
-          `The tag, **${tag.name}**, has an alias named \`${name}\`. Please remove it before renaming the tag.`
-        )
-      );
+      const embed = Embed.Primary([
+        `The tag, **${tag.name}**, has an alias named \`${name}\`.`,
+        `Please remove it before renaming the tag.`
+      ]);
+
+      return message.util?.send(embed);
     }
 
-    message.util?.send(
-      Embed.Primary(`Renamed tag **${tag.name}** to \`${name}\``)
-    );
-    tag.name = name;
-    return tag.save();
+    /* send embed. */
+    const embed = Embed.Primary(`Renamed tag **${tag.name}** to \`${name}\``);
+    message.util?.send(embed);
+
+    /* update tag */
+    await Database.PRISMA.tag.update({
+      where: { id: tag.id },
+      data: { name }
+    });
   }
 }
 

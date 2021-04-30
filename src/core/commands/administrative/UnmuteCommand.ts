@@ -1,18 +1,12 @@
-import {
-  adminCommand,
-  Embed,
-  IDs,
-  Infraction,
-  InfractionType,
-  MandrocCommand,
-  Moderation
-} from "@lib";
+import { adminCommand, Embed, IDs, MandrocCommand, Moderation } from "@lib";
+import { InfractionType } from "@prisma/client";
 import { captureException } from "@sentry/node";
+import { UnbanCommand } from "./UnbanCommand";
 
 import type { GuildMember, Message } from "discord.js";
 
 @adminCommand("unmute", {
-  aliases: ["unmute"],
+  aliases: [ "unmute" ],
   args: [
     {
       id: "member",
@@ -33,19 +27,14 @@ import type { GuildMember, Message } from "discord.js";
   ]
 })
 export class UnmuteCommand extends MandrocCommand {
-  async exec(message: Message, { member, reason }: args) {
+  async exec(message: Message, {
+    member,
+    reason
+  }: args) {
     if (!member.roles.cache.has(IDs.MUTED)) {
       const embed = Embed.Warning(`${member} is not muted.`);
       return message.util?.send(embed);
     }
-
-    const infraction = await Infraction.findOne({
-      where: {
-        offenderId: member.id,
-        type: InfractionType.MUTE
-      },
-      order: { id: "DESC" }
-    });
 
     if (message.deletable) {
       message.delete().catch(captureException);
@@ -57,8 +46,9 @@ export class UnmuteCommand extends MandrocCommand {
       reason
     });
 
+    const infraction = await UnbanCommand.getOrigin(member.id, InfractionType.Mute);
     const origin = infraction
-      ? `was **[Case ${infraction.id}](${Moderation.lcurl}/${infraction.messageId})**`
+      ? `was **[Case ${infraction.id}](${Moderation.lcUrl}/${infraction.messageId})**`
       : "is unknown";
 
     return message.channel

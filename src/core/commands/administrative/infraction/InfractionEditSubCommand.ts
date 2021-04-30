@@ -1,8 +1,8 @@
 import {
   code,
-  command,
+  command, Database,
   Embed,
-  Infraction,
+  InfractionMeta,
   Mandroc,
   MandrocCommand,
   Moderation,
@@ -11,6 +11,7 @@ import {
 
 import type { Message } from "discord.js";
 import type { ArgumentOptions } from "discord-akairo";
+import type { Infraction, Prisma } from "@prisma/client";
 
 @command("infraction-edit", {
   *args(): IterableIterator<ArgumentOptions> {
@@ -84,19 +85,26 @@ export class InfractionEditSubCommand extends MandrocCommand {
         await msg.util?.send(
           Embed.Primary(
             `Edited **[#${infraction.id}](${
-              Moderation.lcurl
+              Moderation.lcUrl
             }/${ml})**'s reason to be:\n${code`${contents}`}`
           )
         );
         break;
     }
 
-    infraction.meta.edits = [
-      ...(infraction.meta.edits ?? []),
+    const meta = infraction.meta as InfractionMeta
+    meta.edits = [
+      ...(meta.edits ?? []),
       { id: msg.author.id, at: Date.now(), method, contents }
     ];
 
-    await infraction.save();
+    await Database.PRISMA.infraction.update({
+      where: { id: infraction.id },
+      data: {
+        ...infraction,
+        meta: meta as Prisma.JsonObject
+      }
+    })
   }
 }
 

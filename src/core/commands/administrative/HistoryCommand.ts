@@ -1,9 +1,10 @@
-import { adminCommand, Embed, Infraction, MandrocCommand } from "@lib";
-import type { Message, User } from "discord.js";
+import { adminCommand, Database, Embed, MandrocCommand } from "@lib";
 import moment from "moment";
 
+import type { Message, User } from "discord.js";
+
 @adminCommand("history", {
-  aliases: ["history"],
+  aliases: [ "history" ],
   args: [
     {
       id: "target",
@@ -17,9 +18,9 @@ import moment from "moment";
 })
 export default class HistoryCommand extends MandrocCommand {
   public async exec(message: Message, { target }: args) {
-    const infractions = await Infraction.find({
+    const infractions = await Database.PRISMA.infraction.findMany({
         where: { offenderId: target.id },
-        order: { createdAt: "DESC" }
+        orderBy: { createdAt: "desc" }
       }),
       embed = Embed.Primary().setAuthor(`Infraction History: ${target.tag}`);
 

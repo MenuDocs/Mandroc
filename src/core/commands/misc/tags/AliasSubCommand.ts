@@ -1,4 +1,5 @@
-import { command, Embed, MandrocCommand, PermissionLevel, Tag } from "@lib";
+import { command, Database, Embed, MandrocCommand, PermissionLevel } from "@lib";
+import type { Tag } from "@prisma/client";
 import type { Message } from "discord.js";
 
 @command("tag-alias", {
@@ -21,30 +22,31 @@ import type { Message } from "discord.js";
   permissionLevel: PermissionLevel.Helper
 })
 export default class AliasSubCommand extends MandrocCommand {
-  public async exec(message: Message, { tag, alias }: args) {
+  public async exec(message: Message, {
+    tag,
+    alias
+  }: args) {
     const i = tag.aliases.findIndex(a => a.toLowerCase() === alias);
     if (i !== -1) {
       tag.aliases.splice(i, 1);
-      message.util?.send(
-        Embed.Primary(
-          `The alias, \`${alias}\`, has been removed from tag **${tag.name}**.`
-        )
-      );
+
+      const embed = Embed.Primary(`The alias, \`${alias}\`, has been removed from tag **${tag.name}**.`);
+      await message.util?.send(embed);
     } else {
       tag.aliases.push(alias);
-      message.util?.send(
-        Embed.Primary(
-          `The alias, \`${alias}\`, has been added to tag **${tag.name}**.`
-        )
-      );
+
+      const embed = Embed.Primary(`The alias, \`${alias}\`, has been added to tag **${tag.name}**.`);
+      await message.util?.send(embed);
     }
 
-    return tag.save();
+    await Database.PRISMA.tag.update({
+      where: tag,
+      data: tag
+    });
   }
 }
 
 type args = {
-  method: "add" | "remove";
   tag: Tag;
   alias: string;
 };
