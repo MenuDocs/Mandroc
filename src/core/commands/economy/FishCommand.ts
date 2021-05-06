@@ -1,4 +1,4 @@
-import { command, Database, Embed, MandrocCommand, ToolMetadata } from "@lib";
+import { command, Database, Embed, MandrocCommand, ToolMetadata, ToolType } from "@lib";
 import ms from "ms";
 
 import type { Message } from "discord.js";
@@ -6,13 +6,13 @@ import type { Message } from "discord.js";
 @command("fish", {
   aliases: [ "fish" ],
   description: {
-    content: "Fishes after goods in the sea.",
+    content: "Fish after goods in the sea.",
     examples: (prefix: string) => [ `${prefix}fish` ],
     usage: ""
   }
 })
 export default class FishCommand extends MandrocCommand {
-  private items: Array<ReeledItem> = [
+  private items: Array<Item> = [
     {
       name: "Worn Boot",
       value: 60,
@@ -34,47 +34,28 @@ export default class FishCommand extends MandrocCommand {
   ];
 
   public async exec(message: Message) {
-    const fishingRod = await Database.PRISMA.inventoryItem.findFirst({
-      where: {
-        profileId: message.author.id,
-        item: {
-          type: "Tool",
-          metadata: {
-            equals: {
-              type: "fishing_rod"
-            }
-          }
-        }
-      }
-    });
-
+    const [ fishingRod, updateFishingRod ] = await Database.useTool(message.author.id, ToolType.FISHING_ROD);
     if (!fishingRod) {
       const embed = Embed.Warning("You must possess a **fishing rod** in order to run this command.");
       return message.util?.send(embed);
     }
 
-    const profile = await message.member!.getProfile();
+    const [ profile, updateProfile ] = await message.member?.useProfile()!;
     if (profile.lastFished && profile.lastFished < Date.now() + ms("25m")) {
       const embed = Embed.Warning("You can only access this command every 25 minutes.");
       return message.util?.send(embed);
     }
 
     /* decrement fishing rod durability */
-    await Database.PRISMA.inventoryItem.update({
-      where: { id: fishingRod.id },
-      data: {
-        metadata: {
-          durability: (fishingRod.metadata as ToolMetadata).durability - 1
-        }
+    await updateFishingRod({
+      metadata: {
+        durability: (fishingRod.metadata as ToolMetadata).durability + 1
       }
     });
 
     /* update last fished. */
-    await Database.PRISMA.profile.update({
-      where: { id: profile.id },
-      data: {
-        lastFished: Date.now()
-      }
+    await updateProfile({
+      lastFished: Date.now()
     });
 
     if (Math.floor(Math.random() * 100) <= 33) {
@@ -103,20 +84,17 @@ export default class FishCommand extends MandrocCommand {
     }
 
     /* add the gained currency to the author's pocket */
-    await Database.PRISMA.profile.update({
-      where: { id: profile.id },
-      data: {
-        pocket: {
-          increment: gain
-        }
+    await updateProfile({
+      pocket: {
+        increment: gain
       }
     });
   }
 }
 
-type ItemTier = "common" | "basic" | "rare" | "exotic";
+export type ItemTier = "common" | "basic" | "rare" | "exotic";
 
-interface ReeledItem {
+export interface Item {
   tier: ItemTier;
   name: string;
   value: number;

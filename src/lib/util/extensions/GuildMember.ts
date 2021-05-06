@@ -1,5 +1,5 @@
 import { Structures } from "discord.js";
-import { Database, IDs, PermissionLevel } from "@lib";
+import { Database, IDs, PermissionLevel, UseProfile } from "@lib";
 import type { Profile } from "@prisma/client";
 
 class GuildMember extends Structures.get("GuildMember") {
@@ -48,11 +48,11 @@ class GuildMember extends Structures.get("GuildMember") {
    * Returns the profile for this guild member.
    */
   async getProfile(): Promise<Profile> {
-    return Database.PRISMA.profile.upsert({
-      create: { id: this.id },
-      where: { id: this.id },
-      update: {}
-    });
+    return Database.findProfile(this.id);
+  }
+
+  async useProfile(): Promise<UseProfile> {
+    return Database.useProfile(this.id);
   }
 
   async getProfileWithInventoryItems() {
