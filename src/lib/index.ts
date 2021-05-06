@@ -10,7 +10,7 @@ import type { Class } from "type-fest";
 import type { InventoryItem, Profile, Item } from "@prisma/client";
 
 import type { Moderation } from "./administrative/Moderation";
-import type { Redis, UseProfile } from "./database";
+import type { ProfileHook, Redis } from "./database";
 import type { PermissionLevel } from "./classes/Command";
 
 export * from "./administrative/Moderation";
@@ -52,7 +52,7 @@ declare module "discord.js" {
 
     getProfile(): Promise<Profile>;
 
-    useProfile(): Promise<UseProfile>;
+    useProfile(): Promise<ProfileHook>;
 
     getProfileWithInventoryItems(): Promise<Profile & { inventory: (InventoryItem & { item: Item })[] }>;
   }

@@ -1,4 +1,4 @@
-import { command, config, Database, Embed, MandrocCommand, PermissionLevel } from "@lib";
+import { command, config, Embed, MandrocCommand, PermissionLevel, useTag } from "@lib";
 import { render } from "mustache";
 
 import type { Message, TextChannel } from "discord.js";
@@ -19,7 +19,7 @@ export default class ShowSubCommand extends MandrocCommand {
       return;
     }
 
-    const [ tag, updateTag ] = await Database.useTag(name);
+    const [ tag, updateTag ] = await useTag(name);
     if (!tag) {
       return;
     }

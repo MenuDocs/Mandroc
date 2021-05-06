@@ -54,11 +54,10 @@ export default class FishCommand extends MandrocCommand {
     });
 
     /* update last fished. */
-    await updateProfile({
-      lastFished: Date.now()
-    });
+    await updateProfile({ lastFished: Date.now() }, false);
 
     if (Math.floor(Math.random() * 100) <= 33) {
+      await updateProfile()
       const embed = Embed.Warning("Oh no, you didn't catch anything..");
       return message.util?.send(embed);
     }

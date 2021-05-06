@@ -58,7 +58,7 @@ export abstract class Database {
             type: "Tool",
             metadata: {
               equals: {
-                type: toolType,
+                type: toolType
               }
             }
           }
@@ -114,27 +114,6 @@ export abstract class Database {
   }
 
   /**
-   * React-esque hooks for tool items.
-   *
-   * @param query Name or alias of the tag,
-   */
-  static async useTag(query: string): Promise<UseTag> {
-    const tag = await Database.findTag(query);
-    if (!tag) {
-      return [ null, async () => void 0 ];
-    }
-
-    async function update(data: TagUpdateData) {
-      await Database.PRISMA.tag.update({
-        where: { id: tag!.id },
-        data
-      });
-    }
-
-    return [ tag, update ];
-  }
-
-  /**
    * Find or creates a profile with the provided id.
    *
    * @param id User id.
@@ -148,24 +127,6 @@ export abstract class Database {
   }
 
   /**
-   * React-esque hooks for user profiles.
-   *
-   * @param userId ID of the user
-   */
-  static async useProfile(userId: string): Promise<UseProfile> {
-    const profile = await this.findProfile(userId);
-
-    async function update(data: ProfileUpdateData) {
-      await Database.PRISMA.profile.update({
-        where: { id: userId },
-        data
-      });
-    }
-
-    return [ profile, update ];
-  }
-
-  /**
    *
    * @returns {Promise<number>}
    */
@@ -176,12 +137,6 @@ export abstract class Database {
 
 type InventoryUpdateData = Prisma.XOR<Prisma.InventoryItemUpdateInput, Prisma.InventoryItemUncheckedUpdateInput>
 export type UseInventoryItem = Use<InventoryItem | null, InventoryUpdateData>;
-
-type ProfileUpdateData = Prisma.XOR<Prisma.ProfileUpdateInput, Prisma.ProfileUncheckedUpdateInput>
-export type UseProfile = Use<Profile, ProfileUpdateData>;
-
-type TagUpdateData = Prisma.XOR<Prisma.TagUpdateInput, Prisma.TagUncheckedUpdateInput>
-export type UseTag = Use<Tag | null, TagUpdateData>;
 
 type Use<T, U> = [ T, SaveMethod<U> ]
 type SaveMethod<T> = (data: T) => Promise<void>;
