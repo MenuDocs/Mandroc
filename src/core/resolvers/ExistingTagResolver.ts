@@ -17,12 +17,11 @@ export class ExistingTagResolver extends Resolver<string> {
 
     const tag = await Database.PRISMA.tag.findFirst({
       where: {
-        name: phrase,
-        OR: {
-          aliases: {
-            has: phrase
-          }
-        }
+        OR: [
+          { name: phrase },
+          { aliases: { has: phrase } },
+          { name: { contains: phrase } }
+        ]
       },
       select: {
         name: true

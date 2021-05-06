@@ -32,15 +32,18 @@ import type { Message } from "discord.js";
     },
     {
       id: "staffOnly",
+      match: "flag",
       flag: [ "--staffOnly" ]
     },
     {
       id: "roles",
       flag: [ "-r", "--roles" ],
-      match: "option"
+      match: "option",
+      default: ""
     },
     {
       id: "supportOnly",
+      match: "flag",
       flag: [ "--supportOnly" ]
     }
   ],

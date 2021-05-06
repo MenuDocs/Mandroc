@@ -16,15 +16,6 @@ export class TagResolver extends Resolver<Tag> {
       return Flag.fail(phrase);
     }
 
-    return await Database.PRISMA.tag.findFirst({
-      where: {
-        name: phrase,
-        OR: {
-          aliases: {
-            has: phrase
-          }
-        }
-      }
-    });
+    return await Database.findTag(phrase);
   }
 }

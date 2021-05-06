@@ -112,6 +112,8 @@ export class Mandroc extends AkairoClient {
         `[${text}](https://developer.mozilla.org${node.href})`
     });
 
+
+
     this.commandHandler = new CommandHandler(this, {
       aliasReplacement: /-/g,
       allowMention: true,

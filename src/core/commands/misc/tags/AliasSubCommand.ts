@@ -22,10 +22,13 @@ import type { Message } from "discord.js";
   permissionLevel: PermissionLevel.Helper
 })
 export default class AliasSubCommand extends MandrocCommand {
-  public async exec(message: Message, {
-    tag,
-    alias
-  }: args) {
+  public async exec(message: Message, { tag, alias }: args) {
+    const conflictingTag = await Database.findTag(alias);
+    if (conflictingTag) {
+      const embed = Embed.Danger(`The tag **${conflictingTag.name}** has a conflicting name or alias.`);
+      return message.util?.send(embed);
+    }
+
     const i = tag.aliases.findIndex(a => a.toLowerCase() === alias);
     if (i !== -1) {
       tag.aliases.splice(i, 1);
@@ -40,8 +43,12 @@ export default class AliasSubCommand extends MandrocCommand {
     }
 
     await Database.PRISMA.tag.update({
-      where: tag,
-      data: tag
+      where: { id: tag.id },
+      data: {
+        aliases: {
+          push: alias
+        }
+      }
     });
   }
 }

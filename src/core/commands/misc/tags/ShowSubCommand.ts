@@ -19,16 +19,7 @@ export default class ShowSubCommand extends MandrocCommand {
       return;
     }
 
-    const tag = await Database.PRISMA.tag.findFirst({
-      where: {
-        name,
-        OR: {
-          name: { contains: name },
-          aliases: { has: name }
-        }
-      }
-    });
-
+    const [ tag, updateTag ] = await Database.useTag(name);
     if (!tag) {
       return;
     }
@@ -60,7 +51,6 @@ export default class ShowSubCommand extends MandrocCommand {
         tag: message.author.tag,
         nickname: message.member?.nickname
       },
-
       guild: {
         memberCount: message.guild!.members.cache.size
       }
@@ -70,12 +60,7 @@ export default class ShowSubCommand extends MandrocCommand {
     message.util?.send(tag.embedded ? Embed.Primary(contents) : contents);
 
     /* update row */
-    await Database.PRISMA.tag.update({
-      where: { id: tag.id },
-      data: {
-        uses: { increment: 1 }
-      }
-    });
+    await updateTag({ uses: tag.uses++ });
   }
 }
 

@@ -1,4 +1,4 @@
-import { InventoryItem, Prisma, PrismaClient, Profile } from "@prisma/client";
+import { InventoryItem, Prisma, PrismaClient, Profile, Tag } from "@prisma/client";
 import { Logger } from "@ayanaware/logger";
 
 export enum ToolType {
@@ -58,7 +58,7 @@ export abstract class Database {
             type: "Tool",
             metadata: {
               equals: {
-                type: toolType
+                type: toolType,
               }
             }
           }
@@ -89,6 +89,49 @@ export abstract class Database {
     }
 
     return [ item, update ];
+  }
+
+
+  /**
+   * Finds a tool in a user's inventory.
+   *
+   * @param query Name or alias of the tag,
+   */
+  static async findTag(query: string): Promise<Tag | null> {
+    try {
+      return await Database.PRISMA.tag.findFirst({
+        where: {
+          OR: [
+            { name: query },
+            { aliases: { has: query } },
+            { name: { contains: query } }
+          ]
+        }
+      });
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /**
+   * React-esque hooks for tool items.
+   *
+   * @param query Name or alias of the tag,
+   */
+  static async useTag(query: string): Promise<UseTag> {
+    const tag = await Database.findTag(query);
+    if (!tag) {
+      return [ null, async () => void 0 ];
+    }
+
+    async function update(data: TagUpdateData) {
+      await Database.PRISMA.tag.update({
+        where: { id: tag!.id },
+        data
+      });
+    }
+
+    return [ tag, update ];
   }
 
   /**
@@ -136,6 +179,9 @@ export type UseInventoryItem = Use<InventoryItem | null, InventoryUpdateData>;
 
 type ProfileUpdateData = Prisma.XOR<Prisma.ProfileUpdateInput, Prisma.ProfileUncheckedUpdateInput>
 export type UseProfile = Use<Profile, ProfileUpdateData>;
+
+type TagUpdateData = Prisma.XOR<Prisma.TagUpdateInput, Prisma.TagUncheckedUpdateInput>
+export type UseTag = Use<Tag | null, TagUpdateData>;
 
 type Use<T, U> = [ T, SaveMethod<U> ]
 type SaveMethod<T> = (data: T) => Promise<void>;
