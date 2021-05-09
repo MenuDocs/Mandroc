@@ -26,7 +26,7 @@ export default class BlockCommand extends MandrocCommand {
     });
 
     if (targetProfile.blocked) {
-      const embed = Embed.Warning("This user is already blocked.");
+      const embed = Embed.warning("This user is already blocked.");
       return message.util?.send(embed);
     }
 
@@ -37,7 +37,7 @@ export default class BlockCommand extends MandrocCommand {
       }
     });
 
-    message.util?.send(Embed.Primary(`**${target.tag}** has been blocked.`));
+    message.util?.send(Embed.primary(`**${target.tag}** has been blocked.`));
   }
 }
 

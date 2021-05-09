@@ -30,7 +30,7 @@ export default class CategorySubCommand extends MandrocCommand {
   }: args) {
     await updateTag(tag.id, { category });
 
-    const embed = Embed.Primary(`I changed the category of tag **${tag.name}** from \`${tag.category}\` to \`${category}\``);
+    const embed = Embed.primary(`I changed the category of tag **${tag.name}** from \`${tag.category}\` to \`${category}\``);
     return message.util?.send(embed);
   }
 }

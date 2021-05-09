@@ -32,7 +32,7 @@ export default class RestrictSubCommand extends MandrocCommand {
         }
 
         const adj = (c: Dictionary) => (c.removed ? "removed" : "added"),
-          embed = Embed.Primary(changed.map(c => `**<@&${c.id}>**: ${adj(c)}`));
+          embed = Embed.primary(changed.map(c => `**<@&${c.id}>**: ${adj(c)}`));
 
         await message.util?.send(embed);
         break;
@@ -43,7 +43,7 @@ export default class RestrictSubCommand extends MandrocCommand {
           ? "now"
           : "no longer";
 
-        const embed = Embed.Primary(`The tag, **${tag.name}**, is ${sen} restricted to staff.`);
+        const embed = Embed.primary(`The tag, **${tag.name}**, is ${sen} restricted to staff.`);
         await message.util?.send(embed);
 
         break;
@@ -54,7 +54,7 @@ export default class RestrictSubCommand extends MandrocCommand {
           ? "now"
           : "no longer";
 
-        const embed = Embed.Primary(`The tag, **${tag.name}**, is ${sen} restricted to support channels.`);
+        const embed = Embed.primary(`The tag, **${tag.name}**, is ${sen} restricted to support channels.`);
         message.util?.send(embed);
         break
       }

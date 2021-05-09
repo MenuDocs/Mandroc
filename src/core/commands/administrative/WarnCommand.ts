@@ -37,7 +37,7 @@ export default class WarnCommand extends MandrocCommand {
       reason
     });
 
-    const embed = Embed.Primary(
+    const embed = Embed.primary(
       `Successfully warned **${offender}** for \`${reason}\``
     );
 

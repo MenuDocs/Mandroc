@@ -28,13 +28,13 @@ export default class RenameTagSubCommand extends MandrocCommand {
   }: args) {
     /* check for redundant rename */
     if (tag.name.toLowerCase() === name.toLowerCase()) {
-      const embed = Embed.Primary(`That tag is already named \`${name}\``);
+      const embed = Embed.primary(`That tag is already named \`${name}\``);
       return message.util?.send(embed);
     }
 
     /* check for conflicting aliases. */
     if (tag.aliases.some(a => a.toLowerCase() === name.toLowerCase())) {
-      const embed = Embed.Primary([
+      const embed = Embed.primary([
         `The tag, **${tag.name}**, has an alias named \`${name}\`.`,
         `Please remove it before renaming the tag.`
       ]);
@@ -43,7 +43,7 @@ export default class RenameTagSubCommand extends MandrocCommand {
     }
 
     /* send embed. */
-    const embed = Embed.Primary(`Renamed tag **${tag.name}** to \`${name}\``);
+    const embed = Embed.primary(`Renamed tag **${tag.name}** to \`${name}\``);
     message.util?.send(embed);
 
     /* update tag */

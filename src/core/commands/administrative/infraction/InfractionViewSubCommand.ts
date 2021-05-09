@@ -29,7 +29,7 @@ export class InfractionViewSubCommand extends MandrocCommand {
       moderator = await this.client.users.fetch(infraction.moderatorId, true),
       meta = infraction.meta as InfractionMeta
 
-    const embed = Embed.Primary()
+    const embed = Embed.primary()
       .setTitle(`${infraction.type.capitalize()} (Case ${infraction.id})`)
       .setDescription(
         [

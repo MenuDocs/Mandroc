@@ -11,7 +11,7 @@ import type { Message } from "discord.js";
 export class CommandStartedListener extends Listener {
   async exec(message: Message, command: Command, reason: string) {
     if (reason === Disabled.INHIBITOR_REASON) {
-      const embed = Embed.Warning("This command is disabled.");
+      const embed = Embed.warning("This command is disabled.");
       await message.util?.send(embed);
     }
 

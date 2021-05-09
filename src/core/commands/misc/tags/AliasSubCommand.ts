@@ -33,14 +33,14 @@ export default class AliasSubCommand extends MandrocCommand {
     } else {
       const conflictingTag = await Database.findTag(alias);
       if (conflictingTag) {
-        const embed = Embed.Danger(`The tag **${conflictingTag.name}** has a conflicting name or alias.`);
+        const embed = Embed.danger(`The tag **${conflictingTag.name}** has a conflicting name or alias.`);
         return message.util?.send(embed);
       }
 
       tag.aliases.push(alias);
     }
 
-    const embed = Embed.Primary(`The alias, \`${alias}\`, has been ${i === -1 ? "added to" : "removed from"} tag **${tag.name}**.`);
+    const embed = Embed.primary(`The alias, \`${alias}\`, has been ${i === -1 ? "added to" : "removed from"} tag **${tag.name}**.`);
     await message.util?.send(embed);
 
     await updateTag(tag.id, {

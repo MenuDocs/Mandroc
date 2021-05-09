@@ -82,18 +82,12 @@ export class ModLog {
    * The infraction.
    */
   get infraction(): Prisma.XOR<Prisma.InfractionCreateInput, Prisma.InfractionUncheckedCreateInput> {
-    const meta: Dictionary = {};
-    if (this.duration) {
-      meta.duration = this.duration.ms;
-    }
-
-    if (!this.moderator.id) {
-      meta.automod = true;
-    }
-
-    if (this.causedAutomated) {
-      meta.causedAutomated = this.causedAutomated;
-    }
+    const meta: InfractionMeta = {
+      automod: !this.moderator.id,
+      causedAutomated: this.causedAutomated,
+      edits: [],
+      duration: this.duration?.ms
+    };
 
     return {
       id: this.#caseId,
@@ -130,14 +124,15 @@ export class ModLog {
   static async parseReason(reason: string): Promise<string> {
     for (const [ text, id ] of reason.matchAll(/#(\d+)/gi)) {
       const infraction = await Database.PRISMA.infraction.findFirst({
-        where: { id: +id }
+        where: { id: +id },
+        select: { messageId: true }
       });
 
-      const link = infraction
-        ? `[#${id}](${Moderation.lcUrl}/${infraction.messageId})`
-        : text;
+      if (!infraction) {
+        continue
+      }
 
-      reason = reason.replace(text, link);
+      reason = reason.replace(text, `[#${id}](${Moderation.lcUrl}/${infraction.messageId})`)
     }
 
     return reason;
@@ -310,6 +305,7 @@ export class ModLog {
     if (!this.postable) {
       throw "This mod log isn't postable.";
     }
+
     if (!channel) {
       throw "Can't find the mod logs channel.";
     }
@@ -336,7 +332,9 @@ export class ModLog {
     infraction.messageId = await this.post();
 
     // (3) Save the infraction
-    return await Database.PRISMA.infraction.create({ data: infraction });
+    return await Database.PRISMA.infraction.create({
+      data: infraction,
+    });
   }
 }
 
@@ -357,14 +355,17 @@ interface Duration {
   section: string;
 }
 
-export interface InfractionEdit {
+export interface InfractionEdit extends Prisma.JsonObject {
   id: string;
   method: "reason";
   contents: string;
   at: number;
 }
 
-export interface InfractionMeta {
+export interface InfractionMeta extends Prisma.JsonObject {
   duration?: number;
-  edits?: InfractionEdit[];
+  edits: InfractionEdit[];
+  pardon?: string;
+  automod: boolean;
+  causedAutomated?: number;
 }

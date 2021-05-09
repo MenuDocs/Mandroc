@@ -16,7 +16,7 @@ export default class ChopCommand extends MandrocCommand {
     /* check if the user has an axe. */
     const [ axe, updateAxe ] = await Database.useTool(message.author.id, ToolType.AXE);
     if (!axe || !(axe.metadata as ToolMetadata).durability) {
-      const embed = Embed.Warning("You must possess an **axe** to run this command.");
+      const embed = Embed.warning("You must possess an **axe** to run this command.");
       return message.util?.send(embed);
     }
 
@@ -26,7 +26,7 @@ export default class ChopCommand extends MandrocCommand {
       const remaining = Date.now() - profile.lastChopped;
       if (ms("25m") > remaining) {
         const rem = ms(remaining, { long: true });
-        const embed = Embed.Warning(`Woah! it was only **${rem}** before your last chop session, it's good to take a nice \`25 minute\` break between each session :)`);
+        const embed = Embed.warning(`Woah! it was only **${rem}** before your last chop session, it's good to take a nice \`25 minute\` break between each session :)`);
         return message.util?.send(embed);
       }
     }
@@ -48,11 +48,11 @@ export default class ChopCommand extends MandrocCommand {
 
       /* send embed */
       const chopped = logs.map((x, i) => `*${logAmounts[i]} ${x} logs*`).join(", ");
-      message.util?.send(Embed.Success(`Wow! You got ${chopped}, and earned **${gain} ₪**`));
+      message.util?.send(Embed.success(`Wow! You got ${chopped}, and earned **${gain} ₪**`));
 
       /* update pocket */
     } else {
-      const embed = Embed.Warning("Yikes. The forest you went to burnt down, and it's too late to go to another.");
+      const embed = Embed.warning("Yikes. The forest you went to burnt down, and it's too late to go to another.");
       message.util?.send(embed);
     }
 

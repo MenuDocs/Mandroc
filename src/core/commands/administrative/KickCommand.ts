@@ -28,7 +28,7 @@ import { AntiMassModeration } from "../../../lib/administrative/automation/modul
 export default class KickCommand extends MandrocCommand {
   async exec(message: Message, { target, reason }: args) {
     if (!target.manageable) {
-      const embed = Embed.Warning(
+      const embed = Embed.warning(
         "You do not have permission to interact with them."
       );
       return message.util?.send(embed);
@@ -40,7 +40,7 @@ export default class KickCommand extends MandrocCommand {
       reason: reason
     });
 
-    const response = Embed.Success(
+    const response = Embed.success(
       `Successfully kicked **${target}** \`(${target.id})\``
     );
 

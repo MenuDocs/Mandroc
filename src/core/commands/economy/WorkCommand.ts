@@ -26,7 +26,7 @@ export default class DailyCommand extends MandrocCommand {
       profile.lastWorked + ms("12h") > Date.now()
     ) {
       return message.util?.send(
-        Embed.Warning("You can only work once every 12 hours.")
+        Embed.warning("You can only work once every 12 hours.")
       );
     }
 
@@ -40,6 +40,6 @@ export default class DailyCommand extends MandrocCommand {
       }
     })
 
-    await message.util?.send(Embed.Primary(this.stories(hourlyPay, hours).random()));
+    await message.util?.send(Embed.primary(this.stories(hourlyPay, hours).random()));
   }
 }

@@ -41,12 +41,12 @@ export default class PayCommand extends MandrocCommand {
   }: args) {
     const payer = await message.member!.getProfile();
     if (payer.pocket < amount) {
-      const embed = Embed.Warning("You don't have enough money in your pocket.");
+      const embed = Embed.warning("You don't have enough money in your pocket.");
       return message.util?.send(embed);
     }
 
     /* send transaction message. */
-    await message.util?.send(Embed.Primary(`Successfully payed **${amount} ₪** to ${receiver}`));
+    await message.util?.send(Embed.primary(`Successfully payed **${amount} ₪** to ${receiver}`));
 
     /* update both receiver and sender profiles. */
     await Database.PRISMA.profile.update({

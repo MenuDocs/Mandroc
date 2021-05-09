@@ -29,7 +29,7 @@ export default class NumberGuesserCommand extends MandrocCommand {
 
       if (guesses.size === 0) {
         message.util?.send(
-          Embed.Primary("Seems that you forgot to answer... cancelling.")
+          Embed.primary("Seems that you forgot to answer... cancelling.")
         );
         return false;
       }
@@ -37,7 +37,7 @@ export default class NumberGuesserCommand extends MandrocCommand {
       const guess = +guesses.first()!.content;
       if (guess === num) {
         /* send won message. */
-        const embed = Embed.Success(`Correct! Want the amount you guessed :wink: **${num} ₪** has been added to your account!`);
+        const embed = Embed.success(`Correct! Want the amount you guessed :wink: **${num} ₪** has been added to your account!`);
         await message.util?.send(embed);
 
         /* update the profile. */
@@ -57,14 +57,14 @@ export default class NumberGuesserCommand extends MandrocCommand {
         return false;
       }
 
-      const embed = Embed.Warning(`The number is **${num > guess ? "higher" : "lower"}** than that!`);
+      const embed = Embed.warning(`The number is **${num > guess ? "higher" : "lower"}** than that!`);
       await guesses.first()?.delete();
       await message.util?.send(embed);
 
       return true;
     }
 
-    await message.channel.send(Embed.Primary("Guess a number between **0** and **500**"));
+    await message.channel.send(Embed.primary("Guess a number between **0** and **500**"));
     while (attempts !== 10) {
       const cont = await prompt();
       if (!cont) {

@@ -39,14 +39,14 @@ export class PersistCommand extends MandrocCommand {
 
   async exec(message: Message, { role, member }: args) {
     if (GuildMemberRemoveListener.PERSISTENT_ROLES.includes(role.id)) {
-      const embed = Embed.Danger(
+      const embed = Embed.danger(
         `The role ${role} can't be toggled, as they are hard-coded... lol`
       );
       return message.util?.send(embed);
     }
 
     const logs = await this.client.moderation.logChannel(),
-      embed = Embed.Primary();
+      embed = Embed.primary();
 
     let has;
     if (!member) {
@@ -69,7 +69,7 @@ export class PersistCommand extends MandrocCommand {
       await this.persist(has, role.id, `${KEY}:${member.id}`);
     }
 
-    const log = Embed.Primary()
+    const log = Embed.primary()
       .setAuthor("Role Persistence", message.author.displayAvatarURL())
       .setDescription(
         [

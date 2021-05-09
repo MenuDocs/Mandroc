@@ -24,12 +24,12 @@ export default class NumberGuesserCommand extends MandrocCommand {
   public async exec(message: Message, { amount }: args) {
     const profile = await message.member!.getProfile();
     if (amount <= 0) {
-      const embed = Embed.Warning(`${amount < 0 ? "**Negative numbers** aren't" : "**Zero** isn't"} a valid amount!`);
+      const embed = Embed.warning(`${amount < 0 ? "**Negative numbers** aren't" : "**Zero** isn't"} a valid amount!`);
       return message.util?.send(embed);
     }
 
     if (amount > profile.pocket) {
-      const embed = Embed.Warning("You may not gamble more than you have in your pocket!");
+      const embed = Embed.warning("You may not gamble more than you have in your pocket!");
       return message.util?.send(embed);
     }
 
@@ -40,10 +40,10 @@ export default class NumberGuesserCommand extends MandrocCommand {
     let pocket = profile.pocket;
     if (Math.random() <= chances) {
       pocket += amount / 2;
-      message.util?.send(Embed.Primary(`You won **${amount / 2} ₪**`));
+      message.util?.send(Embed.primary(`You won **${amount / 2} ₪**`));
     } else {
       pocket -= amount;
-      message.util?.send(Embed.Warning(`You lost **${amount} ₪**`));
+      message.util?.send(Embed.warning(`You lost **${amount} ₪**`));
     }
 
     /* update profile column */

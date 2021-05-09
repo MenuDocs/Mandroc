@@ -6,7 +6,7 @@ import type { Message } from "discord.js";
 export default class ListSubCommand extends MandrocCommand {
   public async exec(message: Message) {
     if (!(await Database.PRISMA.tag.count)) {
-      const embed = Embed.Primary("It's pretty empty in here. No one has added a tag yet :(");
+      const embed = Embed.primary("It's pretty empty in here. No one has added a tag yet :(");
       return message.util?.send(embed);
     }
 
@@ -22,7 +22,7 @@ export default class ListSubCommand extends MandrocCommand {
     const categories = new Set([ ...tags.map(tag => tag.category) ]);
 
     /* create embed */
-    const embed = Embed.Primary(`These are the available tags for the MenuDocs server. There are a total of **${tags.length}** tags.`)
+    const embed = Embed.primary(`These are the available tags for the MenuDocs server. There are a total of **${tags.length}** tags.`)
       .setThumbnail(this.client.user!.displayAvatarURL())
       .setTitle("All Tags");
 

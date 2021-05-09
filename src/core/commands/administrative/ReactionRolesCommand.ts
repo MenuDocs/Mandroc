@@ -24,7 +24,7 @@ export class InfractionCommand extends MandrocCommand {
         ["rr-add", "add", "a", "new", "create", "+"],
         ["rr-remove", "remove", "r", "rf", "rm", "rem", "-"]
       ],
-      otherwise: Embed.Primary([
+      otherwise: Embed.primary([
         "Please provide a subcommand.",
         "**`add`** - adds a reaction role to a message.",
         "**`remove`** - removes a reaction role from a message or all if no emoji is provided."

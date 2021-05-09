@@ -27,7 +27,7 @@ export default class TypeSubCommand extends MandrocCommand {
     tag,
     type
   }: args) {
-    const embed = Embed.Primary();
+    const embed = Embed.primary();
     if (tag.embedded && type === "embedded") {
       embed.setDescription(`The tag, **${tag.name}**, is already of type \`embedded\``);
       return message.util?.send(embed);

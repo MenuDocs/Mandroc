@@ -21,10 +21,10 @@ export default class FishCommand extends MandrocCommand {
 
     /* check for an empty inventory. */
     if (!inventory.length) {
-      return message.util?.send(Embed.Primary("Oh, you have no items in your inventory!"));
+      return message.util?.send(Embed.primary("Oh, you have no items in your inventory!"));
     }
 
-    const embed = Embed.Primary()
+    const embed = Embed.primary()
       .setTitle(`**${message.author.username}**'s Inventory`);
 
     /* map out categories. */

@@ -73,7 +73,7 @@ export class Moderation {
   ) {
     if (dm) {
       const _duration = duration ? ms(duration, { long: true }) : null;
-      const embed = Embed.Danger(
+      const embed = Embed.danger(
         `You've been muted in **MenuDocs** ${
           _duration ? `for **${_duration}**` : "permanently"
         }.\n${code`${reason}`}`
@@ -113,7 +113,7 @@ export class Moderation {
       .setType(InfractionType.Warn);
 
     if (dm) {
-      const embed = Embed.Danger(
+      const embed = Embed.danger(
         `You've been warned in ${data.offender.guild.name} for \`${data.reason}\``
       );
 
@@ -171,7 +171,7 @@ export class Moderation {
 
   async kickMember(member: GuildMember, reason: string, dm = DEFAULT_DM_VALUE) {
     if (dm) {
-      const embed = Embed.Danger(
+      const embed = Embed.danger(
         `You've been kicked from **MenuDocs** for: ${code`${reason}`}`
       );
       await this.tryDm(member.user, embed);
@@ -213,7 +213,7 @@ export class Moderation {
         _duration ? `for **${_duration}**` : "permanently"
       }.\n${code`${reason}`}`;
 
-      await this.tryDm(member.user, Embed.Danger(desc));
+      await this.tryDm(member.user, Embed.danger(desc));
     }
 
     await member.ban({
@@ -255,7 +255,7 @@ export class Moderation {
     dm = DEFAULT_DM_VALUE
   ) {
     if (dm) {
-      const embed = Embed.Danger(`You've been soft-banned from **MenuDocs**`);
+      const embed = Embed.danger(`You've been soft-banned from **MenuDocs**`);
       await this.tryDm(member.user, embed);
     }
 
@@ -310,6 +310,7 @@ export class Moderation {
       modLog.duration?.ms,
       dm
     );
+
     return await modLog.finish();
   }
 
@@ -321,13 +322,7 @@ export class Moderation {
   ) {
     if (dm) {
       const _duration = duration ? ms(duration, { long: true }) : null;
-
-      const embed = Embed.Danger(
-        `You've been timed out (blacklisted from help channels) in **MenuDocs** ${
-          _duration ? `for **${_duration}**` : "permanently"
-        }.\n${code`${reason}`}`
-      );
-
+      const embed = Embed.danger(`You've been timed out (blacklisted from help channels) in **MenuDocs** ${_duration ? `for **${_duration}**` : "permanently"}.\n${code`${reason}`}`);
       await this.tryDm(member.user, embed);
     }
 

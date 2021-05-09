@@ -68,13 +68,13 @@ export default class MineCommand extends MandrocCommand {
     });
 
     if (!pickaxe) {
-      const embed = Embed.Warning("You must possess a **pickaxe** in order to run this command.");
+      const embed = Embed.warning("You must possess a **pickaxe** in order to run this command.");
       return message.util?.send(embed);
     }
 
     const profile = await message.member!.getProfile();
     if (profile.lastMined && profile.lastMined < Date.now() + ms("25m")) {
-      const embed = Embed.Warning("You can only access this command every 25 minutes.");
+      const embed = Embed.warning("You can only access this command every 25 minutes.");
       return message.util?.send(embed);
     }
 
@@ -96,7 +96,7 @@ export default class MineCommand extends MandrocCommand {
     });
 
     if (Math.floor(Math.random() * 100) <= 33) {
-      const embed = Embed.Warning("You didn't find anything in the mine.");
+      const embed = Embed.warning("You didn't find anything in the mine.");
       return message.util?.send(embed);
     }
 
@@ -110,7 +110,7 @@ export default class MineCommand extends MandrocCommand {
           .filter(x => x.tier === this.itemTiers[idx])
           .random();
 
-        const embed = Embed.Primary(`Wow, you mined a ${resource.name}, it's value of \`${resource.price} ₪\` has been added to your pocket.`);
+        const embed = Embed.primary(`Wow, you mined a ${resource.name}, it's value of \`${resource.price} ₪\` has been added to your pocket.`);
         message.util?.send(embed);
 
         /* add resource value to overall gain. */

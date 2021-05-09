@@ -17,7 +17,7 @@ export abstract class Giveaway {
         `${config.get("giveaways.mention-everyone")}` === "true"
           ? "@everyone"
           : "",
-        Embed.Primary([
+        Embed.primary([
           `React with **${GiveawayTask.EMOJI}** to win \`${prize}\`!`,
           `Ends at **${moment(end).format("L LT")}**`
         ])

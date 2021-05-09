@@ -36,13 +36,13 @@ export default class FishCommand extends MandrocCommand {
   public async exec(message: Message) {
     const [ fishingRod, updateFishingRod ] = await Database.useTool(message.author.id, ToolType.FISHING_ROD);
     if (!fishingRod) {
-      const embed = Embed.Warning("You must possess a **fishing rod** in order to run this command.");
+      const embed = Embed.warning("You must possess a **fishing rod** in order to run this command.");
       return message.util?.send(embed);
     }
 
     const [ profile, updateProfile ] = await message.member?.useProfile()!;
     if (profile.lastFished && profile.lastFished < Date.now() + ms("25m")) {
-      const embed = Embed.Warning("You can only access this command every 25 minutes.");
+      const embed = Embed.warning("You can only access this command every 25 minutes.");
       return message.util?.send(embed);
     }
 
@@ -58,7 +58,7 @@ export default class FishCommand extends MandrocCommand {
 
     if (Math.floor(Math.random() * 100) <= 33) {
       await updateProfile()
-      const embed = Embed.Warning("Oh no, you didn't catch anything..");
+      const embed = Embed.warning("Oh no, you didn't catch anything..");
       return message.util?.send(embed);
     }
 
@@ -72,7 +72,7 @@ export default class FishCommand extends MandrocCommand {
           .random();
 
         /* send caught message. */
-        const embed = Embed.Primary(`Wow, you caught a ${caughtItem.name}, it's value of \`${caughtItem.value}₪\` has been added to your pocket.`);
+        const embed = Embed.primary(`Wow, you caught a ${caughtItem.name}, it's value of \`${caughtItem.value}₪\` has been added to your pocket.`);
         message.util?.send(embed);
 
         /* add caught item to the overall gain */

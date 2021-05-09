@@ -45,7 +45,7 @@ export class LeaderboardCommand extends MandrocCommand {
       desc += `\u3000**${type.capitalize()}:** ${profile[type].toLocaleString()}\n\n`;
     }
 
-    const embed = Embed.Primary(desc);
+    const embed = Embed.primary(desc);
     if (max > 1) {
       embed.setFooter(`Page: ${current}/${max}`);
     }

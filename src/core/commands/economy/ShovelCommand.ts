@@ -42,14 +42,14 @@ export default class ShovelCommand extends MandrocCommand {
   async exec(message: Message) {
     const [ shovel, updateShovel ] = await Database.useTool(message.author.id, ToolType.SHOVEL);
     if (!shovel) {
-      const embed = Embed.Warning("You must possess a shovel in order to run this command.")
+      const embed = Embed.warning("You must possess a shovel in order to run this command.")
       return message.util?.send(embed);
     }
 
     /* check if the user is on a cool-down. */
     const [profile, updateProfile] = await message.member?.useProfile()!;
     if (profile.lastShoveled && profile.lastShoveled < Date.now() + ms("25m")) {
-      const embed = Embed.Warning("You can only dig every **25 minutes**.");
+      const embed = Embed.warning("You can only dig every **25 minutes**.");
       return message.util?.send(embed);
     }
 
@@ -66,7 +66,7 @@ export default class ShovelCommand extends MandrocCommand {
     });
 
     if (Math.floor(Math.random() * 100) <= 33) {
-      const embed = Embed.Warning("Oh no, you didn't find anything.")
+      const embed = Embed.warning("Oh no, you didn't find anything.")
       return message.util?.send(embed);
     }
 
@@ -80,7 +80,7 @@ export default class ShovelCommand extends MandrocCommand {
           .random();
 
         /* send caught message. */
-        const embed = Embed.Primary(`Wow, you dug up a ${grantedItem.name}, it's value of **${grantedItem.value} ₪** has been added to your pocket.`)
+        const embed = Embed.primary(`Wow, you dug up a ${grantedItem.name}, it's value of **${grantedItem.value} ₪** has been added to your pocket.`)
         message.util?.send(embed);
 
         /* add caught item to the overall gain. */

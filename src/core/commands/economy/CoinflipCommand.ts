@@ -43,9 +43,9 @@ export default class CoinflipCommand extends MandrocCommand {
     const landed = [ "tails", "heads" ].random();
     if (side === landed) {
       const amount = Math.round(bet / 3);
-      message.util?.send(Embed.Success(`Wow! It was \`${side}\` indeed! *You received:* **${amount} ₪**`));
+      message.util?.send(Embed.success(`Wow! It was \`${side}\` indeed! *You received:* **${amount} ₪**`));
     } else {
-      const embed = Embed.Success(`Darn it ... it was \`${side}\`. *You lost:* **${bet} ₪**`);
+      const embed = Embed.success(`Darn it ... it was \`${side}\`. *You lost:* **${bet} ₪**`);
       message.util?.send(embed);
     }
 

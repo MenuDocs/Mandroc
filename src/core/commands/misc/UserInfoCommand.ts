@@ -26,7 +26,7 @@ export default class UserInfoCommand extends MandrocCommand {
       update: {}
     });
 
-    const embed = Embed.Primary().setThumbnail(user.displayAvatarURL());
+    const embed = Embed.primary().setThumbnail(user.displayAvatarURL());
 
     /* general info */
 

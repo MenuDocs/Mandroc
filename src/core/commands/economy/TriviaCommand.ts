@@ -20,7 +20,7 @@ export default class TriviaCommand extends MandrocCommand {
     );
 
     message.util?.send(
-      Embed.Primary()
+      Embed.primary()
         .setFooter("You have 10 seconds to answer this question.")
         .setTitle("Multiple Choice")
         .setDescription(this.client.turndown.turndown(trivia.question))
@@ -54,7 +54,7 @@ export default class TriviaCommand extends MandrocCommand {
       const earned = Number.random(15, 45);
       switch (reason) {
         case "correct":
-          await message.util?.send(Embed.Primary(`Congrats! You earned **${earned} ₪**`));
+          await message.util?.send(Embed.primary(`Congrats! You earned **${earned} ₪**`));
 
           /* add earned amount to the author's pocket */
           await Database.PRISMA.profile.upsert({
@@ -74,7 +74,7 @@ export default class TriviaCommand extends MandrocCommand {
 
         case "cancel":
           message.util?.send(
-            Embed.Primary(
+            Embed.primary(
               `Oh okay, I cancelled the trivia. You missed out on **${earned} ₪**`
             )
           );
@@ -82,7 +82,7 @@ export default class TriviaCommand extends MandrocCommand {
 
         case "time":
           message.util?.send(
-            Embed.Primary(
+            Embed.primary(
               `Oh no! You ran out of time. You missed out on **${earned} ₪**`
             )
           );

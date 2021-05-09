@@ -19,11 +19,11 @@ export default class SnipeCommand extends MandrocCommand {
   public async exec(message: Message, { amount }: args) {
     const sniped = message.channel.lastDeletedMessages;
     if (!sniped?.length) {
-      const embed = Embed.Primary("No sniped messages :flushed:");
+      const embed = Embed.primary("No sniped messages :flushed:");
       return message.util?.send(embed);
     }
 
-    const embed = Embed.Primary();
+    const embed = Embed.primary();
 
     let passed = false;
     for (const snipe of sniped.slice(0, amount).reverse()) {

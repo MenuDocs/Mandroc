@@ -42,7 +42,7 @@ export class ReactionRolesRemoveSubCommand extends MandrocCommand {
     try {
       msg = await channel.messages.fetch(messageId, true);
     } catch (e) {
-      const embed = Embed.Danger(`Provided message was not found in **${channel}**`);
+      const embed = Embed.danger(`Provided message was not found in **${channel}**`);
       return message.util?.send(embed);
     }
 
@@ -68,7 +68,7 @@ export class ReactionRolesRemoveSubCommand extends MandrocCommand {
         });
       }
 
-      const embed = Embed.Primary(`Removed **${reactionRoles.length}** reaction roles for message [\`${msg.id}\`](${msg.url})`);
+      const embed = Embed.primary(`Removed **${reactionRoles.length}** reaction roles for message [\`${msg.id}\`](${msg.url})`);
       return message.util?.send(embed);
     }
 
@@ -82,7 +82,7 @@ export class ReactionRolesRemoveSubCommand extends MandrocCommand {
     });
 
     if (!exists) {
-      const embed = Embed.Danger(`A reaction role for the emoji **${emoji}** doesn't exist.`);
+      const embed = Embed.danger(`A reaction role for the emoji **${emoji}** doesn't exist.`);
       return message.util?.send(embed);
     }
 
@@ -99,7 +99,7 @@ export class ReactionRolesRemoveSubCommand extends MandrocCommand {
       }
     });
 
-    const embed = Embed.Primary(`Removed reaction role for emoji ${emoji}`);
+    const embed = Embed.primary(`Removed reaction role for emoji ${emoji}`);
     return message.util?.send(embed);
   }
 }

@@ -23,13 +23,13 @@ export default class ChopCommand extends MandrocCommand {
 
     /* check for empty inventory. */
     if (!inventory.length) {
-      const embed = Embed.Primary("You dont have anything in your inventory.");
+      const embed = Embed.primary("You dont have anything in your inventory.");
       return message.util?.send(embed);
     }
 
     const toRepair = inventory.filter(i => (i.metadata as ToolMetadata).durability !== 100);
     if (!toRepair.length) {
-      const embed = Embed.Primary("Nothing in your inventory is repairable.");
+      const embed = Embed.primary("Nothing in your inventory is repairable.");
       return message.util?.send(embed);
     }
 
@@ -45,7 +45,7 @@ export default class ChopCommand extends MandrocCommand {
       });
     }
 
-    const embed = Embed.Success("All items in your inventory have been repaired.");
+    const embed = Embed.success("All items in your inventory have been repaired.");
     return message.util?.send(embed);
   }
 }

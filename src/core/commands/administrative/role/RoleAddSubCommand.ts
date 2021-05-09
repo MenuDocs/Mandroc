@@ -35,12 +35,12 @@ import { GuildMemberRemoveListener } from "../../../listeners/guild/GuildMemberR
 export class RoleAddSubCommand extends MandrocCommand {
   async exec(message: Message, { member, role, persist }: args) {
     if (member.roles.cache.has(role.id)) {
-      const embed = Embed.Warning(`${member} already has this role.`);
+      const embed = Embed.warning(`${member} already has this role.`);
       return message.util?.send(embed);
     }
 
-    if (role.comparePositionTo(message.member!.roles.highest) < 0) {
-      const embed = Embed.Danger(`You cannot add this role to ${member}.`);
+    if (role.comparePositionTo(message.member!.roles.highest) > 0) {
+      const embed = Embed.danger(`You cannot add this role to ${member}.`);
       return message.util?.send(embed);
     }
 
@@ -59,7 +59,7 @@ export class RoleAddSubCommand extends MandrocCommand {
       }
     }
 
-    const embed = Embed.Primary(
+    const embed = Embed.primary(
       `Successfully added role ${role} to ${member}${
         persist ? ", the role will persist if and when they leave." : ""
       }`

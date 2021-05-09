@@ -19,7 +19,7 @@ export default class StatsCommand extends MandrocCommand {
 
   public async exec(message: Message) {
     return message.util?.send(
-      Embed.Primary("Sorry, this command is still WIP")
+      Embed.primary("Sorry, this command is still WIP")
     );
 
     /**
@@ -52,7 +52,7 @@ export default class StatsCommand extends MandrocCommand {
     } = ytBody.items[0];
 
     return message.util?.send(
-      Embed.Primary()
+      Embed.primary()
         .addField("Youtube", [
           `MenuDocs has **${subscriberCount}** subscribers and has uploaded **${videoCount}** videos!`,
           `❯ [Latest Video](https://www.youtube.com/watch?v=${videoId}) | *Published at: ${publishedAt}*`, //format this when I can be bothered

@@ -40,14 +40,14 @@ export default class RobCommand extends MandrocCommand {
       victim = await member.getProfile();
 
     if (victim.pocket < 200) {
-      const embed = Embed.Warning(
+      const embed = Embed.warning(
         "They do not have enough money to be robbed."
       );
       return message.channel.send(embed);
     }
 
     if (robber.lastRobbed && robber.lastRobbed + ms("2h") > Date.now()) {
-      const embed = Embed.Warning("You can only rob once every two hours!");
+      const embed = Embed.warning("You can only rob once every two hours!");
       return message.channel.send(embed);
     }
 
@@ -55,7 +55,7 @@ export default class RobCommand extends MandrocCommand {
       const stolen = Math.floor((Math.random() * victim.pocket) / (bodyguard ? 8 : 9));
 
       /* send success message. */
-      const embed = Embed.Primary(`You stole **${stolen} ₪** from ${member}.${bodyguard
+      const embed = Embed.primary(`You stole **${stolen} ₪** from ${member}.${bodyguard
         ? ""
         : "\nThey should really get a bodyguard :eyes:"}`);
 
@@ -88,7 +88,7 @@ export default class RobCommand extends MandrocCommand {
 
     const rand = Math.random();
     if (rand < bodyguardTiers[victim.bodyguard].safe) {
-      const embed = Embed.Primary(failureMessages[victim.bodyguard](member));
+      const embed = Embed.primary(failureMessages[victim.bodyguard](member));
       return message.util?.send(embed);
     }
 

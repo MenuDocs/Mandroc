@@ -16,7 +16,7 @@ import type { Message } from "discord.js";
 })
 export default class SourceSubCommand extends MandrocCommand {
   public async exec(message: Message, { tag }: args) {
-    return message.util?.send(Embed.Primary(code("md")`${tag.contents}`));
+    return message.util?.send(Embed.primary(code("md")`${tag.contents}`));
   }
 }
 

@@ -34,12 +34,12 @@ import { AntiMassModeration } from "../../../lib/administrative/automation/modul
 export class MuteCommand extends MandrocCommand {
   async exec(message: Message, { duration, member, reason }: args) {
     if (member.user.id === this.client.user?.id) {
-      const embed = Embed.Danger("No");
+      const embed = Embed.danger("No");
       return message.util?.send(embed);
     }
 
     if (member.roles.cache.has(IDs.MUTED)) {
-      const embed = Embed.Warning(
+      const embed = Embed.warning(
         "That member is already muted. Use *!unmute* before trying to mute them."
       );
       return message.util?.send(embed);
@@ -57,7 +57,7 @@ export class MuteCommand extends MandrocCommand {
     }
 
     const dur = duration ? `for **${ms(duration, { long: true })}** ` : "",
-      embed = Embed.Primary(
+      embed = Embed.primary(
         `Successfully muted **${member}** ${dur}with reason \`${reason}\``
       );
 

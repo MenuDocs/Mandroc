@@ -17,7 +17,7 @@ export default class InfoSubCommand extends MandrocCommand {
   public async exec(message: Message, { tag }: args) {
     const author = await this.client.users.fetch(tag.authorId);
 
-    const embed = Embed.Primary()
+    const embed = Embed.primary()
       .setAuthor(author.username, author.displayAvatarURL())
       .setDescription([
         `**Created At**: ${new Date(tag.createdAt).toLocaleString()}`,

@@ -19,13 +19,13 @@ export default class DailyCommand extends MandrocCommand {
     /* check for last daily. */
     if (profile.lastDaily && profile.lastDaily + ms("1d") > Date.now()) {
       const rem = ms(Date.now() - profile.lastDaily, { long: true }),
-        embed = Embed.Primary(`Ayo! It's only been **${rem}** since you last got your daily coins, chill.`);
+        embed = Embed.primary(`Ayo! It's only been **${rem}** since you last got your daily coins, chill.`);
 
       return message.util?.send(embed);
     }
 
     /* send daily message. */
-    const embed = Embed.Warning("Your daily **200 ₪** has been added to your pocket.");
+    const embed = Embed.warning("Your daily **200 ₪** has been added to your pocket.");
     message.util?.send(embed);
 
     /* update profile */

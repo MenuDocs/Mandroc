@@ -32,7 +32,7 @@ export class GiveawayTask implements ScheduledTask<GiveawayMeta> {
     const reactions = message.reactions.cache.get(GiveawayTask.EMOJI),
       potentialWinners = (await reactions?.users?.fetch())?.filter(u => !u.bot);
 
-    const newEmbed = Embed.Primary(
+    const newEmbed = Embed.primary(
       `Giveaway ended at **${moment().format("L LT")}**`
     )
       .setTimestamp(Date.now())
@@ -42,7 +42,7 @@ export class GiveawayTask implements ScheduledTask<GiveawayMeta> {
     await message.edit(newEmbed);
 
     if (!potentialWinners?.size) {
-      const embed = Embed.Primary("It seems that no one wanted the prize...");
+      const embed = Embed.primary("It seems that no one wanted the prize...");
       return message.channel?.send(embed);
     }
 

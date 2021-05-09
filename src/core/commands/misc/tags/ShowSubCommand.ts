@@ -57,7 +57,7 @@ export default class ShowSubCommand extends MandrocCommand {
     };
 
     const contents = render(tag.contents, view);
-    message.util?.send(tag.embedded ? Embed.Primary(contents) : contents);
+    message.util?.send(tag.embedded ? Embed.primary(contents) : contents);
 
     /* update row */
     await updateTag({

@@ -29,7 +29,7 @@ export class EditTagSubCommand extends MandrocCommand {
     tag,
     contents
   }: args) {
-    const embed = Embed.Primary(`Updating the tag \`${tag.name}\` with the supplied contents.`);
+    const embed = Embed.primary(`Updating the tag \`${tag.name}\` with the supplied contents.`);
     message.util?.send(embed);
 
     /* update the tag. */

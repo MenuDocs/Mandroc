@@ -63,7 +63,7 @@ export default class AddSubCommand extends MandrocCommand {
   ) {
     if (this.handler.findCommand(name)) {
       return message.util?.send(
-        Embed.Primary(
+        Embed.primary(
           `A command with the name or alias, **${name}**, already exists.`
         )
       );
@@ -71,7 +71,7 @@ export default class AddSubCommand extends MandrocCommand {
 
     const exists = await Database.PRISMA.tag.count({ where: { name } }) > 0;
     if (exists) {
-      return message.util?.send(Embed.Primary(`The tag, **${name}**, already exists.`));
+      return message.util?.send(Embed.primary(`The tag, **${name}**, already exists.`));
     }
 
     console.log(roles);
@@ -89,7 +89,7 @@ export default class AddSubCommand extends MandrocCommand {
       }
     });
 
-    const embed = Embed.Primary(`I created the tag \`${name}\`${category === "general" ? "" : ` and added it to the **${category.capitalize()}** category`}.`);
+    const embed = Embed.primary(`I created the tag \`${name}\`${category === "general" ? "" : ` and added it to the **${category.capitalize()}** category`}.`);
     return message.util?.send(embed);
   }
 }

@@ -76,7 +76,7 @@ export class ReactionRolesAddSubCommand extends MandrocCommand {
     try {
       msg = await channel.messages.fetch(messageId, true);
     } catch (e) {
-      const embed = Embed.Danger(
+      const embed = Embed.danger(
         `The provided message was not found in **${channel}**`
       );
       return message.util?.send(embed);
@@ -91,7 +91,7 @@ export class ReactionRolesAddSubCommand extends MandrocCommand {
     });
 
     if (exists) {
-      const embed = Embed.Danger(
+      const embed = Embed.danger(
         `A reaction role for the emoji **${emoji}** already exists.`
       );
       return message.util?.send(embed);
@@ -107,7 +107,7 @@ export class ReactionRolesAddSubCommand extends MandrocCommand {
     });
 
     await msg.react(e);
-    const embed = Embed.Primary(`Created a reaction role for ${role} with the emoji ${emoji} in ${channel}.`);
+    const embed = Embed.primary(`Created a reaction role for ${role} with the emoji ${emoji} in ${channel}.`);
     return message.util?.send(embed);
   }
 }

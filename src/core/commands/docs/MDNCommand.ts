@@ -51,7 +51,7 @@ export default class MDNCommand extends MandrocCommand {
         }](${link})**\n`;
       }
 
-      const embed = Embed.Primary()
+      const embed = Embed.primary()
         .setAuthor(message.author.tag, message.author.displayAvatarURL())
         .setDescription(str);
 

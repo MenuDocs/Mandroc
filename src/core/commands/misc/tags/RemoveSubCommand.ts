@@ -22,7 +22,7 @@ export default class RemoveSubCommand extends MandrocCommand {
       where: { id: tag.id }
     });
 
-    return message.util?.send(Embed.Primary(`Successfully removed the tag **${tag.name}**.`));
+    return message.util?.send(Embed.primary(`Successfully removed the tag **${tag.name}**.`));
   }
 }
 

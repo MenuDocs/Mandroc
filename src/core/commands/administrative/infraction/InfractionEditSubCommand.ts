@@ -37,12 +37,8 @@ import type { Infraction, Prisma } from "@prisma/client";
           type: "string",
           match: "rest",
           prompt: {
-            start: `Please provide the new reason for **Infraction #${
-              (infraction! as Infraction).id
-            }**`,
-            retry: `Please provide the new reason for **Infraction #${
-              (infraction! as Infraction).id
-            }**`
+            start: `Please provide the new reason for **Infraction #${(infraction! as Infraction).id}**`,
+            retry: `Please provide the new reason for **Infraction #${(infraction! as Infraction).id}**`
           }
         };
 
@@ -83,7 +79,7 @@ export class InfractionEditSubCommand extends MandrocCommand {
         }
 
         await msg.util?.send(
-          Embed.Primary(
+          Embed.primary(
             `Edited **[#${infraction.id}](${
               Moderation.lcUrl
             }/${ml})**'s reason to be:\n${code`${contents}`}`
@@ -97,6 +93,7 @@ export class InfractionEditSubCommand extends MandrocCommand {
       ...(meta.edits ?? []),
       { id: msg.author.id, at: Date.now(), method, contents }
     ];
+
 
     await Database.PRISMA.infraction.update({
       where: { id: infraction.id },
