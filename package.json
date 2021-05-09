@@ -18,7 +18,9 @@
     "start:dev": "NODE_ENV=development node .",
     "format": "prettier --write src/",
     "dev": "yarn build && yarn start:dev",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate up"
   },
   "dependencies": {
     "@ayanaware/errors": "^1.1.0",
