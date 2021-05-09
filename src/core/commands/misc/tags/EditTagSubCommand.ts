@@ -3,7 +3,7 @@ import { command, Embed, MandrocCommand, PermissionLevel, updateTag } from "@lib
 import type { Tag } from "@prisma/client";
 import type { Message } from "discord.js";
 
-@command("tag-category", {
+@command("tag-edit", {
   args: [
     {
       id: "tag",
@@ -14,28 +14,30 @@ import type { Message } from "discord.js";
       }
     },
     {
-      id: "category",
+      id: "contents",
+      match: "rest",
       prompt: {
         start: "mate, are ya dumb.",
-        retry: "JUST GIVE ME A CATEGORY NAME YA DONUT."
+        retry: "JUST GIVE ME SOME CONTENT NAME YA DONUT."
       }
     }
   ],
   permissionLevel: PermissionLevel.Helper
 })
-export default class CategorySubCommand extends MandrocCommand {
-  public async exec(message: Message, {
+export class EditTagSubCommand extends MandrocCommand {
+  async exec(message: Message, {
     tag,
-    category
+    contents
   }: args) {
-    await updateTag(tag.id, { category });
+    const embed = Embed.Primary(`Updating the tag \`${tag.name}\` with the supplied contents.`);
+    message.util?.send(embed);
 
-    const embed = Embed.Primary(`I changed the category of tag **${tag.name}** from \`${tag.category}\` to \`${category}\``);
-    return message.util?.send(embed);
+    /* update the tag. */
+    await updateTag(tag.id, { contents });
   }
 }
 
 type args = {
   tag: Tag;
-  category: string;
-};
+  contents: string;
+}

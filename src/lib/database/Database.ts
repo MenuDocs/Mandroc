@@ -56,16 +56,15 @@ export abstract class Database {
    * @param keys The middleware to add
    */
   static addMiddleware(prisma: PrismaClient, keys: Middleware[]) {
-    keys.removeDuplicates()
     for (const key of keys) {
       switch (key) {
         case "time":
           prisma.$use(async (params, next) => {
-            const start = Date.now(),
-              result = await next(params),
-              end = Date.now();
+            const start = Date.now();
+            const result = await next(params);
+            const end = Date.now();
 
-            Database.LOGGER.debug(`Query took ${start - end}ms`, `${params.model}.${params.action}`);
+            Database.LOGGER.debug(`Query took ${end - start}ms`, `${params.model}.${params.action}`);
             return result;
           });
 
@@ -121,7 +120,6 @@ export abstract class Database {
 
     return [ item, update ];
   }
-
 
   /**
    * Finds a tool in a user's inventory.

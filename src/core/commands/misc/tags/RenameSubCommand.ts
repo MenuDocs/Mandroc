@@ -1,4 +1,4 @@
-import { command, Database, Embed, MandrocCommand, PermissionLevel } from "@lib";
+import { command, Embed, MandrocCommand, PermissionLevel, updateTag } from "@lib";
 
 import type { Tag } from "@prisma/client";
 import type { Message } from "discord.js";
@@ -47,10 +47,7 @@ export default class RenameTagSubCommand extends MandrocCommand {
     message.util?.send(embed);
 
     /* update tag */
-    await Database.PRISMA.tag.update({
-      where: { id: tag.id },
-      data: { name }
-    });
+    await updateTag(tag.id, { name })
   }
 }
 

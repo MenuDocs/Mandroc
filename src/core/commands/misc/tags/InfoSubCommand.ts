@@ -25,7 +25,8 @@ export default class InfoSubCommand extends MandrocCommand {
         `**Content Length**: ${tag.contents.length.toLocaleString()}`,
         `**Aliases**: ${tag.aliases.map(a => `\`${a}\``).join(", ") || "none"}`,
         `**Embedded**: ${tag.embedded ? "yes" : "no"}`,
-        `**Category**: ${tag.category}`
+        `**Category**: ${tag.category}`,
+        `**Contents**: use the \`tag source\` command ;)`
       ]);
 
     return message.util?.send(embed);

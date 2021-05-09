@@ -1,4 +1,4 @@
-import { command, Database, Embed, MandrocCommand, PermissionLevel } from "@lib";
+import { command, Embed, MandrocCommand, PermissionLevel, updateTag } from "@lib";
 
 import type { Tag } from "@prisma/client";
 import type { Message } from "discord.js";
@@ -41,12 +41,7 @@ export default class TypeSubCommand extends MandrocCommand {
     message.util?.send(embed);
 
     /* update tag */
-    await Database.PRISMA.tag.update({
-      where: { id: tag.id },
-      data: {
-        embedded: type === "embedded"
-      }
-    });
+    await updateTag(tag.id, { embedded: type === "embedded" });
   }
 }
 

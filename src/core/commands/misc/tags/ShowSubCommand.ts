@@ -60,7 +60,9 @@ export default class ShowSubCommand extends MandrocCommand {
     message.util?.send(tag.embedded ? Embed.Primary(contents) : contents);
 
     /* update row */
-    await updateTag({ uses: tag.uses++ });
+    await updateTag({
+      uses: { increment: 1 }
+    });
   }
 }
 

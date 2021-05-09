@@ -1,4 +1,4 @@
-import { command, Database, Embed, MandrocCommand, PermissionLevel } from "@lib";
+import { command, Embed, MandrocCommand, PermissionLevel, updateTag } from "@lib";
 import type { Tag } from "@prisma/client";
 import type { Message, Role } from "discord.js";
 
@@ -61,9 +61,10 @@ export default class RestrictSubCommand extends MandrocCommand {
     }
 
     /* update row */
-    await Database.PRISMA.tag.update({
-      where: { id: tag.id },
-      data: tag
+    await updateTag(tag.id, {
+      supportOnly: tag.supportOnly,
+      staffOnly: tag.staffOnly,
+      allowedRoles: tag.allowedRoles
     });
   }
 

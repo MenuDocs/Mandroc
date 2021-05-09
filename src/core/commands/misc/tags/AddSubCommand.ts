@@ -22,7 +22,7 @@ import type { Message } from "discord.js";
       type: [ "embedded", "regular" ],
       match: "option",
       flag: [ "-t", "--type" ],
-      default: "embedded"
+      default: "regular"
     },
     {
       id: "category",
@@ -38,8 +38,7 @@ import type { Message } from "discord.js";
     {
       id: "roles",
       flag: [ "-r", "--roles" ],
-      match: "option",
-      default: ""
+      match: "option"
     },
     {
       id: "supportOnly",
@@ -75,6 +74,8 @@ export default class AddSubCommand extends MandrocCommand {
       return message.util?.send(Embed.Primary(`The tag, **${name}**, already exists.`));
     }
 
+    console.log(roles);
+
     await Database.PRISMA.tag.create({
       data: {
         name: name,
@@ -84,11 +85,12 @@ export default class AddSubCommand extends MandrocCommand {
         category: category,
         staffOnly: staffOnly ?? false,
         supportOnly: supportOnly ?? true,
-        allowedRoles: roles.split(/[\s,]+/g) || []
+        allowedRoles: roles?.split(/[\s,]+/g) || []
       }
     });
 
-    return message.util?.send(Embed.Primary(`I created the tag **${name}**`));
+    const embed = Embed.Primary(`I created the tag \`${name}\`${category === "general" ? "" : ` and added it to the **${category.capitalize()}** category`}.`);
+    return message.util?.send(embed);
   }
 }
 
@@ -99,5 +101,5 @@ type args = {
   category: string;
   supportOnly: boolean;
   staffOnly: boolean;
-  roles: string;
+  roles?: string;
 };

@@ -1,4 +1,4 @@
-import { command, Database, Embed, MandrocCommand, PermissionLevel } from "@lib";
+import { command, Database, Embed, MandrocCommand, PermissionLevel, updateTag } from "@lib";
 import type { Tag } from "@prisma/client";
 import type { Message } from "discord.js";
 
@@ -8,7 +8,8 @@ import type { Message } from "discord.js";
       id: "tag",
       type: "tag",
       prompt: {
-        start: "I need a tag."
+        start: "I need a tag.",
+        retry: "I need a tag bruh."
       }
     },
     {
@@ -22,33 +23,28 @@ import type { Message } from "discord.js";
   permissionLevel: PermissionLevel.Helper
 })
 export default class AliasSubCommand extends MandrocCommand {
-  public async exec(message: Message, { tag, alias }: args) {
-    const conflictingTag = await Database.findTag(alias);
-    if (conflictingTag) {
-      const embed = Embed.Danger(`The tag **${conflictingTag.name}** has a conflicting name or alias.`);
-      return message.util?.send(embed);
-    }
-
+  public async exec(message: Message, {
+    tag,
+    alias
+  }: args) {
     const i = tag.aliases.findIndex(a => a.toLowerCase() === alias);
     if (i !== -1) {
       tag.aliases.splice(i, 1);
-
-      const embed = Embed.Primary(`The alias, \`${alias}\`, has been removed from tag **${tag.name}**.`);
-      await message.util?.send(embed);
     } else {
-      tag.aliases.push(alias);
+      const conflictingTag = await Database.findTag(alias);
+      if (conflictingTag) {
+        const embed = Embed.Danger(`The tag **${conflictingTag.name}** has a conflicting name or alias.`);
+        return message.util?.send(embed);
+      }
 
-      const embed = Embed.Primary(`The alias, \`${alias}\`, has been added to tag **${tag.name}**.`);
-      await message.util?.send(embed);
+      tag.aliases.push(alias);
     }
 
-    await Database.PRISMA.tag.update({
-      where: { id: tag.id },
-      data: {
-        aliases: {
-          push: alias
-        }
-      }
+    const embed = Embed.Primary(`The alias, \`${alias}\`, has been ${i === -1 ? "added to" : "removed from"} tag **${tag.name}**.`);
+    await message.util?.send(embed);
+
+    await updateTag(tag.id, {
+      aliases: tag.aliases
     });
   }
 }

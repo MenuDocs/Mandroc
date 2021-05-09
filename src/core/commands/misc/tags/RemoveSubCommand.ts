@@ -9,7 +9,8 @@ import type { Message } from "discord.js";
       id: "tag",
       type: "tag",
       prompt: {
-        start: "I need a tag to delete."
+        start: "I need a tag to delete.",
+        retry: "I need a tag to delete."
       }
     }
   ],
@@ -21,7 +22,7 @@ export default class RemoveSubCommand extends MandrocCommand {
       where: { id: tag.id }
     });
 
-    return message.util?.send(Embed.Primary(`Deleted the tag **${tag.name}** successfully.`));
+    return message.util?.send(Embed.Primary(`Successfully removed the tag **${tag.name}**.`));
   }
 }
 
