@@ -1,5 +1,6 @@
 import { Command, Listener } from "discord-akairo";
-import { listener } from "@lib";
+import { Embed, listener } from "@lib";
+import { Disabled } from "../inhibitors/Disabled";
 
 import type { Message } from "discord.js";
 
@@ -9,6 +10,11 @@ import type { Message } from "discord.js";
 })
 export class CommandStartedListener extends Listener {
   async exec(message: Message, command: Command, reason: string) {
+    if (reason === Disabled.INHIBITOR_REASON) {
+      const embed = Embed.Warning("This command is disabled.");
+      await message.util?.send(embed);
+    }
+
     this.client.log.debug(
       `blocked: ${message.author.tag} (${message.author.id}) -> ${command.id}, reason=${reason}`,
       "commands"

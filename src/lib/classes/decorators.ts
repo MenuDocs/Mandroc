@@ -1,11 +1,7 @@
-import {
-  MandrocCommand,
-  MandrocCommandOptions,
-  PermissionLevel
-} from "./Command";
+import { MandrocCommand, MandrocCommandOptions, PermissionLevel } from "./Command";
 
 import type { Class } from "type-fest";
-import type { Listener, ListenerOptions } from "discord-akairo";
+import type { Inhibitor, InhibitorOptions, Listener, ListenerOptions } from "discord-akairo";
 import type { Monitor, MonitorOptions } from "./monitor/Monitor";
 
 /**
@@ -31,6 +27,21 @@ export function listener(id: string, options: ListenerOptions) {
  */
 export function monitor(id: string, options?: MonitorOptions) {
   return <T extends Class<Monitor>>(target: T) => {
+    return class extends target {
+      constructor(...args: any[]) {
+        super(...args, id, options);
+      }
+    };
+  };
+}
+
+/**
+ * A helper function for inhibitors.
+ * @param id
+ * @param options
+ */
+export function inhibitor(id: string, options?: InhibitorOptions) {
+  return <T extends Class<Inhibitor>>(target: T) => {
     return class extends target {
       constructor(...args: any[]) {
         super(...args, id, options);
