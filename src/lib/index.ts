@@ -48,6 +48,11 @@ declare module "discord.js" {
   interface GuildMember {
     permissionLevel: PermissionLevel | null;
 
+    /**
+     * Determines whether this member's permission level is higher than the provided member or permission level.
+     *
+     * @param target The guild member or permission level.
+     */
     above(target: GuildMember | PermissionLevel): boolean;
 
     getProfile(): Promise<Profile>;
@@ -122,6 +127,11 @@ declare global {
      * Returns random entry of array.
      */
     random(): T;
+
+    /**
+     * Removes all duplicated keys.
+     */
+    removeDuplicates(): this;
 
     /**
      * Format's this Array (includes markdown).

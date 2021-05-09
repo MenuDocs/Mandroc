@@ -1,5 +1,6 @@
 import { InventoryItem, Prisma, PrismaClient, Profile, Tag } from "@prisma/client";
 import { Logger } from "@ayanaware/logger";
+import { config } from "../util";
 
 export enum ToolType {
   FISHING_ROD = "fishing_rod",
@@ -40,7 +41,37 @@ export abstract class Database {
     prisma.$on("info", ({ message }) => this.LOGGER.debug(message));
     prisma.$on("error", ({ message }) => this.LOGGER.error(message));
 
+    const enabledMiddleware = config.get<Middleware[]>("database.middleware", { envType: "array" })
+    if (enabledMiddleware.length) {
+      Database.addMiddleware(prisma, enabledMiddleware);
+    }
+
     Database.PRISMA = prisma;
+  }
+
+  /**
+   * Adds the provided middleware to the supplied prisma client.
+   *
+   * @param prisma The prisma client
+   * @param keys The middleware to add
+   */
+  static addMiddleware(prisma: PrismaClient, keys: Middleware[]) {
+    keys.removeDuplicates()
+    for (const key of keys) {
+      switch (key) {
+        case "time":
+          prisma.$use(async (params, next) => {
+            const start = Date.now(),
+              result = await next(params),
+              end = Date.now();
+
+            Database.LOGGER.debug(`Query took ${start - end}ms`, `${params.model}.${params.action}`);
+            return result;
+          });
+
+          break
+      }
+    }
   }
 
   /**
@@ -140,3 +171,4 @@ export type UseInventoryItem = Use<InventoryItem | null, InventoryUpdateData>;
 
 type Use<T, U> = [ T, SaveMethod<U> ]
 type SaveMethod<T> = (data: T) => Promise<void>;
+type Middleware = "time";

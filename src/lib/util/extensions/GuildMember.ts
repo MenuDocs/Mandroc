@@ -1,5 +1,5 @@
 import { Structures } from "discord.js";
-import { Database, IDs, PermissionLevel, useProfile, UseProfile } from "@lib";
+import { Database, IDs, PermissionLevel, ProfileHook, useProfile } from "@lib";
 import type { Profile } from "@prisma/client";
 
 class GuildMember extends Structures.get("GuildMember") {
@@ -24,10 +24,6 @@ class GuildMember extends Structures.get("GuildMember") {
     );
   }
 
-  /**
-   * Determines whether this member's permission level is higher than the provided member or permission level.
-   * @param {PermissionLevel | GuildMember} target The guild member or permission level.
-   */
   above(target: PermissionLevel | GuildMember) {
     if (!this.permissionLevel) {
       return false;
@@ -44,14 +40,11 @@ class GuildMember extends Structures.get("GuildMember") {
     return this.permissionLevel > target;
   }
 
-  /**
-   * Returns the profile for this guild member.
-   */
   async getProfile(): Promise<Profile> {
     return Database.findProfile(this.id);
   }
 
-  async useProfile(): Promise<UseProfile> {
+  async useProfile(): Promise<ProfileHook> {
     return useProfile(this.id);
   }
 

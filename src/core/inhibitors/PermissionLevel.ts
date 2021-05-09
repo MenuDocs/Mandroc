@@ -1,18 +1,15 @@
 import { Inhibitor } from "discord-akairo";
+import { inhibitor, MandrocCommand } from "@lib";
 
 import type { Message } from "discord.js";
-import type { MandrocCommand } from "@lib";
 
+@inhibitor("permission-level", {
+  category: "permissions",
+  priority: 1,
+  reason: "permissionLevel"
+})
 export default class PermissionLevelInhibitor extends Inhibitor {
-  public constructor() {
-    super("permission-level", {
-      category: "permissions",
-      priority: 1,
-      reason: "permissionLevel"
-    });
-  }
-
-  public async exec(message: Message, command: MandrocCommand) {
+  async exec(message: Message, command: MandrocCommand) {
     if (
       !message.guild ||
       !message.member ||
