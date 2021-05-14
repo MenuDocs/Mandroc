@@ -7,9 +7,10 @@ import type { Logger } from "@ayanaware/logger";
 import type { CommandHandler } from "discord-akairo";
 import type TurndownService from "turndown";
 import type { Class } from "type-fest";
+import type { InventoryItem, Profile, Item } from "@prisma/client";
 
 import type { Moderation } from "./administrative/Moderation";
-import type { Database, Profile, Redis } from "./database";
+import type { ProfileHook, Redis } from "./database";
 import type { PermissionLevel } from "./classes/Command";
 
 export * from "./administrative/Moderation";
@@ -35,7 +36,6 @@ declare module "discord.js" {
     canMDN: boolean;
     turndown: TurndownService;
     moderation: Moderation;
-    database: Database;
     commandHandler: CommandHandler;
     redis: Redis;
   }
@@ -48,9 +48,18 @@ declare module "discord.js" {
   interface GuildMember {
     permissionLevel: PermissionLevel | null;
 
+    /**
+     * Determines whether this member's permission level is higher than the provided member or permission level.
+     *
+     * @param target The guild member or permission level.
+     */
     above(target: GuildMember | PermissionLevel): boolean;
 
     getProfile(): Promise<Profile>;
+
+    useProfile(): Promise<ProfileHook>;
+
+    getProfileWithInventoryItems(): Promise<Profile & { inventory: (InventoryItem & { item: Item })[] }>;
   }
 
   interface DeletedMessage {
@@ -118,6 +127,11 @@ declare global {
      * Returns random entry of array.
      */
     random(): T;
+
+    /**
+     * Removes all duplicated keys.
+     */
+    removeDuplicates(): this;
 
     /**
      * Format's this Array (includes markdown).

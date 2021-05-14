@@ -1,4 +1,4 @@
-import { Color, IDs, Infraction, Mandroc } from "@lib";
+import { Color, IDs, Mandroc, Database } from "@lib";
 import { MessageEmbed } from "discord.js";
 
 import type { ScheduledTask } from "./ScheduledTask";
@@ -6,14 +6,23 @@ import type { ScheduledTask } from "./ScheduledTask";
 export class UnbanTask implements ScheduledTask<UnbanMeta> {
   readonly name = "unban";
 
-  async execute(client: Mandroc, { caseId: _cid, offenderId }: UnbanMeta) {
-    const infraction = await Infraction.findOne({ where: { id: +_cid } });
-    if (!infraction) {
+  async execute(client: Mandroc, {
+    caseId: _cid,
+    offenderId
+  }: UnbanMeta) {
+    try {
+      /* set infraction to finished. */
+      await Database.PRISMA.infraction.update({
+        where: { id: +_cid },
+        data: {
+          meta: {
+            finished: true
+          }
+        }
+      });
+    } catch {
       return;
     }
-
-    infraction.meta.finished = true;
-    await infraction.save();
 
     const guild = client.guilds.cache.get(IDs.GUILD);
     if (!guild) {

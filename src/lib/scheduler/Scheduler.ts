@@ -94,6 +94,10 @@ export class Scheduler {
     return Redis.get();
   }
 
+  static async getMetadata<T>(key: string): Promise<T> {
+    return (await Scheduler.redis.client.hgetall(key)) as unknown as T
+  }
+
   /**
    * Schedules a task to be ran at a specific date.
    * @param task The task to schedule.
@@ -143,8 +147,8 @@ export class Scheduler {
 
   async _runKey(key: string, data: ScheduledTaskInfo) {
     const meta = data.metaKey
-      ? await Scheduler.redis.client.hgetall(data.metaKey)
-      : {};
+      ? await Scheduler.getMetadata(data.metaKey)
+      : {}
 
     await this.tasks
       .get(Scheduler.parse(key)!.task)

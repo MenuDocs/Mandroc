@@ -28,7 +28,7 @@ export default class EchoCommand extends MandrocCommand {
   public async exec(message: Message, { embed, content }: args) {
     if (message.deletable) await message.delete();
     return embed
-      ? message.util?.send(Embed.Primary(content))
+      ? message.util?.send(Embed.primary(content))
       : message.util?.send(content);
   }
 }

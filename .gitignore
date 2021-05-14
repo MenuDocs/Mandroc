@@ -1,9 +1,10 @@
-node_modules/
-dist/
-.idea
-.vscode
+/node_modules/
+/dist/
+/.idea/
+/.vscode/
 
 config.json
-yarn.lock
-dump.rdb
-.env
+
+*.rdb
+*.env
+*.log

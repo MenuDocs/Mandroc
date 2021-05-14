@@ -1,5 +1,6 @@
-import { Infraction, Resolver } from "@lib";
+import { Database, Resolver } from "@lib";
 
+import type { Infraction } from "@prisma/client";
 import type { Message } from "discord.js";
 
 export class InfractionResolver extends Resolver<Infraction> {
@@ -25,6 +26,8 @@ export class InfractionResolver extends Resolver<Infraction> {
       return null;
     }
 
-    return (await Infraction.findOne({ where: { id } })) ?? null;
+    return await Database.PRISMA.infraction.findFirst({
+      where: { id }
+    });
   }
 }

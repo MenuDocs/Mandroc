@@ -8,6 +8,14 @@ import { dotprop } from "./DotNotation";
 const log = Logger.get("Config");
 
 class Config {
+  static BOOLEAN_VALUES: Record<string, boolean> = {
+    no: false,
+    yes: true,
+    "true": true,
+    "false": false
+  };
+  static ARRAY_SEPARATOR = ",";
+
   /**
    * The configuration data from "config.json"
    * @private
@@ -65,28 +73,58 @@ class Config {
    * Get a configuration value.
    *
    * @param path The path to the value.
-   * @param defaultValue Default value to return.
+   * @param options Options
    */
-  public get<T>(path: string, defaultValue?: T): T {
+  public get<T>(path: string, options: GetOptions<T> = {}): T {
     if (!this._data) {
-      return this.getEnv(path, defaultValue);
+      return this.getEnv(path, options);
     }
 
-    return (dotprop.get(this._data, path) ??
-      this.getEnv(path) ??
-      defaultValue) as T;
+    return (dotprop.get(this._data, path) ?? this.getEnv(path, options) ?? options.default) as T;
   }
 
   /**
    * Retrieves an environment variable with the provided name or path.
    *
    * @param nameOrPath The name of the environment variable or a dot notated path.
-   * @param {T} defaultValue
+   * @param options Options for this
    */
-  public getEnv<T>(nameOrPath: string, defaultValue?: T): T {
+  public getEnv<T>(nameOrPath: string, options: GetOptions<T> = {}): T {
     nameOrPath = nameOrPath.replace(/\./g, "_").toUpperCase();
-    return (process.env[nameOrPath] ?? defaultValue) as T;
+
+    let value: unknown = (process.env[nameOrPath] ?? options.default);
+    if (options.envType && typeof value === "string") {
+      switch (options.envType) {
+        case "boolean":
+          value = Config.BOOLEAN_VALUES[value];
+          break;
+        case "array":
+          value = value.split(Config.ARRAY_SEPARATOR);
+          break;
+        case "float":
+        case "integer":
+          value = options.envType === "float"
+            ? parseFloat(value)
+            : parseInt(value);
+
+          break;
+      }
+    }
+
+    return value as T;
   }
 }
 
 export const config = new Config();
+
+interface GetOptions<V> {
+  /**
+   * The default value to return.
+   */
+  default?: V;
+
+  /**
+   * The type of value to resolve the environment variable into.
+   */
+  envType?: "array" | "boolean" | "integer" | "float"
+}

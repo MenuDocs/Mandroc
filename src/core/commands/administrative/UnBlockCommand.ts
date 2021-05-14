@@ -1,7 +1,6 @@
-import { adminCommand, MandrocCommand, Profile } from "@lib";
+import { adminCommand, Embed, MandrocCommand, useProfile } from "@lib";
 
-import type { Message } from "discord.js";
-import type { User } from "discord.js";
+import type { Message, User } from "discord.js";
 
 @adminCommand("unblock", {
   editable: false,
@@ -19,17 +18,18 @@ import type { User } from "discord.js";
 })
 export default class BlockCommand extends MandrocCommand {
   async exec(message: Message, { target }: args) {
-    const targetProfile = await Profile.findOneOrCreate({
-      where: { _id: target.id },
-      create: { _id: target.id }
+    const [ profile, updateProfile ] = await useProfile(target.id);
+    if (!profile.blocked) {
+      const embed = Embed.warning("This user isn't blocked.")
+      return message.util?.send(embed);
+    }
+
+    await updateProfile({
+      blocked: false
     });
 
-    if (targetProfile.blocked)
-      return message.channel.send("This user isn't  blocked.");
-
-    targetProfile.blocked = false;
-
-    message.channel.send(`**${target.tag}** was unblocked!`);
+    const embed = Embed.success(`**${target.tag}** was unblocked.`)
+    return message.util?.send(embed);
   }
 }
 

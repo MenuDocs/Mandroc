@@ -16,7 +16,7 @@ export class GiveawayCommand extends MandrocCommand {
         ["giveaway-end", "end", "e"],
         ["giveaway-create", "create", "c", "new", "n"]
       ],
-      otherwise: Embed.Primary([
+      otherwise: Embed.primary([
         "Please provide a subcommand.",
         "",
         "**`end`** - ends a giveaway with the provided id.",

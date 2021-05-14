@@ -1,15 +1,9 @@
-import {
-  adminCommand,
-  Color,
-  MandrocCommand,
-  PermissionLevel,
-  Profile
-} from "@lib";
+import { adminCommand, Color, Database, MandrocCommand, PermissionLevel } from "@lib";
 import { Message, MessageEmbed, User } from "discord.js";
 
 @adminCommand("eco", {
   permissionLevel: PermissionLevel.Management,
-  aliases: ["eco"],
+  aliases: [ "eco" ],
   description: {
     content: "Adjust a user's economy.",
     examples: (prefix: string) => [
@@ -58,23 +52,34 @@ import { Message, MessageEmbed, User } from "discord.js";
 })
 export default class EcoCommand extends MandrocCommand {
   public async exec(
-    { channel }: Message,
-    { receiver, action, account, amount }: args
+    message: Message,
+    {
+      receiver,
+      action,
+      account,
+      amount
+    }: args
   ) {
-    const actionRegex = /(set|remove|add)/gm;
-    const receiverProfile =
-      (await Profile.findOne({ _id: receiver.id })) ??
-      (await Profile.create({ _id: receiver.id }));
-    const accountRegex = /(pocket|bank)/gm;
+    const actionRegex = /(set|remove|add)/gm,
+      accountRegex = /(pocket|bank)/gm;
+
+    const receiverProfile = await Database.PRISMA.profile.upsert({
+      where: { id: receiver.id },
+      create: { id: receiver.id },
+      update: {},
+      select: {
+        pocket: true,
+        bank: true
+      }
+    });
 
     const embed = new MessageEmbed();
-
     if (!actionRegex.exec(action)) {
       embed
         .setColor(Color.Warning)
         .setDescription("Your action must match `set|remove|add`");
 
-      return channel.send(embed);
+      return message.util?.send(embed);
     }
 
     if (!accountRegex.exec(account)) {
@@ -82,49 +87,44 @@ export default class EcoCommand extends MandrocCommand {
         .setColor(Color.Warning)
         .setDescription("Your account must match `pocket|bank`");
 
-      return channel.send(embed);
+      return message.util?.send(embed);
     }
 
     action = action.toLocaleLowerCase();
     if (action === "set") {
       if (account === "pocket") {
         receiverProfile!.pocket = amount;
-        await receiverProfile.save();
       } else {
         receiverProfile!.bank = amount;
-        await receiverProfile.save();
       }
     }
 
     if (action === "add") {
       if (account === "pocket") {
         receiverProfile!.pocket += amount;
-        await receiverProfile.save();
       } else {
         receiverProfile!.bank += amount;
-        await receiverProfile.save();
       }
     }
 
     if (action === "remove") {
       if (account === "pocket") {
         receiverProfile!.pocket -= amount;
-        await receiverProfile.save();
       } else {
         receiverProfile!.bank -= amount;
-        await receiverProfile.save();
       }
     }
 
-    await receiverProfile.save();
+    await Database.PRISMA.profile.update({
+      where: { id: receiver.id },
+      data: receiverProfile
+    });
 
     embed
       .setColor(Color.Success)
-      .setDescription(
-        `Successfully ran \`${action}\` affecting ${receiver}'s \`${account}\``
-      );
+      .setDescription(`Successfully ran \`${action}\` affecting ${receiver}'s \`${account}\``);
 
-    channel.send(embed);
+    message.util?.send(embed);
   }
 }
 

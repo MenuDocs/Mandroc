@@ -1,28 +1,18 @@
-import {
-  command,
-  MandrocCommand,
-  Embed,
-  bodyguardTiers,
-  BodyguardTier
-} from "@lib";
+import { bodyguardTiers, command, Database, Embed, MandrocCommand } from "@lib";
 import ms from "ms";
 
 import type { GuildMember, Message } from "discord.js";
+import type { BodyguardTier } from "@prisma/client";
 
-const failureMessages: Record<
-  BodyguardTier,
-  (target: GuildMember) => string
-> = {
-  chad: g =>
-    `NANI!?!?! **${g.user.tag}** had a **Chad** tier bodyguard <:monkaMEGA:515436779893948416>`,
-  deluxe: g =>
-    `Ohk... so **${g.user.tag}** had a good bodyguard. Better luck next time.`,
-  gold: g => `Wow. You failed to rob **${g.user.tag}**`,
-  rookie: g => `Lol. You really failed to rob **${g.user.tag}**...`
+const failureMessages: Record<BodyguardTier, (target: GuildMember) => string> = {
+  Chad: g => `NANI!?!?! **${g.user.tag}** had a **Chad** tier bodyguard <:monkaMEGA:515436779893948416>`,
+  Deluxe: g => `Ohk... so **${g.user.tag}** had a good bodyguard. Better luck next time.`,
+  Gold: g => `Wow. You failed to rob **${g.user.tag}**`,
+  Rookie: g => `Lol. You really failed to rob **${g.user.tag}**...`
 };
 
 @command("rob", {
-  aliases: ["rob", "steal"],
+  aliases: [ "rob", "steal" ],
   channel: "guild",
   description: {
     content: "Robs money from a user.",
@@ -50,34 +40,46 @@ export default class RobCommand extends MandrocCommand {
       victim = await member.getProfile();
 
     if (victim.pocket < 200) {
-      const embed = Embed.Warning(
+      const embed = Embed.warning(
         "They do not have enough money to be robbed."
       );
       return message.channel.send(embed);
     }
 
     if (robber.lastRobbed && robber.lastRobbed + ms("2h") > Date.now()) {
-      const embed = Embed.Warning("You can only rob once every two hours!");
+      const embed = Embed.warning("You can only rob once every two hours!");
       return message.channel.send(embed);
     }
 
     const rob = async (bodyguard = false) => {
-      const stolen = Math.floor(
-        (Math.random() * victim.pocket) / (bodyguard ? 8 : 9)
-      );
+      const stolen = Math.floor((Math.random() * victim.pocket) / (bodyguard ? 8 : 9));
 
-      victim.pocket -= stolen;
-      robber.pocket += stolen;
-      robber.lastRobbed = Date.now();
-
-      const embed = Embed.Primary(
-        `You stole **${stolen} ₪** from ${member}.${
-          bodyguard ? "" : "\nThey should really get a bodyguard :eyes:"
-        }`
-      );
+      /* send success message. */
+      const embed = Embed.primary(`You stole **${stolen} ₪** from ${member}.${bodyguard
+        ? ""
+        : "\nThey should really get a bodyguard :eyes:"}`);
 
       await message.util?.send(embed);
-      await Promise.all([victim, robber].map(p => p.save()));
+
+      /* update profiles */
+      await Database.PRISMA.profile.update({
+        where: { id: robber.id },
+        data: {
+          pocket: {
+            increment: stolen
+          },
+          lastRobbed: Date.now()
+        }
+      });
+
+      await Database.PRISMA.profile.update({
+        where: { id: victim.id },
+        data: {
+          pocket: {
+            decrement: stolen
+          }
+        }
+      });
     };
 
     if (!victim.bodyguard) {
@@ -86,7 +88,7 @@ export default class RobCommand extends MandrocCommand {
 
     const rand = Math.random();
     if (rand < bodyguardTiers[victim.bodyguard].safe) {
-      const embed = Embed.Primary(failureMessages[victim.bodyguard](member));
+      const embed = Embed.primary(failureMessages[victim.bodyguard](member));
       return message.util?.send(embed);
     }
 

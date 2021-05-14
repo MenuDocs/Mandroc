@@ -17,7 +17,7 @@ export class AntiCodeBlock extends Module {
         await message.delete();
         message.util
           ?.send(
-            Embed.Primary(
+            Embed.primary(
               `${message.author}, use a bin to prevent bulking the chat.`
             )
           )

@@ -1,4 +1,6 @@
-import { command, Embed, MandrocCommand, PermissionLevel, Tag } from "@lib";
+import { command, Embed, MandrocCommand, PermissionLevel, updateTag } from "@lib";
+
+import type { Tag } from "@prisma/client";
 import type { Message } from "discord.js";
 
 @command("tag-category", {
@@ -22,16 +24,14 @@ import type { Message } from "discord.js";
   permissionLevel: PermissionLevel.Helper
 })
 export default class CategorySubCommand extends MandrocCommand {
-  public async exec(message: Message, { tag, category }: args) {
-    const old = tag.category;
-    tag.category = category;
-    await tag.save();
+  public async exec(message: Message, {
+    tag,
+    category
+  }: args) {
+    await updateTag(tag.id, { category });
 
-    return message.util?.send(
-      Embed.Primary(
-        `I changed the category of tag **${tag.name}** from \`${old}\` to \`${category}\``
-      )
-    );
+    const embed = Embed.primary(`I changed the category of tag **${tag.name}** from \`${tag.category}\` to \`${category}\``);
+    return message.util?.send(embed);
   }
 }
 

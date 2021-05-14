@@ -1,7 +1,8 @@
-import { Infraction, InfractionType, PermissionLevel } from "@lib";
+import { Database, PermissionLevel } from "@lib";
 import { Collection, Message } from "discord.js";
 import { Module } from "../Module";
 import ms from "ms";
+import { InfractionType } from "@prisma/client";
 
 export class AntiSpam extends Module {
   buckets = new Collection<string, number[]>();
@@ -13,18 +14,18 @@ export class AntiSpam extends Module {
    *
    * @returns The timestamp of their last unmute, or null if they haven't gotten umuted before.
    */
-  private static async getLastUnmute(user: string): Promise<number | null> {
-    const modlog = await Infraction.findOne({
+  private static async getLastUnmute(user: string): Promise<Date | null> {
+    const infraction = await Database.PRISMA.infraction.findFirst({
       where: {
         offenderId: user,
-        type: InfractionType.UNMUTE
+        type: InfractionType.UnMute
       },
-      order: {
-        id: "DESC"
+      orderBy: {
+        id: "desc"
       }
     });
 
-    return modlog?.createdAt ?? null;
+    return infraction?.createdAt ?? null;
   }
 
   async run(message: Message): Promise<boolean> {
@@ -37,7 +38,7 @@ export class AntiSpam extends Module {
     bucket.push(message.createdTimestamp);
     const first = bucket.shift()!;
 
-    const lastUnmute = await AntiSpam.getLastUnmute(message.author.id);
+    const lastUnmute = (await AntiSpam.getLastUnmute(message.author.id))?.getTime();
     if (bucket.length >= 5) {
       if (
         message.editedTimestamp &&

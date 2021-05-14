@@ -1,30 +1,19 @@
-import { Guild, Intents, MessageEmbed, Util } from "discord.js";
+import { Guild, Intents, MessageEmbed } from "discord.js";
 import { Logger } from "@ayanaware/logger";
-import {
-  AkairoClient,
-  CommandHandler,
-  Flag,
-  InhibitorHandler,
-  ListenerHandler
-} from "discord-akairo";
+import { AkairoClient, CommandHandler, InhibitorHandler, ListenerHandler } from "discord-akairo";
 import { join } from "path";
 import TurndownService from "turndown";
-import ms from "ms";
 
 import { ResolverHandler } from "./classes/resolver/ResolverHandler";
 import { MonitorHandler } from "./classes/monitor/MonitorHandler";
 
-import { Database, Redis, Tag } from "./database";
+import { Database, Redis } from "./database";
 import { Scheduler } from "./scheduler/Scheduler";
 import { MandrocCommand } from "./classes/Command";
 import { Moderation } from "./administrative/Moderation";
 import { Color, config, IDs } from "./util";
 
 export class Mandroc extends AkairoClient {
-  /**
-   * The database instance.
-   */
-  readonly database: Database;
 
   /**
    * The client logger.
@@ -88,7 +77,7 @@ export class Mandroc extends AkairoClient {
         "424566306042544128",
         "277211104390807552"
       ],
-      partials: ["MESSAGE", "REACTION", "CHANNEL", "GUILD_MEMBER", "USER"],
+      partials: [ "MESSAGE", "REACTION", "CHANNEL", "GUILD_MEMBER", "USER" ],
       presence: {
         activity: {
           url: "https://twitch.tv/menudocs",
@@ -111,8 +100,6 @@ export class Mandroc extends AkairoClient {
 
     this.log = Logger.get(Mandroc);
 
-    this.database = new Database();
-
     this.redis = new Redis();
 
     this.moderation = new Moderation(this);
@@ -124,6 +111,8 @@ export class Mandroc extends AkairoClient {
       replacement: (text, node) =>
         `[${text}](https://developer.mozilla.org${node.href})`
     });
+
+
 
     this.commandHandler = new CommandHandler(this, {
       aliasReplacement: /-/g,
@@ -181,56 +170,6 @@ export class Mandroc extends AkairoClient {
       directory: join(process.cwd(), "dist", "core", "inhibitors"),
       automateCategories: true
     });
-
-    this.commandHandler.resolver.addType("tag", async (message, phrase) => {
-      if (!message.guild) {
-        return Flag.fail(phrase);
-      }
-      if (!phrase) {
-        return Flag.fail(phrase);
-      }
-      phrase = Util.cleanContent(phrase.toLowerCase(), message);
-
-      let tags = await Tag.find();
-      const [tag] = tags.filter(
-        t => t.name === phrase || t.aliases.includes(phrase)
-      );
-
-      return tag || null;
-    });
-
-    this.commandHandler.resolver.addType("duration", (_m, phrase) => {
-      if (!phrase) {
-        return null;
-      }
-
-      const _ms = ms(phrase);
-      return !_ms ? null : _ms;
-    });
-
-    this.commandHandler.resolver.addType(
-      "existingTag",
-      async (message, phrase) => {
-        if (!message.guild) {
-          return Flag.fail(phrase);
-        }
-        if (!phrase) {
-          return Flag.fail(phrase);
-        }
-
-        const phraseArr = phrase.split(",");
-        phraseArr.forEach(s =>
-          Util.cleanContent(s.trim().toLowerCase(), message)
-        );
-
-        let tags = await Tag.find();
-        const [tag] = tags.filter(
-          t => t.name === phrase || t.aliases.includes(phrase)
-        );
-
-        return tag ? Flag.fail(tag.name) : phrase;
-      }
-    );
   }
 
   /**
@@ -253,7 +192,7 @@ export class Mandroc extends AkairoClient {
       .useInhibitorHandler(this.inhibitorHandler)
       .useListenerHandler(this.listenerHandler);
 
-    await this.database.launch();
+    await Database.connect();
     await this.redis.launch();
 
     await this.monitorHandler.loadAll();

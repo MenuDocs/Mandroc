@@ -19,7 +19,7 @@ export class InfractionCommand extends MandrocCommand {
         ["infraction-edit", "edit", "e"],
         ["infraction-view", "view", "info", "i", "v"]
       ],
-      otherwise: Embed.Primary([
+      otherwise: Embed.primary([
         "Please provide a subcommand.",
         "**`view`** - displays information on the provided infraction.",
         "**`edit`** - allows editing of an infraction."

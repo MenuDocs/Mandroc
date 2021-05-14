@@ -1,18 +1,18 @@
-import { command, Embed, MandrocCommand } from "@lib";
+import { command, Database, Embed, MandrocCommand } from "@lib";
 
 import type { Message } from "discord.js";
 
 @command("coinflip", {
-  aliases: ["coinflip"],
+  aliases: [ "coin-flip" ],
   description: {
     content: "Flips a coin - test your luck :wink:.",
-    examples: (prefix: string) => [`${prefix}coinflip tails 200`],
+    examples: (prefix: string) => [ `${prefix}coinflip tails 200` ],
     usage: "<user>"
   },
   args: [
     {
       id: "side",
-      type: ["heads", "tails"],
+      type: [ "heads", "tails" ],
       prompt: {
         start: "Please tell me which side you bet on.",
         retry: "Please try again... Example: `!coinflip <heads|tails> <amount>`"
@@ -29,7 +29,10 @@ import type { Message } from "discord.js";
   ]
 })
 export default class CoinflipCommand extends MandrocCommand {
-  async exec(message: Message, { side, bet }: args) {
+  async exec(message: Message, {
+    side,
+    bet
+  }: args) {
     const profile = await message.member!.getProfile();
     if (bet > profile.pocket) {
       return message.util?.send(
@@ -37,24 +40,23 @@ export default class CoinflipCommand extends MandrocCommand {
       );
     }
 
-    const landed = ["tails", "heads"].random();
+    const landed = [ "tails", "heads" ].random();
     if (side === landed) {
       const amount = Math.round(bet / 3);
-      profile.pocket += amount;
-      message.util?.send(
-        Embed.Success(
-          `Wow! It was \`${side}\` indeed! *You received:* **${amount} ₪**`
-        )
-      );
+      message.util?.send(Embed.success(`Wow! It was \`${side}\` indeed! *You received:* **${amount} ₪**`));
     } else {
-      profile.pocket -= bet;
-      const embed = Embed.Success(
-        `Darn it ... it was \`${side}\`. *You lost:* **${bet} ₪**`
-      );
+      const embed = Embed.success(`Darn it ... it was \`${side}\`. *You lost:* **${bet} ₪**`);
       message.util?.send(embed);
     }
 
-    return profile.save();
+    await Database.PRISMA.profile.update({
+      where: { id: profile.id },
+      data: {
+        pocket: {
+          [side === landed ? "increment" : "decrement"]: bet
+        }
+      }
+    });
   }
 }
 

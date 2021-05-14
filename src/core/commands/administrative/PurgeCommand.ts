@@ -63,7 +63,7 @@ export default class PurgeCommand extends MandrocCommand {
 
       message.util
         ?.send(
-          Embed.Primary(
+          Embed.primary(
             `Deleted **${messages.size} messages** by ${args.user} \`(${args.user.id})\`.`
           )
         )
@@ -91,7 +91,7 @@ export default class PurgeCommand extends MandrocCommand {
       ]);
 
       message.util
-        ?.send(Embed.Primary(`Deleted **${messages.size}**`))
+        ?.send(Embed.primary(`Deleted **${messages.size}**`))
         ?.then(m => m.delete({ timeout: 5000 }));
     }
 

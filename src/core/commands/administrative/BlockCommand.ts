@@ -1,7 +1,6 @@
-import { adminCommand, MandrocCommand, Profile } from "@lib";
+import { adminCommand, Database, Embed, MandrocCommand } from "@lib";
 
-import type { Message } from "discord.js";
-import type { User } from "discord.js";
+import type { Message, User } from "discord.js";
 
 @adminCommand("block", {
   editable: false,
@@ -19,17 +18,26 @@ import type { User } from "discord.js";
 })
 export default class BlockCommand extends MandrocCommand {
   async exec(message: Message, { target }: args) {
-    const targetProfile = await Profile.findOneOrCreate({
-      where: { _id: target.id },
-      create: { _id: target.id }
+    const targetProfile = await Database.PRISMA.profile.upsert({
+      where: { id: target.id },
+      create: { id: target.id },
+      update: {},
+      select: { blocked: true }
     });
 
-    if (targetProfile.blocked)
-      return message.channel.send("This user is already blocked.");
+    if (targetProfile.blocked) {
+      const embed = Embed.warning("This user is already blocked.");
+      return message.util?.send(embed);
+    }
 
-    targetProfile.blocked = true;
+    await Database.PRISMA.profile.update({
+      where: { id: target.id },
+      data: {
+        blocked: true
+      }
+    });
 
-    message.channel.send(`**${target.tag}** was blocked!`);
+    message.util?.send(Embed.primary(`**${target.tag}** has been blocked.`));
   }
 }
 

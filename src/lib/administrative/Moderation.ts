@@ -1,26 +1,12 @@
-import {
-  code,
-  Embed,
-  IDs,
-  Infraction,
-  InfractionType,
-  Mandroc,
-  ModLog,
-  Scheduler
-} from "@lib";
+import { code, Embed, IDs, Mandroc, ModLog, Scheduler } from "@lib";
 import ms from "ms";
 import { captureException } from "@sentry/node";
 
 import { AutoMod } from "./automation/AutoMod";
 import { ActionManager } from "./queue/ActionManager";
 
-import type {
-  Guild,
-  GuildMember,
-  Message,
-  TextChannel,
-  User
-} from "discord.js";
+import type { Guild, GuildMember, Message, TextChannel, User } from "discord.js";
+import { Infraction, InfractionType } from "@prisma/client";
 
 const DEFAULT_DM_VALUE = true;
 
@@ -49,7 +35,7 @@ export class Moderation {
     this.actions = new ActionManager(this);
   }
 
-  static get lcurl(): string {
+  static get lcUrl(): string {
     return `https://discord.com/channels/${IDs.GUILD}/${IDs.MOD_LOGS}`;
   }
 
@@ -68,7 +54,7 @@ export class Moderation {
       .setOffender(data.offender)
       .setReason(data.reason)
       .setModerator(data.moderator)
-      .setType(InfractionType.MUTE);
+      .setType(InfractionType.Mute);
 
     if (data.duration) {
       modlog.setDuration(data.duration);
@@ -87,7 +73,7 @@ export class Moderation {
   ) {
     if (dm) {
       const _duration = duration ? ms(duration, { long: true }) : null;
-      const embed = Embed.Danger(
+      const embed = Embed.danger(
         `You've been muted in **MenuDocs** ${
           _duration ? `for **${_duration}**` : "permanently"
         }.\n${code`${reason}`}`
@@ -104,7 +90,7 @@ export class Moderation {
       .setOffender(data.offender)
       .setModerator(data.moderator)
       .setReason(data.reason)
-      .setType(InfractionType.UNMUTE);
+      .setType(InfractionType.UnMute);
 
     if (removeRole) {
       await data.offender.roles.remove(IDs.MUTED);
@@ -124,25 +110,20 @@ export class Moderation {
       .setReason(data.reason)
       .setOffender(data.offender)
       .setModerator(data.moderator)
-      .setType(InfractionType.WARN);
+      .setType(InfractionType.Warn);
 
     if (dm) {
-      const embed = Embed.Danger(
+      const embed = Embed.danger(
         `You've been warned in ${data.offender.guild.name} for \`${data.reason}\``
       );
 
       await this.tryDm(data.offender.user, embed);
     }
 
-    const automated = await this.automation.runProfile(
-      data.offender,
-      null,
-      true
-    );
-
+    const automated = await this.automation.runProfile(data.offender, true);
     if (automated) {
       switch (automated.type) {
-        case InfractionType.BAN:
+        case InfractionType.Ban:
           await this.banMember(
             data.offender,
             automated.reason,
@@ -151,7 +132,7 @@ export class Moderation {
           );
 
           break;
-        case InfractionType.MUTE:
+        case InfractionType.Mute:
           await this.muteMember(
             data.offender,
             automated.reason,
@@ -160,7 +141,7 @@ export class Moderation {
           );
 
           break;
-        case InfractionType.KICK:
+        case InfractionType.Kick:
           await this.kickMember(data.offender, automated.reason, dm);
           break;
       }
@@ -182,7 +163,7 @@ export class Moderation {
       .setReason(data.reason)
       .setOffender(data.offender)
       .setModerator(data.moderator)
-      .setType(InfractionType.KICK);
+      .setType(InfractionType.Kick);
 
     await this.kickMember(data.offender, data.reason, dm);
     return modLog.finish();
@@ -190,7 +171,7 @@ export class Moderation {
 
   async kickMember(member: GuildMember, reason: string, dm = DEFAULT_DM_VALUE) {
     if (dm) {
-      const embed = Embed.Danger(
+      const embed = Embed.danger(
         `You've been kicked from **MenuDocs** for: ${code`${reason}`}`
       );
       await this.tryDm(member.user, embed);
@@ -209,7 +190,7 @@ export class Moderation {
       .setReason(data.reason)
       .setOffender(data.offender)
       .setModerator(data.moderator)
-      .setType(InfractionType.BAN);
+      .setType(InfractionType.Ban);
 
     if (data.duration) {
       modLog.setDuration(data.duration);
@@ -232,10 +213,13 @@ export class Moderation {
         _duration ? `for **${_duration}**` : "permanently"
       }.\n${code`${reason}`}`;
 
-      await this.tryDm(member.user, Embed.Danger(desc));
+      await this.tryDm(member.user, Embed.danger(desc));
     }
 
-    await member.ban({ days: 7, reason });
+    await member.ban({
+      days: 7,
+      reason
+    });
   }
 
   /**
@@ -248,7 +232,7 @@ export class Moderation {
       .setReason(data.reason)
       .setOffender(data.offender)
       .setModerator(data.moderator)
-      .setType(InfractionType.SOFTBAN);
+      .setType(InfractionType.SoftBan);
 
     if (data.duration) {
       modLog.setDuration(data.duration);
@@ -271,11 +255,14 @@ export class Moderation {
     dm = DEFAULT_DM_VALUE
   ) {
     if (dm) {
-      const embed = Embed.Danger(`You've been soft-banned from **MenuDocs**`);
+      const embed = Embed.danger(`You've been soft-banned from **MenuDocs**`);
       await this.tryDm(member.user, embed);
     }
 
-    await member.ban({ days: delDays, reason });
+    await member.ban({
+      days: delDays,
+      reason
+    });
   }
 
   /**
@@ -289,7 +276,7 @@ export class Moderation {
         .setReason(data.reason)
         .setOffender(data.offender)
         .setModerator(data.moderator)
-        .setType(InfractionType.UNBAN);
+        .setType(InfractionType.UnBan);
 
       await Scheduler.get().cleanup("unban", data.offender.id);
       await guild.members.unban(data.offender);
@@ -306,24 +293,25 @@ export class Moderation {
    * @param dm
    */
   async timeout(data: PunishData, dm = DEFAULT_DM_VALUE): Promise<Infraction> {
-    const modlog = new ModLog(this.client)
+    const modLog = new ModLog(this.client)
       .setOffender(data.offender)
       .setReason(data.reason)
       .setModerator(data.moderator)
-      .setType(InfractionType.TIMEOUT);
+      .setType(InfractionType.Timeout);
 
     if (data.duration) {
-      modlog.setDuration(data.duration);
-      await modlog.schedule();
+      modLog.setDuration(data.duration);
+      await modLog.schedule();
     }
 
     await this.timeoutMember(
       data.offender,
       data.reason,
-      modlog.duration?.ms,
+      modLog.duration?.ms,
       dm
     );
-    return await modlog.finish();
+
+    return await modLog.finish();
   }
 
   async timeoutMember(
@@ -334,13 +322,7 @@ export class Moderation {
   ) {
     if (dm) {
       const _duration = duration ? ms(duration, { long: true }) : null;
-
-      const embed = Embed.Danger(
-        `You've been timed out (blacklisted from help channels) in **MenuDocs** ${
-          _duration ? `for **${_duration}**` : "permanently"
-        }.\n${code`${reason}`}`
-      );
-
+      const embed = Embed.danger(`You've been timed out (blacklisted from help channels) in **MenuDocs** ${_duration ? `for **${_duration}**` : "permanently"}.\n${code`${reason}`}`);
       await this.tryDm(member.user, embed);
     }
 

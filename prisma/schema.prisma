@@ -1,0 +1,150 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE-URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Badge {
+  id        String   @id
+  name      String
+  authorId  String   @map("author_id")
+  emojiId   String   @map("emoji_id")
+  createdAt DateTime @default(now())
+
+  @@map("badge")
+}
+
+model Infraction {
+  id          Int            @id @default(autoincrement())
+  offenderId  String         @map("offender_id")
+  moderatorId String         @map("moderator_id")
+  messageId   String?        @map("message_id")
+  reason      String
+  createdAt   DateTime       @default(now())
+  type        InfractionType
+  meta        Json           @default("{}")
+
+  @@map("infraction")
+}
+
+enum InfractionType {
+  Warn
+  Ban
+  SoftBan
+  Kick
+  Mute
+  UnBan
+  UnMute
+  Timeout
+}
+
+model ReactionRole {
+  id             String  @default(cuid())
+  messageId      String  @map("message_id")
+  emojiId        String  @map("emoji_id")
+  roleId         String  @map("role_id")
+  removeReaction Boolean @map("remove_reaction")
+
+  @@id([id, messageId])
+  @@map("reaction_role")
+}
+
+model Tag {
+  id           String   @id @default(cuid())
+  name         String
+  authorId     String   @map("author_id")
+  contents     String
+  uses         Int      @default(0)
+  category     String   @default("general")
+  aliases      String[]
+  createdAt    DateTime @default(now()) @map("croeated_at")
+  embedded     Boolean  @default(false)
+  supportOnly  Boolean  @default(true) @map("support_only")
+  staffOnly    Boolean  @default(false) @map("staff_only")
+  allowedRoles String[] @map("allowed_roles")
+
+  @@map("tag")
+}
+
+model Profile {
+  id           String          @id
+  pocket       Int             @default(0)
+  bank         Int             @default(0)
+  xp           Int             @default(0)
+  level        Int             @default(1)
+  boosters     Json            @default("{ \"xp\": null, \"coins\": null }")
+  badges       String[]
+  bodyguard    BodyguardTier?
+  reputation   String[]
+  lastRobbed   Int?            @map("last_robbed")
+  lastDaily    Int?            @map("last_daily")
+  lastWeekly   Int?            @map("last_weekly")
+  lastWorked   Int?            @map("last_worked")
+  lastChopped  Int?            @map("last_chopped")
+  lastMined    Int?            @map("last_mined")
+  lastFished   Int?            @map("last_fished")
+  lastShoveled Int?            @map("last_shoveled")
+  blocked      Boolean         @default(false)
+  notes        Json[]
+  inventory    InventoryItem[]
+
+  @@map("profile")
+}
+
+model InventoryItem {
+  id        String  @id @default(cuid())
+  item      Item    @relation(fields: [itemId], references: [id])
+  itemId    String  @map("item_id")
+  profile   Profile @relation(fields: [profileId], references: [id])
+  profileId String  @map("profile_id")
+  metadata  Json
+
+  @@map("inventory_item")
+}
+
+enum BodyguardTier {
+  Chad
+  Deluxe
+  Gold
+  Rookie
+}
+
+model Item {
+  id       String        @id
+  name     String
+  type     ItemType
+  modifier ItemModifier?
+  metadata Json          @default("{}")
+
+  @@map("item")
+  InventoryItem InventoryItem[]
+  ShopItem      ShopItem[]
+}
+
+enum ItemType {
+  Redeemable
+  Tool
+  Document
+}
+
+enum ItemModifier {
+  Booster
+  Bodyguard
+}
+
+model ShopItem {
+  id         Int     @id @default(autoincrement())
+  item       Item    @relation(fields: [itemId], references: [id])
+  itemId     String  @map("item_id")
+  autoRedeem Boolean @map("auto_redeem")
+  price      Int
+  category   String  @default("general")
+
+  @@map("shop_item")
+}

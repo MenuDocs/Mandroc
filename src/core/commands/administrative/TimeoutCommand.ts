@@ -5,7 +5,7 @@ import ms from "ms";
 import type { GuildMember, Message } from "discord.js";
 
 @adminCommand("timeout", {
-  aliases: ["timeout"],
+  aliases: [ "timeout" ],
   args: [
     {
       id: "member",
@@ -31,9 +31,13 @@ import type { GuildMember, Message } from "discord.js";
   ]
 })
 export class TimeoutCommand extends MandrocCommand {
-  async exec(message: Message, { duration, member, reason }: args) {
+  async exec(message: Message, {
+    duration,
+    member,
+    reason
+  }: args) {
     if (member.roles.cache.has(IDs.TIMED_OUT)) {
-      const embed = Embed.Warning("That member is already timed out.");
+      const embed = Embed.warning("That member is already timed out.");
       return message.util?.send(embed);
     }
 
@@ -48,13 +52,10 @@ export class TimeoutCommand extends MandrocCommand {
       message.delete().catch(captureException);
     }
 
-    const embed = Embed.Primary(
-      `Successfully timed out **${member}** for ${ms(duration, {
-        long: true
-      })} with reason \`${reason}\``
-    );
-
-    return message.channel.send(embed).then(m => m.delete({ timeout: 6000 }));
+    const embed = Embed.primary(`Successfully timed out **${member}** for ${ms(duration, { long: true })} with reason \`${reason}\``);
+    return message.util
+      ?.send(embed)
+      ?.then(m => m.delete({ timeout: 6000 }));
   }
 }
 

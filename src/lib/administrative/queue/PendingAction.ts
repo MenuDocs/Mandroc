@@ -55,7 +55,7 @@ export class PendingAction {
   }
 
   static getEmbed(data: ActionData): MessageEmbed {
-    return Embed.Primary(data.description)
+    return Embed.primary(data.description)
       .setAuthor("Action Required", data.subject.user.displayAvatarURL())
       .setColor("#b03333")
       .setTimestamp(data.timestamp);

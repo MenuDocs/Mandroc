@@ -1,62 +1,67 @@
-import { command, Embed, MandrocCommand, PermissionLevel } from "@lib";
+import { command, Database, Embed, MandrocCommand, PermissionLevel, ToolMetadata, ToolType } from "@lib";
 import ms from "ms";
 
 import type { Message } from "discord.js";
 
 @command("chop", {
-  aliases: ["chop"],
+  aliases: [ "chop" ],
   description: {
     content: "Chops trees.",
-    examples: (prefix: string) => [`${prefix}chop`],
+    examples: (prefix: string) => [ `${prefix}chop` ],
     usage: ""
   }
 })
 export default class ChopCommand extends MandrocCommand {
   public async exec(message: Message) {
-    const profile = await message.member!.getProfile(),
-      logs = ["oak", "birch", "apple", "pine"].shuffle();
-
-    if (!profile.inventory.find(x => x.name === "axe")) {
-      return message.util?.send(
-        Embed.Warning("You must possess an axe to run this command.")
-      );
+    /* check if the user has an axe. */
+    const [ axe, updateAxe ] = await Database.useTool(message.author.id, ToolType.AXE);
+    if (!axe || !(axe.metadata as ToolMetadata).durability) {
+      const embed = Embed.warning("You must possess an **axe** to run this command.");
+      return message.util?.send(embed);
     }
 
+    /* check for cool-down. */
+    const [ profile, updateProfile ] = await message.member?.useProfile()!;
     if (profile.lastChopped) {
       const remaining = Date.now() - profile.lastChopped;
       if (ms("25m") > remaining) {
-        const embed = Embed.Warning(
-          `Woah! it was only **${ms(remaining, {
-            long: true
-          })}** before your last chop session, it's good to take a nice \`25 minute\` break between each session :)`
-        );
+        const rem = ms(remaining, { long: true });
+        const embed = Embed.warning(`Woah! it was only **${rem}** before your last chop session, it's good to take a nice \`25 minute\` break between each session :)`);
         return message.util?.send(embed);
       }
     }
 
-    const logAmounts = [...Array(10).keys()].slice(1).shuffle(),
-      chance =
-        message.member?.permissionLevel === PermissionLevel.Donor ? 0.4 : 0.2;
+    /* update axe durability */
+    await updateAxe({
+      metadata: {
+        durability: (axe.metadata as ToolMetadata).durability - 1
+      }
+    });
 
-    profile.lastChopped = Date.now();
+    const logs = [ "oak", "birch", "apple", "pine" ].shuffle(),
+      logAmounts = [ ...Array(10).keys() ].slice(1).shuffle(),
+      chance = message.member?.permissionLevel === PermissionLevel.Donor ? 0.4 : 0.2;
+
+    let gain = 0;
     if (Math.random() <= chance) {
-      const earned = logAmounts.reduce((acc, x) => acc + x * 8, 0),
-        chopped = logs.map((x, i) => `*${logAmounts[i]} ${x} logs*`).join(", ");
+      gain = logAmounts.reduce((acc, x) => acc + x * 8, 0);
 
-      message.util?.send(
-        Embed.Success(`Wow! You got ${chopped}, and earned **${earned * 8} ₪**`)
-      );
+      /* send embed */
+      const chopped = logs.map((x, i) => `*${logAmounts[i]} ${x} logs*`).join(", ");
+      message.util?.send(Embed.success(`Wow! You got ${chopped}, and earned **${gain} ₪**`));
 
-      // update pocket
-      profile.pocket += earned;
+      /* update pocket */
     } else {
-      message.util?.send(
-        Embed.Warning(
-          "Yikes. The forest you went to burnt down, and it's too late to go to another."
-        )
-      );
+      const embed = Embed.warning("Yikes. The forest you went to burnt down, and it's too late to go to another.");
+      message.util?.send(embed);
     }
 
-    await profile.save();
+    /* update author's last chopped timestamp */
+    await updateProfile({
+      lastChopped: Date.now(),
+      pocket: {
+        increment: gain
+      }
+    });
   }
 }

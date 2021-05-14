@@ -1,4 +1,4 @@
-import { command, Embed, MandrocCommand } from "@lib";
+import { command, Database, Embed, MandrocCommand } from "@lib";
 import ms from "ms";
 
 import type { Message } from "discord.js";
@@ -26,17 +26,20 @@ export default class DailyCommand extends MandrocCommand {
       profile.lastWorked + ms("12h") > Date.now()
     ) {
       return message.util?.send(
-        Embed.Warning("You can only work once every 12 hours.")
+        Embed.warning("You can only work once every 12 hours.")
       );
     }
 
     const [hourlyPay, hours] = [...Array(10).keys()].slice(1).shuffle();
-    profile.lastWorked = Date.now();
-    profile.pocket += hourlyPay * hours;
 
-    await profile.save();
-    await message.util?.send(
-      Embed.Primary(this.stories(hourlyPay, hours).random())
-    );
+    await Database.PRISMA.profile.update({
+      where: { id: profile.id },
+      data: {
+        lastWorked: Date.now(),
+        pocket: profile.pocket + (hourlyPay * hours)
+      }
+    })
+
+    await message.util?.send(Embed.primary(this.stories(hourlyPay, hours).random()));
   }
 }

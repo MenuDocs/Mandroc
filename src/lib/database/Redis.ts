@@ -1,6 +1,6 @@
 import IORedis from "ioredis";
 import { Logger } from "@ayanaware/logger";
-import { config } from "../util/Config";
+import { config } from "../util";
 
 export class Redis {
   /**
@@ -51,33 +51,13 @@ export class Redis {
   }
 
   /**
-   * Get the total count of infractions.
-   * @type {number}
-   */
-  async infractionCount(defaultCount = 0): Promise<number> {
-    let infractions: number | string | null = await this.client.get(
-      "admin:infractions"
-    );
-    if (!infractions) {
-      infractions = defaultCount;
-      await this.client.set("admin:infractions", String(defaultCount));
-    }
-
-    return +infractions;
-  }
-
-  async incrementInfractions(): Promise<number> {
-    return this.client.incr("admin:infractions");
-  }
-
-  /**
    * Connects to the redis server.
    */
   async launch() {
     try {
       this.client = new IORedis({
-        host: config.get<string>("redis-host"),
-        port: config.get<number>("redis-port")
+        host: config.get<string>("redis.host"),
+        port: config.get<number>("redis.port", { envType: "integer" })
       });
     } catch (e) {
       this.logger.error(e);

@@ -19,7 +19,7 @@ export default class MessageDeletedListener extends Listener {
     const logs = message.guild?.channels.cache.get(IDs.LOG_CHANNEL) as
         | TextChannel
         | undefined,
-      embed = Embed.Primary()
+      embed = Embed.primary()
         .setTimestamp()
         .setAuthor(
           "Message Deleted",

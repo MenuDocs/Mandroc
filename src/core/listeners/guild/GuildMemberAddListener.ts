@@ -1,6 +1,6 @@
 import { Embed, IDs, listener, Redis } from "@lib";
 import { Listener } from "discord-akairo";
-import { AntiRaid } from "../../../lib/administrative/automation/modules/AntiRaid";
+// import { AntiRaid } from "../../../lib/administrative/automation/modules/AntiRaid";
 
 import type { GuildMember, User } from "discord.js";
 
@@ -14,11 +14,11 @@ export default class GuildMemberAddListener extends Listener {
       await member.fetch(true);
     }
 
-    if (AntiRaid.onGoingRaid) {
-      return await AntiRaid.raidKick([member]);
-    }
-
-    AntiRaid.recentJoins.push(member);
+    // if (AntiRaid.onGoingRaid) {
+    //   return await AntiRaid.raidKick([member]);
+    // }
+    //
+    // AntiRaid.recentJoins.push(member);
 
     await member.roles.add(IDs.UNVERIFIED);
     const roles = await Redis.get().client.lrange(
@@ -49,7 +49,7 @@ export default class GuildMemberAddListener extends Listener {
     }
 
     await (projections as any).send(
-      Embed.Primary(this.joinMessage(member.user))
+      Embed.primary(this.joinMessage(member.user))
     );
   }
 

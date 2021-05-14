@@ -24,7 +24,7 @@ export class InfractionCommand extends MandrocCommand {
         ["role-add", "add", "+"],
         ["role-remove", "remove", "rem", "rm", "-"]
       ],
-      otherwise: Embed.Primary([
+      otherwise: Embed.primary([
         "Please provide a subcommand.",
         "**`add`** - adds a role to the provided member",
         "**`remove`** - removes a role from the provided member"

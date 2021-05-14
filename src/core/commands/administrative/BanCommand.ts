@@ -42,7 +42,7 @@ import { AntiMassModeration } from "../../../lib/administrative/automation/modul
 export default class BanCommand extends MandrocCommand {
   public async exec(message: Message, { target, duration, reason }: args) {
     if (!target.manageable) {
-      const embed = Embed.Warning(
+      const embed = Embed.warning(
         `You do not have permission to interact with ${target} \`(${target.id})\`.`
       );
       return message.util?.send(embed);
@@ -59,7 +59,7 @@ export default class BanCommand extends MandrocCommand {
       duration
     });
 
-    const embed = Embed.Success(
+    const embed = Embed.success(
       `Successfully banned **${target}** \`(${target.id})\` ${
         duration ? `for **${ms(duration, { long: true })}**` : "permanently"
       }`

@@ -15,7 +15,7 @@ export class ClearSnipesCommand extends MandrocCommand {
   async exec(message: Message, { channel }: args) {
     channel.lastDeletedMessages = [];
     await message.util?.send(
-      Embed.Primary(
+      Embed.primary(
         `Successfully cleared the snipes for **${channel}** \`(${channel.id})\``
       )
     );

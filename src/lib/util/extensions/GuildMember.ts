@@ -1,9 +1,10 @@
 import { Structures } from "discord.js";
-import { IDs, PermissionLevel, Profile } from "@lib";
+import { Database, IDs, PermissionLevel, ProfileHook, useProfile } from "@lib";
+import type { Profile } from "@prisma/client";
 
 class GuildMember extends Structures.get("GuildMember") {
   get permissionLevel(): PermissionLevel | null {
-    for (const [level, role] of Object.entries(IDs.PERMISSIONS).reverse()) {
+    for (const [ level, role ] of Object.entries(IDs.PERMISSIONS).reverse()) {
       if (this.roles.cache.has(role)) {
         return level as any;
       }
@@ -23,10 +24,6 @@ class GuildMember extends Structures.get("GuildMember") {
     );
   }
 
-  /**
-   * Determines whether this member's permission level is higher than the provided member or permission level.
-   * @param {PermissionLevel | GuildMember} target The guild member or permission level.
-   */
   above(target: PermissionLevel | GuildMember) {
     if (!this.permissionLevel) {
       return false;
@@ -43,13 +40,26 @@ class GuildMember extends Structures.get("GuildMember") {
     return this.permissionLevel > target;
   }
 
-  /**
-   * Returns the profile for this guild member.
-   */
   async getProfile(): Promise<Profile> {
-    return Profile.findOneOrCreate({
-      where: { userId: this.id },
-      create: { userId: this.id }
+    return Database.findProfile(this.id);
+  }
+
+  async useProfile(): Promise<ProfileHook> {
+    return useProfile(this.id);
+  }
+
+  async getProfileWithInventoryItems() {
+    return await Database.PRISMA.profile.upsert({
+      create: { id: this.id },
+      where: { id: this.id },
+      update: {},
+      include: {
+        inventory: {
+          include: {
+            item: true
+          }
+        }
+      }
     });
   }
 }

@@ -1,9 +1,9 @@
+import { Collection, MessageEmbed } from "discord.js";
+import { Color } from "../../../util";
 import { Module } from "../Module";
 
 import type { Message } from "discord.js";
-import { Collection, MessageEmbed } from "discord.js";
 import type { AutoMod } from "../AutoMod";
-import { Color } from "@lib";
 
 export class AntiMassModeration extends Module {
   /**

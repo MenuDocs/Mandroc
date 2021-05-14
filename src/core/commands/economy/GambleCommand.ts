@@ -1,12 +1,12 @@
-import { command, Embed, MandrocCommand } from "@lib";
+import { command, Database, Embed, MandrocCommand, PermissionLevel } from "@lib";
 
 import type { Message } from "discord.js";
 
 @command("gamble", {
-  aliases: ["gamble"],
+  aliases: [ "gamble" ],
   description: {
     content: "Guess a number between `x` and `y`.",
-    examples: (prefix: string) => [`${prefix}gamble 500`],
+    examples: (prefix: string) => [ `${prefix}gamble 500` ],
     usage: "!gamble <amount>"
   },
   args: [
@@ -24,31 +24,33 @@ export default class GambleCommand extends MandrocCommand {
   public async exec(message: Message, { amount }: args) {
     const profile = await message.member!.getProfile();
     if (amount <= 0) {
-      return message.channel.send(
-        Embed.Warning("You must provide a valid number!")
-      );
+      const embed = Embed.warning(`${amount < 0 ? "**Negative numbers** aren't" : "**Zero** isn't"} a valid amount!`);
+      return message.util?.send(embed);
     }
 
     if (amount > profile.pocket) {
-      return message.channel.send(
-        Embed.Warning("You may not gamble more than you have in your pocket!")
-      );
+      const embed = Embed.warning("You may not gamble more than you have in your pocket!");
+      return message.util?.send(embed);
     }
 
-    const chances = [false, false, false, true];
-    if (message.member?.permissionLevel !== 1) {
-      chances.push(true);
-    }
+    const chances = message.member?.permissionLevel === PermissionLevel.Donor
+      ? .50
+      : .25;
 
-    if (chances.random()) {
-      profile.pocket += amount / 2;
-      message.channel.send(Embed.Primary(`You won **${amount / 2} ₪**`));
+    let pocket = profile.pocket;
+    if (Math.random() <= chances) {
+      pocket += amount / 2;
+      message.util?.send(Embed.primary(`You won **${amount / 2} ₪**`));
     } else {
-      profile.pocket -= amount;
-      message.channel.send(Embed.Warning(`You lost **${amount} ₪**`));
+      pocket -= amount;
+      message.util?.send(Embed.warning(`You lost **${amount} ₪**`));
     }
 
-    await profile.save();
+    /* update profile column */
+    await Database.PRISMA.profile.update({
+      where: { id: profile.id },
+      data: { pocket }
+    });
   }
 }
 

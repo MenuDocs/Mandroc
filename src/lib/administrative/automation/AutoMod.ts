@@ -1,7 +1,8 @@
 import moment from "moment";
+import { InfractionType } from "@prisma/client";
 
 import * as Modules from "./modules";
-import { Infraction, InfractionType, Profile } from "../../database";
+import { Database } from "../../database";
 import { ModLog } from "../ModLog";
 import { buildString } from "../../util";
 
@@ -49,14 +50,15 @@ export class AutoMod {
    */
   public async runProfile(
     target: GuildMember,
-    profile?: Profile | null,
     increment = true
   ): Promise<ModLog | null> {
-    if (!profile) {
-      profile = await target.getProfile();
-    }
+    let infractions = await Database.PRISMA.infraction.count({
+      where: {
+        offenderId: target.id,
+        type: InfractionType.Warn
+      }
+    });
 
-    let infractions = await profile.getInfractionCount(InfractionType.WARN);
     if (increment) {
       infractions += 1;
     }
@@ -69,15 +71,15 @@ export class AutoMod {
 
       switch (infractions) {
         case 2:
-          modLog.setType(InfractionType.MUTE).setDuration("12h");
+          modLog.setType(InfractionType.Mute).setDuration("12h");
 
           break;
         case 3:
-          modLog.setType(InfractionType.MUTE).setDuration("3d");
+          modLog.setType(InfractionType.Mute).setDuration("3d");
 
           break;
         case 5:
-          const infractions = await Infraction.find({
+          const infractions = await Database.PRISMA.infraction.findMany({
             where: {
               offenderId: target.id
             }

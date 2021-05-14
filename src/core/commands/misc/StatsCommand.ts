@@ -26,6 +26,7 @@ export default class StatsCommand extends MandrocCommand {
       snippet: { publishedAt }
     } = ytBody.items[0];
 
+
     return message.util?.send(Embed.Primary()
       .addField("Youtube", [
         `MenuDocs has **${subscriberCount}** subscribers and has uploaded **${videoCount}** videos!\n`,

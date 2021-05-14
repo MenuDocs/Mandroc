@@ -1,4 +1,4 @@
-import { command, Embed, MandrocCommand, PermissionLevel, Profile } from "@lib";
+import { command, Database, Embed, MandrocCommand, PermissionLevel } from "@lib";
 
 import type { Message, User } from "discord.js";
 import utc from "moment";
@@ -20,12 +20,13 @@ import utc from "moment";
 })
 export default class UserInfoCommand extends MandrocCommand {
   public async exec(message: Message, { user }: args) {
-    const profile = await Profile.findOneOrCreate({
-      where: { userId: user.id },
-      create: { userId: user.id }
+    const profile = await Database.PRISMA.profile.upsert({
+      where: { id: user.id },
+      create: { id: user.id },
+      update: {}
     });
 
-    const embed = Embed.Primary().setThumbnail(user.displayAvatarURL());
+    const embed = Embed.primary().setThumbnail(user.displayAvatarURL());
 
     /* general info */
 
@@ -57,10 +58,7 @@ export default class UserInfoCommand extends MandrocCommand {
         : profile.bodyguard ?? "none... you should really buy one.";
 
     // boosters
-    const boosters = Object.entries(profile.boosters)
-      .filter(([, mod]) => mod !== 1)
-      .map(([name, mod]) => `*${mod}x ${name.capitalize()}*`)
-      .join(", ");
+    const boosters = "";
 
     // permission level
     let permissionLevel = null;

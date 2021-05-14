@@ -9,7 +9,7 @@ export class CommandError extends Listener {
   async exec(error: Error, message: Message) {
     this.client.log.error(error);
     message.util?.send(
-      Embed.Primary(
+      Embed.primary(
         "Oops, I ran into an error. Please report this to the developers."
       )
     );

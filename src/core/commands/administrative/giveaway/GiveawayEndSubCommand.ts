@@ -15,7 +15,7 @@ import type { Message } from "discord.js";
 export class GiveawayEndSubCommand extends MandrocCommand {
   async exec(message: Message, { id }: args) {
     if (!(await Giveaway.exists(id))) {
-      const embed = Embed.Primary("No giveaway found with this ID.");
+      const embed = Embed.primary("No giveaway found with this ID.");
       return message.util?.send(embed);
     }
 

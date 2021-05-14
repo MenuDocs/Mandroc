@@ -41,7 +41,7 @@ import { AntiMassModeration } from "../../../lib/administrative/automation/modul
 export default class SoftBanCommand extends MandrocCommand {
   public async exec(message: Message, { target, delDays, reason }: args) {
     if (!target.manageable) {
-      const embed = Embed.Warning(
+      const embed = Embed.warning(
         `You do not have permission to interact with ${target} \`(${target.id})\`.`
       );
       return message.util?.send(embed);
@@ -60,7 +60,7 @@ export default class SoftBanCommand extends MandrocCommand {
 
     await message.guild?.members.unban(target);
 
-    const embed = Embed.Success(
+    const embed = Embed.success(
       `Successfully soft-banned **${target}** \`(${target.id})\``
     );
 

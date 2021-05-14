@@ -69,7 +69,7 @@ export class GuildMemberUpdate extends Listener {
       }
 
       const logs = await this.client.moderation.logChannel(),
-        embed = Embed.Primary()
+        embed = Embed.primary()
           .setAuthor(
             `Member Nickname ${
               !member.nickname ? "Reset" : !old.nickname ? "Set" : "Updated"
@@ -111,7 +111,7 @@ export class GuildMemberUpdate extends Listener {
       }
 
       const logs = await this.client.moderation.logChannel(),
-        embed = Embed.Primary()
+        embed = Embed.primary()
           .setAuthor(`Updated Member Roles`, entry.executor.displayAvatarURL())
           .setDescription(
             [

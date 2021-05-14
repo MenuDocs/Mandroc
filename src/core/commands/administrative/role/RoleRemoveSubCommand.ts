@@ -28,13 +28,13 @@ import type { GuildMember, Message, Role } from "discord.js";
 export class RoleAddSubCommand extends MandrocCommand {
   async exec(message: Message, { member, role }: args) {
     if (!member.roles.cache.has(role.id)) {
-      const embed = Embed.Warning(`${member} already doesn't have this role.`);
+      const embed = Embed.warning(`${member} already doesn't have this role.`);
       return message.util?.send(embed);
     }
 
     await member.roles.remove(role.id);
 
-    const embed = Embed.Primary(
+    const embed = Embed.primary(
       `Successfully removed the role ${role} from ${member}.`
     );
     return message.util?.send(embed);

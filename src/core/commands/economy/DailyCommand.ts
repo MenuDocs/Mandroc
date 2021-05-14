@@ -1,36 +1,42 @@
-import { command, Embed, MandrocCommand } from "@lib";
+import { command, Database, Embed, MandrocCommand } from "@lib";
 import ms from "ms";
 
 import type { Message } from "discord.js";
 
 @command("daily", {
-  aliases: ["daily"],
+  aliases: [ "daily" ],
   channel: "guild",
   description: {
     content: "Pays a minor amount of credits, to help you get by ;)",
-    examples: (prefix: string) => [`${prefix}daily`],
+    examples: (prefix: string) => [ `${prefix}daily` ],
     usage: "!daily"
   }
 })
 export default class DailyCommand extends MandrocCommand {
   async exec(message: Message) {
     const profile = await message.member!.getProfile();
+
+    /* check for last daily. */
     if (profile.lastDaily && profile.lastDaily + ms("1d") > Date.now()) {
-      const embed = Embed.Primary(
-        `Ayo! It's only been **${ms(Date.now() - profile.lastDaily, {
-          long: true
-        })}** since you last got your daily coins, chill.`
-      );
+      const rem = ms(Date.now() - profile.lastDaily, { long: true }),
+        embed = Embed.primary(`Ayo! It's only been **${rem}** since you last got your daily coins, chill.`);
+
       return message.util?.send(embed);
     }
 
-    const embed = Embed.Warning(
-      "Your daily **200 ₪** has been added to your pocket."
-    );
-    profile.pocket += 200;
-    profile.lastDaily = Date.now();
+    /* send daily message. */
+    const embed = Embed.warning("Your daily **200 ₪** has been added to your pocket.");
+    message.util?.send(embed);
 
-    await profile.save();
-    await message.util?.send(embed);
+    /* update profile */
+    await Database.PRISMA.profile.update({
+      where: { id: profile.id },
+      data: {
+        pocket: {
+          increment: 200
+        },
+        lastWeekly: Date.now()
+      }
+    });
   }
 }

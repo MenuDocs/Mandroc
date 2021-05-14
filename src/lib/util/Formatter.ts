@@ -1,14 +1,7 @@
-import {
-  Color,
-  DEFAULT_FORMATTER_COLORS,
-  DefaultFormatter,
-  DefaultFormatterColor,
-  Logger,
-  LogLevel,
-  LogMeta
-} from "@ayanaware/logger";
-import { dim, gray } from "ansi-styles";
+import { Color, DEFAULT_FORMATTER_COLORS, DefaultFormatter, DefaultFormatterColor, Logger, LogLevel, LogMeta } from "@ayanaware/logger";
+import colors from "ansi-styles";
 
+const { dim, gray } = colors;
 const { LOG_PACKAGE_PATH, LOG_TIMESTAMP } = DefaultFormatterColor;
 
 DEFAULT_FORMATTER_COLORS.set(LOG_PACKAGE_PATH, Color.BRIGHT_BLUE).set(
