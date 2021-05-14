@@ -1,6 +1,11 @@
 import { Guild, Intents, MessageEmbed } from "discord.js";
 import { Logger } from "@ayanaware/logger";
-import { AkairoClient, CommandHandler, InhibitorHandler, ListenerHandler } from "discord-akairo";
+import {
+  AkairoClient,
+  CommandHandler,
+  InhibitorHandler,
+  ListenerHandler
+} from "discord-akairo";
 import { join } from "path";
 import TurndownService from "turndown";
 
@@ -14,7 +19,6 @@ import { Moderation } from "./administrative/Moderation";
 import { Color, config, IDs } from "./util";
 
 export class Mandroc extends AkairoClient {
-
   /**
    * The client logger.
    */
@@ -77,7 +81,7 @@ export class Mandroc extends AkairoClient {
         "424566306042544128",
         "277211104390807552"
       ],
-      partials: [ "MESSAGE", "REACTION", "CHANNEL", "GUILD_MEMBER", "USER" ],
+      partials: ["MESSAGE", "REACTION", "CHANNEL", "GUILD_MEMBER", "USER"],
       presence: {
         activity: {
           url: "https://twitch.tv/menudocs",
@@ -112,8 +116,6 @@ export class Mandroc extends AkairoClient {
         `[${text}](https://developer.mozilla.org${node.href})`
     });
 
-
-
     this.commandHandler = new CommandHandler(this, {
       aliasReplacement: /-/g,
       allowMention: true,
@@ -122,7 +124,7 @@ export class Mandroc extends AkairoClient {
       commandUtil: true,
       handleEdits: true,
       defaultCooldown: 7000,
-      directory: join(process.cwd(), "dist", "core", "commands"),
+      directory: join(__dirname, "..", "core", "commands"),
       argumentDefaults: {
         prompt: {
           modifyStart: (_, p) =>
@@ -154,20 +156,20 @@ export class Mandroc extends AkairoClient {
     });
 
     this.resolverHandler = new ResolverHandler(this, {
-      directory: join(process.cwd(), "dist", "core", "resolvers")
+      directory: join(__dirname, "..", "core", "resolvers")
     });
 
     this.monitorHandler = new MonitorHandler(this, {
-      directory: join(process.cwd(), "dist", "core", "monitors")
+      directory: join(__dirname, "..", "core", "monitors")
     });
 
     this.listenerHandler = new ListenerHandler(this, {
-      directory: join(process.cwd(), "dist", "core", "listeners"),
+      directory: join(__dirname, "..", "core", "listeners"),
       automateCategories: true
     });
 
     this.inhibitorHandler = new InhibitorHandler(this, {
-      directory: join(process.cwd(), "dist", "core", "inhibitors"),
+      directory: join(__dirname, "..", "core", "inhibitors"),
       automateCategories: true
     });
   }
