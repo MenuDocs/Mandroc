@@ -35,8 +35,8 @@ services:
       context: .
     environment:
       # other
-      SENTRY-DSN: https://8f60aea923994c8e87f3827ca139335b@o492091.ingest.sentry.io/5558758
-      DISCORD-TOKEN: NzQwNjAwNzI5Njg4OTk3ODg4.XyrYLQ.dFY2ZuHVJkgxg4F4cztoLtDl8_w
+      SENTRY-DSN: lol
+      DISCORD-TOKEN: lol
       # commands
       COMMANDS_DISABLED: repair,inventory,fish,shovel,mine,chop
       # redis
