@@ -25,7 +25,6 @@ services:
       - "6379:6379"
   mandroc:
     container_name: mandroc
-    restart: always
     depends_on:
       - redis
       - psql
