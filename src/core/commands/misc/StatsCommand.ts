@@ -27,7 +27,7 @@ export default class StatsCommand extends MandrocCommand {
     } = ytBody.items[0];
 
 
-    return message.util?.send(Embed.Primary()
+    return message.util?.send(Embed.primary()
       .addField("Youtube", [
         `MenuDocs has **${subscriberCount}** subscribers and has uploaded **${videoCount}** videos!\n`,
         `❯ [Latest Video](https://www.youtube.com/watch?v=${videoId}) | *Published at: ${moment(publishedAt).format("MMMM Do YYYY")}*`,
