@@ -3,7 +3,7 @@ import type { GuildMember, Message, Role } from "discord.js";
 
 @command("role-remove", {
   description: {
-    content: "Used for remonig a role from someone",
+    content: "Used for removing a role from someone",
     usage: "<role> <member>"
   },
   args: [
