@@ -13,7 +13,6 @@ export class ScuffedEmojiResolver extends Resolver<Emoji> {
 
 
   exec(message: Message, phrase: string | null): Emoji | null {
-    console.log(phrase);
     if (!phrase) {
       return null;
     }
@@ -28,8 +27,6 @@ export class ScuffedEmojiResolver extends Resolver<Emoji> {
     if (!snowflake) {
       return null;
     }
-
-    console.log(snowflake);
 
     return message.guild?.emojis?.cache?.get(snowflake) ?? null;
   }
