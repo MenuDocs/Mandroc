@@ -7,6 +7,7 @@ import type { Message } from "discord.js";
 @listener("command-error", { event: "error", emitter: "commands" })
 export class CommandError extends Listener {
   async exec(error: Error, message: Message) {
+    console.log(error);
     this.client.log.error(error);
     message.util?.send(
       Embed.primary(

@@ -28,7 +28,7 @@ import type { Emoji, Message, TextChannel } from "discord.js";
     },
     {
       id: "emoji",
-      type: "emoji"
+      type: "scuffedEmoji"
     }
   ]
 })
@@ -76,7 +76,7 @@ export class ReactionRolesRemoveSubCommand extends MandrocCommand {
     const exists = await Database.PRISMA.reactionRole.findFirst({
       where: {
         messageId,
-        emojiId: emoji.id!!
+        emojiId: emoji.id ?? emoji.name
       },
       select: { id: true }
     });

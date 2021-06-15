@@ -2,8 +2,6 @@ import { adminCommand, Database, Embed, MandrocCommand } from "@lib";
 
 import type { Emoji, Message, Role, TextChannel } from "discord.js";
 
-export const emojiRegex = /<a?:[\w\d-_]+:(\d+)>/g;
-
 @adminCommand("rr-add", {
   description: {
     content: "Adds a reaction role to the provided message.",
@@ -29,16 +27,7 @@ export const emojiRegex = /<a?:[\w\d-_]+:(\d+)>/g;
     },
     {
       id: "emoji",
-      match: "content",
-      type: async (message, content) => {
-        const matches = emojiRegex.exec(content);
-        if (!matches) {
-          return null;
-        }
-
-        const emoteId = matches[1];
-        return message.guild!.emojis.cache.get(emoteId);
-      },
+      type: "scuffedEmoji",
       prompt: {
         start: "You must provide a valid emoji, must be a guild emote.",
         retry: "Provide a valid emoji."
@@ -70,8 +59,6 @@ export class ReactionRolesAddSubCommand extends MandrocCommand {
       instantRemove
     }: args
   ) {
-    const e = typeof emoji === "string" ? emoji : emoji.identifier;
-
     let msg;
     try {
       msg = await channel.messages.fetch(messageId, true);
@@ -85,9 +72,9 @@ export class ReactionRolesAddSubCommand extends MandrocCommand {
     const exists = await Database.PRISMA.reactionRole.findFirst({
       where: {
         messageId,
-        emojiId: e
+        emojiId: emoji.id ?? emoji.name
       },
-      select: {}
+      select: { id: true }
     });
 
     if (exists) {
@@ -100,13 +87,13 @@ export class ReactionRolesAddSubCommand extends MandrocCommand {
     await Database.PRISMA.reactionRole.create({
       data: {
         messageId,
-        emojiId: e,
+        emojiId: emoji.id ?? emoji.name,
         removeReaction: instantRemove,
         roleId: role.id
       }
     });
 
-    await msg.react(e);
+    await msg.react(emoji.identifier);
     const embed = Embed.primary(`Created a reaction role for ${role} with the emoji ${emoji} in ${channel}.`);
     return message.util?.send(embed);
   }
@@ -115,7 +102,7 @@ export class ReactionRolesAddSubCommand extends MandrocCommand {
 type args = {
   channel: TextChannel;
   messageId: string;
-  emoji: Emoji | string;
+  emoji: Emoji;
   role: Role;
   instantRemove: boolean;
 };
