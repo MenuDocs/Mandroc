@@ -63,7 +63,7 @@ model Tag {
   uses         Int      @default(0)
   category     String   @default("general")
   aliases      String[]
-  createdAt    DateTime @default(now()) @map("croeated_at")
+  createdAt    DateTime @default(now()) @map("created_at")
   embedded     Boolean  @default(false)
   supportOnly  Boolean  @default(true) @map("support_only")
   staffOnly    Boolean  @default(false) @map("staff_only")
