@@ -61,5 +61,5 @@
   "engines": {
     "node": ">=14.x.x"
   },
-  "license": "MIT"
+  "license": "GPL-3.0-only"
 }
